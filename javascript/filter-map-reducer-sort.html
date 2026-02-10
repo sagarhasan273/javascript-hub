@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Array Methods: Reduce, Map, Filter & Sort</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .method-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .reduce { border-color: #1a2a6c; }
+        .map { border-color: #b21f1f; }
+        .filter { border-color: #fdbb2d; }
+        .sort { border-color: #28a745; }
+        
+        .method-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .method-title {
+            color: #1a2a6c;
+            font-size: 1.5rem;
+        }
+        
+        .method-description {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        .data-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-width: 120px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            min-height: 60px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .array-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            min-height: 60px;
+            align-items: center;
+        }
+        
+        .array-item {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .reduced-item {
+            background: #1a2a6c;
+            font-size: 1.2rem;
+            padding: 15px 20px;
+        }
+        
+        .mapped-item {
+            background: #b21f1f;
+        }
+        
+        .filtered-item {
+            background: #fdbb2d;
+            color: #333;
+        }
+        
+        .sorted-item {
+            background: #28a745;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+        }
+        
+        .process-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .process-step {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+        }
+        
+        .process-arrow {
+            font-size: 24px;
+            color: #1a2a6c;
+            margin: 0 10px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 20px 0;
+        }
+        
+        .method-syntax {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #b21f1f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Array Methods</h1>
+            <p class="subtitle">Master Reduce, Map, Filter, and Sort with Interactive Examples</p>
+        </header>
+        
+        <div class="methods-grid">
+            <!-- Reduce Method Card -->
+            <div class="method-card">
+                <div class="method-header reduce">
+                    <div class="method-icon">🧮</div>
+                    <h3 class="method-title">reduce()</h3>
+                </div>
+                <p class="method-description">Reduces an array to a single value by executing a reducer function on each element.</p>
+                <div class="method-syntax">array.reduce(callback, initialValue)</div>
+                <div class="code-block">
+// Sum all numbers
+const numbers = [1, 2, 3, 4, 5];
+const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+// sum = 15
+                </div>
+                <ul>
+                    <li><strong>Callback:</strong> (accumulator, currentValue, index, array)</li>
+                    <li><strong>Returns:</strong> Single accumulated value</li>
+                    <li><strong>Use cases:</strong> Summing, flattening, grouping, etc.</li>
+                </ul>
+            </div>
+            
+            <!-- Map Method Card -->
+            <div class="method-card">
+                <div class="method-header map">
+                    <div class="method-icon">🗺️</div>
+                    <h3 class="method-title">map()</h3>
+                </div>
+                <p class="method-description">Creates a new array by applying a function to each element of the original array.</p>
+                <div class="method-syntax">array.map(callback)</div>
+                <div class="code-block">
+// Double each number
+const numbers = [1, 2, 3];
+const doubled = numbers.map(n => n * 2);
+// doubled = [2, 4, 6]
+                </div>
+                <ul>
+                    <li><strong>Callback:</strong> (currentValue, index, array)</li>
+                    <li><strong>Returns:</strong> New array with transformed elements</li>
+                    <li><strong>Use cases:</strong> Data transformation, formatting</li>
+                </ul>
+            </div>
+            
+            <!-- Filter Method Card -->
+            <div class="method-card">
+                <div class="method-header filter">
+                    <div class="method-icon">🔍</div>
+                    <h3 class="method-title">filter()</h3>
+                </div>
+                <p class="method-description">Creates a new array with elements that pass a test implemented by the provided function.</p>
+                <div class="method-syntax">array.filter(callback)</div>
+                <div class="code-block">
+// Get even numbers
+const numbers = [1, 2, 3, 4, 5];
+const evens = numbers.filter(n => n % 2 === 0);
+// evens = [2, 4]
+                </div>
+                <ul>
+                    <li><strong>Callback:</strong> (currentValue, index, array)</li>
+                    <li><strong>Returns:</strong> New array with filtered elements</li>
+                    <li><strong>Use cases:</strong> Searching, filtering data</li>
+                </ul>
+            </div>
+            
+            <!-- Sort Method Card -->
+            <div class="method-card">
+                <div class="method-header sort">
+                    <div class="method-icon">🔠</div>
+                    <h3 class="method-title">sort()</h3>
+                </div>
+                <p class="method-description">Sorts the elements of an array in place and returns the sorted array.</p>
+                <div class="method-syntax">array.sort(compareFunction)</div>
+                <div class="code-block">
+// Sort numbers ascending
+const numbers = [3, 1, 4, 1, 5];
+numbers.sort((a, b) => a - b);
+// numbers = [1, 1, 3, 4, 5]
+                </div>
+                <ul>
+                    <li><strong>Compare function:</strong> (a, b) => return value</li>
+                    <li><strong>Returns:</strong> The sorted array (mutates original)</li>
+                    <li><strong>Use cases:</strong> Sorting data in various orders</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Interactive Reduce Demo -->
+        <div class="interactive-section">
+            <h2>🧮 Reduce() Interactive Demo</h2>
+            <div class="demo-controls">
+                <button onclick="demoReduceSum()">Sum Numbers</button>
+                <button onclick="demoReduceMax()">Find Maximum</button>
+                <button onclick="demoReduceFlatten()">Flatten Arrays</button>
+                <button onclick="demoReduceGroup()">Group by Category</button>
+                <button onclick="resetReduce()">Reset</button>
+            </div>
+            
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="array-visual" id="reduce-original">
+                        <div class="array-item">1</div>
+                        <div class="array-item">2</div>
+                        <div class="array-item">3</div>
+                        <div class="array-item">4</div>
+                        <div class="array-item">5</div>
+                    </div>
+                    <div>Original Array</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="reduce-process">
+                        <div>Processing...</div>
+                    </div>
+                    <div>Reduction Process</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="reduce-result">
+                        <div class="array-item reduced-item">?</div>
+                    </div>
+                    <div>Final Result</div>
+                </div>
+            </div>
+            
+            <div class="output" id="reduce-output">
+                Click a button to see reduce() in action
+            </div>
+        </div>
+        
+        <!-- Interactive Map Demo -->
+        <div class="interactive-section">
+            <h2>🗺️ Map() Interactive Demo</h2>
+            <div class="demo-controls">
+                <button onclick="demoMapDouble()">Double Numbers</button>
+                <button onclick="demoMapSquare()">Square Numbers</button>
+                <button onclick="demoMapFormat()">Format Prices</button>
+                <button onclick="demoMapExtract()">Extract Names</button>
+                <button onclick="resetMap()">Reset</button>
+            </div>
+            
+            <div class="data-input">
+                <input type="text" id="map-input" placeholder="Enter numbers (comma separated)" value="1,2,3,4,5">
+                <button onclick="updateMapArray()">Update Array</button>
+            </div>
+            
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="array-visual" id="map-original"></div>
+                    <div>Original Array</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="map-process">
+                        <div>Transforming...</div>
+                    </div>
+                    <div>Mapping Function</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="map-result"></div>
+                    <div>New Array</div>
+                </div>
+            </div>
+            
+            <div class="output" id="map-output">
+                Click a button to see map() transformations
+            </div>
+        </div>
+        
+        <!-- Interactive Filter Demo -->
+        <div class="interactive-section">
+            <h2>🔍 Filter() Interactive Demo</h2>
+            <div class="demo-controls">
+                <button onclick="demoFilterEven()">Even Numbers</button>
+                <button onclick="demoFilterGreater()">Numbers > 3</button>
+                <button onclick="demoFilterString()">Long Strings</button>
+                <button onclick="demoFilterActive()">Active Users</button>
+                <button onclick="resetFilter()">Reset</button>
+            </div>
+            
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="array-visual" id="filter-original"></div>
+                    <div>Original Array</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="filter-process">
+                        <div>Filtering...</div>
+                    </div>
+                    <div>Filter Condition</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="filter-result"></div>
+                    <div>Filtered Array</div>
+                </div>
+            </div>
+            
+            <div class="output" id="filter-output">
+                Click a button to see filter() in action
+            </div>
+        </div>
+        
+        <!-- Interactive Sort Demo -->
+        <div class="interactive-section">
+            <h2>🔠 Sort() Interactive Demo</h2>
+            <div class="demo-controls">
+                <button onclick="demoSortNumbersAsc()">Numbers Ascending</button>
+                <button onclick="demoSortNumbersDesc()">Numbers Descending</button>
+                <button onclick="demoSortStrings()">Strings Alphabetically</button>
+                <button onclick="demoSortObjects()">Objects by Property</button>
+                <button onclick="resetSort()">Reset</button>
+            </div>
+            
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="array-visual" id="sort-original"></div>
+                    <div>Original Array</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="sort-process">
+                        <div>Sorting...</div>
+                    </div>
+                    <div>Sort Algorithm</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="array-visual" id="sort-result"></div>
+                    <div>Sorted Array</div>
+                </div>
+            </div>
+            
+            <div class="output" id="sort-output">
+                Click a button to see different sorting methods
+            </div>
+        </div>
+        
+        <!-- Method Comparison -->
+        <div class="interactive-section">
+            <h2>🔄 Method Comparison & Chaining</h2>
+            <div class="comparison">
+                <div class="comparison-card">
+                    <h4>Imperative Approach (for loops)</h4>
+                    <div class="code-block">
+const numbers = [1, 2, 3, 4, 5];
+let results = [];
+
+for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] % 2 === 0) {
+        results.push(numbers[i] * 2);
+    }
+}
+// results = [4, 8]
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <h4>Functional Approach (method chaining)</h4>
+                    <div class="code-block">
+const numbers = [1, 2, 3, 4, 5];
+const results = numbers
+    .filter(n => n % 2 === 0)
+    .map(n => n * 2);
+// results = [4, 8]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-controls">
+                <button onclick="demoChain1()">Filter → Map</button>
+                <button onclick="demoChain2()">Map → Filter → Reduce</button>
+                <button onclick="demoChain3()">Sort → Map</button>
+                <button onclick="resetChain()">Reset</button>
+            </div>
+            
+            <div class="output" id="chain-output">
+                Click buttons to see method chaining examples
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>💡 Key Takeaways:</strong>
+            <ul>
+                <li><strong>reduce()</strong> is perfect for accumulating values or transforming arrays into different data structures</li>
+                <li><strong>map()</strong> creates new arrays by transforming each element</li>
+                <li><strong>filter()</strong> creates new arrays by selecting elements that meet criteria</li>
+                <li><strong>sort()</strong> organizes arrays (modifies the original)</li>
+                <li>All methods (except sort) are non-mutating and return new arrays</li>
+                <li>Method chaining enables clean, readable data processing pipelines</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Common data sets
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+        const mixedNumbers = [23, 5, 17, 42, 8, 31];
+        const strings = ['apple', 'banana', 'cherry', 'date', 'elderberry'];
+        const users = [
+            { name: 'Alice', age: 25, active: true },
+            { name: 'Bob', age: 30, active: false },
+            { name: 'Charlie', age: 22, active: true },
+            { name: 'Diana', age: 35, active: true }
+        ];
+        const products = [
+            { name: 'Laptop', price: 999, category: 'electronics' },
+            { name: 'Book', price: 15, category: 'education' },
+            { name: 'Phone', price: 699, category: 'electronics' },
+            { name: 'Pen', price: 2, category: 'office' }
+        ];
+
+        // Initialize arrays on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMapArray();
+            resetFilter();
+            resetSort();
+        });
+
+        // ========== REDUCE DEMOS ==========
+        function demoReduceSum() {
+            const output = document.getElementById('reduce-output');
+            const processEl = document.getElementById('reduce-process');
+            const resultEl = document.getElementById('reduce-result');
+            
+            output.innerHTML = '<strong>Summing numbers with reduce():</strong><br>';
+            
+            const sum = numbers.reduce((accumulator, currentValue, index) => {
+                // Visualize the process
+                setTimeout(() => {
+                    processEl.innerHTML = `
+                        <div class="array-item highlight">Acc: ${accumulator}</div>
+                        <div class="process-arrow">+</div>
+                        <div class="array-item">${currentValue}</div>
+                        <div class="process-arrow">=</div>
+                        <div class="array-item">${accumulator + currentValue}</div>
+                    `;
+                }, index * 800);
+                
+                return accumulator + currentValue;
+            }, 0);
+            
+            setTimeout(() => {
+                resultEl.innerHTML = `<div class="array-item reduced-item">${sum}</div>`;
+                output.innerHTML += `<span class="success">Result: ${sum}</span><br>`;
+                output.innerHTML += `Code: <code>numbers.reduce((acc, curr) => acc + curr, 0)</code>`;
+            }, numbers.length * 800);
+        }
+
+        function demoReduceMax() {
+            const output = document.getElementById('reduce-output');
+            const processEl = document.getElementById('reduce-process');
+            const resultEl = document.getElementById('reduce-result');
+            
+            output.innerHTML = '<strong>Finding maximum value with reduce():</strong><br>';
+            
+            const max = numbers.reduce((acc, curr, index) => {
+                setTimeout(() => {
+                    processEl.innerHTML = `
+                        <div class="array-item">Current: ${curr}</div>
+                        <div class="process-arrow">vs</div>
+                        <div class="array-item">Max: ${acc}</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item highlight">New Max: ${Math.max(acc, curr)}</div>
+                    `;
+                }, index * 800);
+                
+                return Math.max(acc, curr);
+            }, numbers[0]);
+            
+            setTimeout(() => {
+                resultEl.innerHTML = `<div class="array-item reduced-item">${max}</div>`;
+                output.innerHTML += `<span class="success">Maximum value: ${max}</span><br>`;
+                output.innerHTML += `Code: <code>numbers.reduce((acc, curr) => Math.max(acc, curr), numbers[0])</code>`;
+            }, numbers.length * 800);
+        }
+
+        function demoReduceFlatten() {
+            const output = document.getElementById('reduce-output');
+            const originalEl = document.getElementById('reduce-original');
+            const processEl = document.getElementById('reduce-process');
+            const resultEl = document.getElementById('reduce-result');
+            
+            const nestedArrays = [[1, 2], [3, 4], [5, 6]];
+            
+            // Update original display
+            originalEl.innerHTML = nestedArrays.map(arr => 
+                `<div class="array-item">[${arr.join(', ')}]</div>`
+            ).join('');
+            
+            output.innerHTML = '<strong>Flattening arrays with reduce():</strong><br>';
+            
+            const flattened = nestedArrays.reduce((acc, curr, index) => {
+                setTimeout(() => {
+                    processEl.innerHTML = `
+                        <div class="array-item">Accumulator: [${acc.join(', ')}]</div>
+                        <div class="process-arrow">+</div>
+                        <div class="array-item">Current: [${curr.join(', ')}]</div>
+                        <div class="process-arrow">=</div>
+                        <div class="array-item highlight">[${acc.concat(curr).join(', ')}]</div>
+                    `;
+                }, index * 800);
+                
+                return acc.concat(curr);
+            }, []);
+            
+            setTimeout(() => {
+                resultEl.innerHTML = flattened.map(num => 
+                    `<div class="array-item">${num}</div>`
+                ).join('');
+                output.innerHTML += `<span class="success">Flattened array: [${flattened.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>arrays.reduce((acc, curr) => acc.concat(curr), [])</code>`;
+            }, nestedArrays.length * 800);
+        }
+
+        function demoReduceGroup() {
+            const output = document.getElementById('reduce-output');
+            const originalEl = document.getElementById('reduce-original');
+            const processEl = document.getElementById('reduce-process');
+            const resultEl = document.getElementById('reduce-result');
+            
+            // Update original display with products
+            originalEl.innerHTML = products.map(p => 
+                `<div class="array-item">${p.name} (${p.category})</div>`
+            ).join('');
+            
+            output.innerHTML = '<strong>Grouping by category with reduce():</strong><br>';
+            
+            const grouped = products.reduce((acc, product, index) => {
+                setTimeout(() => {
+                    processEl.innerHTML = `
+                        <div class="array-item">Processing: ${product.name}</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item highlight">Category: ${product.category}</div>
+                    `;
+                }, index * 800);
+                
+                if (!acc[product.category]) {
+                    acc[product.category] = [];
+                }
+                acc[product.category].push(product.name);
+                return acc;
+            }, {});
+            
+            setTimeout(() => {
+                resultEl.innerHTML = Object.entries(grouped).map(([category, items]) => 
+                    `<div class="array-item" style="background:#6f42c1">${category}: ${items.join(', ')}</div>`
+                ).join('');
+                output.innerHTML += `<span class="success">Grouped products:</span><br>`;
+                output.innerHTML += JSON.stringify(grouped, null, 2);
+                output.innerHTML += `<br>Code: <code>products.reduce((acc, product) => { ... }, {})</code>`;
+            }, products.length * 800);
+        }
+
+        function resetReduce() {
+            document.getElementById('reduce-original').innerHTML = 
+                numbers.map(n => `<div class="array-item">${n}</div>`).join('');
+            document.getElementById('reduce-process').innerHTML = '<div>Processing...</div>';
+            document.getElementById('reduce-result').innerHTML = '<div class="array-item reduced-item">?</div>';
+            document.getElementById('reduce-output').innerHTML = 'Click a button to see reduce() in action';
+        }
+
+        // ========== MAP DEMOS ==========
+        function updateMapArray() {
+            const input = document.getElementById('map-input').value;
+            const numbers = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            const originalEl = document.getElementById('map-original');
+            originalEl.innerHTML = numbers.map(n => `<div class="array-item">${n}</div>`).join('');
+            resetMapOutput();
+            return numbers;
+        }
+
+        function demoMapDouble() {
+            const numbers = updateMapArray();
+            const output = document.getElementById('map-output');
+            const resultEl = document.getElementById('map-result');
+            
+            output.innerHTML = '<strong>Doubling numbers with map():</strong><br>';
+            
+            const doubled = numbers.map((num, index) => {
+                setTimeout(() => {
+                    document.getElementById('map-process').innerHTML = `
+                        <div class="array-item">${num}</div>
+                        <div class="process-arrow">× 2</div>
+                        <div class="array-item highlight">${num * 2}</div>
+                    `;
+                }, index * 600);
+                
+                return num * 2;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = doubled.map(n => `<div class="array-item mapped-item">${n}</div>`).join('');
+                output.innerHTML += `<span class="success">Doubled: [${doubled.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>numbers.map(n => n * 2)</code>`;
+            }, numbers.length * 600);
+        }
+
+        function demoMapSquare() {
+            const numbers = updateMapArray();
+            const output = document.getElementById('map-output');
+            const resultEl = document.getElementById('map-result');
+            
+            output.innerHTML = '<strong>Squaring numbers with map():</strong><br>';
+            
+            const squared = numbers.map((num, index) => {
+                setTimeout(() => {
+                    document.getElementById('map-process').innerHTML = `
+                        <div class="array-item">${num}</div>
+                        <div class="process-arrow">²</div>
+                        <div class="array-item highlight">${num * num}</div>
+                    `;
+                }, index * 600);
+                
+                return num * num;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = squared.map(n => `<div class="array-item mapped-item">${n}</div>`).join('');
+                output.innerHTML += `<span class="success">Squared: [${squared.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>numbers.map(n => n * n)</code>`;
+            }, numbers.length * 600);
+        }
+
+        function demoMapFormat() {
+            const prices = [19.99, 29.99, 5.99, 149.99];
+            const originalEl = document.getElementById('map-original');
+            originalEl.innerHTML = prices.map(p => `<div class="array-item">${p}</div>`).join('');
+            
+            const output = document.getElementById('map-output');
+            const resultEl = document.getElementById('map-result');
+            
+            output.innerHTML = '<strong>Formatting prices with map():</strong><br>';
+            
+            const formatted = prices.map((price, index) => {
+                setTimeout(() => {
+                    document.getElementById('map-process').innerHTML = `
+                        <div class="array-item">${price}</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item highlight">$${price.toFixed(2)}</div>
+                    `;
+                }, index * 600);
+                
+                return `$${price.toFixed(2)}`;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = formatted.map(p => `<div class="array-item mapped-item">${p}</div>`).join('');
+                output.innerHTML += `<span class="success">Formatted: [${formatted.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>prices.map(price => "$${price.toFixed(2)}")</code>`;
+            }, prices.length * 600);
+        }
+
+        function demoMapExtract() {
+            const originalEl = document.getElementById('map-original');
+            originalEl.innerHTML = users.map(u => 
+                `<div class="array-item">${u.name} (${u.age})</div>`
+            ).join('');
+            
+            const output = document.getElementById('map-output');
+            const resultEl = document.getElementById('map-result');
+            
+            output.innerHTML = '<strong>Extracting names with map():</strong><br>';
+            
+            const names = users.map((user, index) => {
+                setTimeout(() => {
+                    document.getElementById('map-process').innerHTML = `
+                        <div class="array-item">${user.name} (${user.age})</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item highlight">${user.name}</div>
+                    `;
+                }, index * 600);
+                
+                return user.name;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = names.map(name => `<div class="array-item mapped-item">${name}</div>`).join('');
+                output.innerHTML += `<span class="success">Names: [${names.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>users.map(user => user.name)</code>`;
+            }, users.length * 600);
+        }
+
+        function resetMap() {
+            updateMapArray();
+            document.getElementById('map-process').innerHTML = '<div>Transforming...</div>';
+            document.getElementById('map-result').innerHTML = '';
+            resetMapOutput();
+        }
+
+        function resetMapOutput() {
+            document.getElementById('map-output').innerHTML = 'Click a button to see map() transformations';
+        }
+
+        // ========== FILTER DEMOS ==========
+        function resetFilter() {
+            const originalEl = document.getElementById('filter-original');
+            originalEl.innerHTML = numbers.map(n => `<div class="array-item">${n}</div>`).join('');
+            document.getElementById('filter-process').innerHTML = '<div>Filtering...</div>';
+            document.getElementById('filter-result').innerHTML = '';
+            document.getElementById('filter-output').innerHTML = 'Click a button to see filter() in action';
+        }
+
+        function demoFilterEven() {
+            const output = document.getElementById('filter-output');
+            const resultEl = document.getElementById('filter-result');
+            
+            output.innerHTML = '<strong>Filtering even numbers:</strong><br>';
+            
+            const evens = numbers.filter((num, index) => {
+                const isEven = num % 2 === 0;
+                
+                setTimeout(() => {
+                    document.getElementById('filter-process').innerHTML = `
+                        <div class="array-item ${isEven ? 'highlight' : ''}">${num}</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item ${isEven ? 'filtered-item' : ''}">${isEven ? 'KEEP' : 'REMOVE'}</div>
+                    `;
+                }, index * 600);
+                
+                return isEven;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = evens.map(n => `<div class="array-item filtered-item">${n}</div>`).join('');
+                output.innerHTML += `<span class="success">Even numbers: [${evens.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>numbers.filter(n => n % 2 === 0)</code>`;
+            }, numbers.length * 600);
+        }
+
+        function demoFilterGreater() {
+            const output = document.getElementById('filter-output');
+            const resultEl = document.getElementById('filter-result');
+            
+            output.innerHTML = '<strong>Filtering numbers greater than 3:</strong><br>';
+            
+            const filtered = numbers.filter((num, index) => {
+                const passes = num > 3;
+                
+                setTimeout(() => {
+                    document.getElementById('filter-process').innerHTML = `
+                        <div class="array-item ${passes ? 'highlight' : ''}">${num}</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item ${passes ? 'filtered-item' : ''}">${passes ? 'KEEP' : 'REMOVE'}</div>
+                    `;
+                }, index * 600);
+                
+                return passes;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = filtered.map(n => `<div class="array-item filtered-item">${n}</div>`).join('');
+                output.innerHTML += `<span class="success">Numbers > 3: [${filtered.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>numbers.filter(n => n > 3)</code>`;
+            }, numbers.length * 600);
+        }
+
+        function demoFilterString() {
+            const originalEl = document.getElementById('filter-original');
+            originalEl.innerHTML = strings.map(s => `<div class="array-item">"${s}"</div>`).join('');
+            
+            const output = document.getElementById('filter-output');
+            const resultEl = document.getElementById('filter-result');
+            
+            output.innerHTML = '<strong>Filtering strings longer than 5 characters:</strong><br>';
+            
+            const longStrings = strings.filter((str, index) => {
+                const passes = str.length > 5;
+                
+                setTimeout(() => {
+                    document.getElementById('filter-process').innerHTML = `
+                        <div class="array-item ${passes ? 'highlight' : ''}">"${str}" (${str.length})</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item ${passes ? 'filtered-item' : ''}">${passes ? 'KEEP' : 'REMOVE'}</div>
+                    `;
+                }, index * 600);
+                
+                return passes;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = longStrings.map(s => `<div class="array-item filtered-item">"${s}"</div>`).join('');
+                output.innerHTML += `<span class="success">Long strings: [${longStrings.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>strings.filter(s => s.length > 5)</code>`;
+            }, strings.length * 600);
+        }
+
+        function demoFilterActive() {
+            const originalEl = document.getElementById('filter-original');
+            originalEl.innerHTML = users.map(u => 
+                `<div class="array-item">${u.name} (${u.active ? 'active' : 'inactive'})</div>`
+            ).join('');
+            
+            const output = document.getElementById('filter-output');
+            const resultEl = document.getElementById('filter-result');
+            
+            output.innerHTML = '<strong>Filtering active users:</strong><br>';
+            
+            const activeUsers = users.filter((user, index) => {
+                const passes = user.active;
+                
+                setTimeout(() => {
+                    document.getElementById('filter-process').innerHTML = `
+                        <div class="array-item ${passes ? 'highlight' : ''}">${user.name}</div>
+                        <div class="process-arrow">→</div>
+                        <div class="array-item ${passes ? 'filtered-item' : ''}">${passes ? 'ACTIVE' : 'INACTIVE'}</div>
+                    `;
+                }, index * 600);
+                
+                return passes;
+            });
+            
+            setTimeout(() => {
+                resultEl.innerHTML = activeUsers.map(u => 
+                    `<div class="array-item filtered-item">${u.name}</div>`
+                ).join('');
+                output.innerHTML += `<span class="success">Active users: ${activeUsers.map(u => u.name).join(', ')}</span><br>`;
+                output.innerHTML += `Code: <code>users.filter(user => user.active)</code>`;
+            }, users.length * 600);
+        }
+
+        // ========== SORT DEMOS ==========
+        function resetSort() {
+            const originalEl = document.getElementById('sort-original');
+            originalEl.innerHTML = mixedNumbers.map(n => `<div class="array-item">${n}</div>`).join('');
+            document.getElementById('sort-process').innerHTML = '<div>Sorting...</div>';
+            document.getElementById('sort-result').innerHTML = '';
+            document.getElementById('sort-output').innerHTML = 'Click a button to see different sorting methods';
+        }
+
+        function demoSortNumbersAsc() {
+            const numbers = [...mixedNumbers];
+            const output = document.getElementById('sort-output');
+            const resultEl = document.getElementById('sort-result');
+            
+            output.innerHTML = '<strong>Sorting numbers in ascending order:</strong><br>';
+            
+            // Show original array
+            setTimeout(() => {
+                document.getElementById('sort-process').innerHTML = 
+                    numbers.map(n => `<div class="array-item">${n}</div>`).join('');
+            }, 600);
+            
+            const sorted = numbers.sort((a, b) => a - b);
+            
+            setTimeout(() => {
+                resultEl.innerHTML = sorted.map(n => `<div class="array-item sorted-item">${n}</div>`).join('');
+                output.innerHTML += `<span class="success">Sorted ascending: [${sorted.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>numbers.sort((a, b) => a - b)</code><br>`;
+                output.innerHTML += `<em>Note: sort() modifies the original array!</em>`;
+            }, 1200);
+        }
+
+        function demoSortNumbersDesc() {
+            const numbers = [...mixedNumbers];
+            const output = document.getElementById('sort-output');
+            const resultEl = document.getElementById('sort-result');
+            
+            output.innerHTML = '<strong>Sorting numbers in descending order:</strong><br>';
+            
+            setTimeout(() => {
+                document.getElementById('sort-process').innerHTML = 
+                    numbers.map(n => `<div class="array-item">${n}</div>`).join('');
+            }, 600);
+            
+            const sorted = numbers.sort((a, b) => b - a);
+            
+            setTimeout(() => {
+                resultEl.innerHTML = sorted.map(n => `<div class="array-item sorted-item">${n}</div>`).join('');
+                output.innerHTML += `<span class="success">Sorted descending: [${sorted.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>numbers.sort((a, b) => b - a)</code>`;
+            }, 1200);
+        }
+
+        function demoSortStrings() {
+            const stringArray = ['zebra', 'apple', 'mongoose', 'banana', 'cat'];
+            const originalEl = document.getElementById('sort-original');
+            originalEl.innerHTML = stringArray.map(s => `<div class="array-item">"${s}"</div>`).join('');
+            
+            const output = document.getElementById('sort-output');
+            const resultEl = document.getElementById('sort-result');
+            
+            output.innerHTML = '<strong>Sorting strings alphabetically:</strong><br>';
+            
+            setTimeout(() => {
+                document.getElementById('sort-process').innerHTML = 
+                    stringArray.map(s => `<div class="array-item">"${s}"</div>`).join('');
+            }, 600);
+            
+            const sorted = [...stringArray].sort();
+            
+            setTimeout(() => {
+                resultEl.innerHTML = sorted.map(s => `<div class="array-item sorted-item">"${s}"</div>`).join('');
+                output.innerHTML += `<span class="success">Sorted: [${sorted.join(', ')}]</span><br>`;
+                output.innerHTML += `Code: <code>strings.sort()</code>`;
+            }, 1200);
+        }
+
+        function demoSortObjects() {
+            const originalEl = document.getElementById('sort-original');
+            originalEl.innerHTML = users.map(u => 
+                `<div class="array-item">${u.name} (${u.age})</div>`
+            ).join('');
+            
+            const output = document.getElementById('sort-output');
+            const resultEl = document.getElementById('sort-result');
+            
+            output.innerHTML = '<strong>Sorting objects by age:</strong><br>';
+            
+            setTimeout(() => {
+                document.getElementById('sort-process').innerHTML = 
+                    users.map(u => `<div class="array-item">${u.name} (${u.age})</div>`).join('');
+            }, 600);
+            
+            const sorted = [...users].sort((a, b) => a.age - b.age);
+            
+            setTimeout(() => {
+                resultEl.innerHTML = sorted.map(u => 
+                    `<div class="array-item sorted-item">${u.name} (${u.age})</div>`
+                ).join('');
+                output.innerHTML += `<span class="success">Sorted by age:</span><br>`;
+                output.innerHTML += sorted.map(u => `${u.name} (${u.age})`).join(', ');
+                output.innerHTML += `<br>Code: <code>users.sort((a, b) => a.age - b.age)</code>`;
+            }, 1200);
+        }
+
+        // ========== METHOD CHAINING DEMOS ==========
+        function demoChain1() {
+            const output = document.getElementById('chain-output');
+            
+            const result = numbers
+                .filter(n => n % 2 === 0)      // Keep even numbers
+                .map(n => n * 3)               // Multiply by 3
+                .filter(n => n > 6);           // Keep results greater than 6
+            
+            output.innerHTML = `
+                <strong>Filter → Map → Filter Chain:</strong><br>
+                <code>numbers.filter(n => n % 2 === 0).map(n => n * 3).filter(n => n > 6)</code><br><br>
+                
+                <strong>Step-by-step:</strong><br>
+                1. Original: [${numbers.join(', ')}]<br>
+                2. Filter evens: [${numbers.filter(n => n % 2 === 0).join(', ')}]<br>
+                3. Map ×3: [${numbers.filter(n => n % 2 === 0).map(n => n * 3).join(', ')}]<br>
+                4. Filter >6: [${result.join(', ')}]<br><br>
+                
+                <span class="success">Final result: [${result.join(', ')}]</span>
+            `;
+        }
+
+        function demoChain2() {
+            const output = document.getElementById('chain-output');
+            
+            const result = numbers
+                .map(n => n * 2)               // Double each number
+                .filter(n => n > 5)            // Keep numbers greater than 5
+                .reduce((sum, n) => sum + n, 0); // Sum all remaining numbers
+            
+            output.innerHTML = `
+                <strong>Map → Filter → Reduce Chain:</strong><br>
+                <code>numbers.map(n => n * 2).filter(n => n > 5).reduce((sum, n) => sum + n, 0)</code><br><br>
+                
+                <strong>Step-by-step:</strong><br>
+                1. Original: [${numbers.join(', ')}]<br>
+                2. Map ×2: [${numbers.map(n => n * 2).join(', ')}]<br>
+                3. Filter >5: [${numbers.map(n => n * 2).filter(n => n > 5).join(', ')}]<br>
+                4. Reduce sum: ${result}<br><br>
+                
+                <span class="success">Final sum: ${result}</span>
+            `;
+        }
+
+        function demoChain3() {
+            const output = document.getElementById('chain-output');
+            
+            const result = [...mixedNumbers]
+                .sort((a, b) => a - b)         // Sort ascending
+                .map(n => n * 10)              // Multiply by 10
+                .slice(0, 3);                  // Take first 3 elements
+            
+            output.innerHTML = `
+                <strong>Sort → Map → Slice Chain:</strong><br>
+                <code>[...numbers].sort((a, b) => a - b).map(n => n * 10).slice(0, 3)</code><br><br>
+                
+                <strong>Step-by-step:</strong><br>
+                1. Original: [${mixedNumbers.join(', ')}]<br>
+                2. Sort ascending: [${[...mixedNumbers].sort((a, b) => a - b).join(', ')}]<br>
+                3. Map ×10: [${[...mixedNumbers].sort((a, b) => a - b).map(n => n * 10).join(', ')}]<br>
+                4. Slice first 3: [${result.join(', ')}]<br><br>
+                
+                <span class="success">Final result: [${result.join(', ')}]</span>
+            `;
+        }
+
+        function resetChain() {
+            document.getElementById('chain-output').innerHTML = 
+                'Click buttons to see method chaining examples';
+        }
+    </script>
+</body>
+</html>

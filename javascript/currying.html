@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Currying Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .curry-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .concept-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .curry-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e17055;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .visualization {
+            position: relative;
+            height: 300px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        
+        .function-box {
+            position: absolute;
+            width: 180px;
+            padding: 15px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            animation: functionTransform 8s infinite;
+        }
+        
+        @keyframes functionTransform {
+            0% { top: 50px; left: 50px; width: 180px; }
+            25% { top: 50px; left: 50px; width: 180px; }
+            50% { top: 50px; left: 300px; width: 120px; }
+            75% { top: 50px; left: 300px; width: 120px; }
+            100% { top: 50px; left: 50px; width: 180px; }
+        }
+        
+        .curried-box {
+            position: absolute;
+            width: 120px;
+            padding: 15px;
+            background: #b21f1f;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            animation: curriedFunction 8s infinite;
+            animation-delay: 2s;
+        }
+        
+        @keyframes curriedFunction {
+            0% { top: 150px; left: 50px; opacity: 0; }
+            25% { top: 150px; left: 50px; opacity: 1; }
+            50% { top: 150px; left: 300px; opacity: 1; }
+            75% { top: 150px; left: 300px; opacity: 1; }
+            100% { top: 150px; left: 50px; opacity: 0; }
+        }
+        
+        .partial-box {
+            position: absolute;
+            width: 150px;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            animation: partialApplication 8s infinite;
+            animation-delay: 4s;
+        }
+        
+        @keyframes partialApplication {
+            0% { top: 200px; left: 400px; opacity: 0; }
+            25% { top: 200px; left: 400px; opacity: 1; }
+            75% { top: 200px; left: 400px; opacity: 1; }
+            100% { top: 200px; left: 400px; opacity: 0; }
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .function-chain {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .function-call {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 0 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .chain-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+            margin: 0 10px;
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .param-inputs {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .warning-text {
+            color: #fdbb2d;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #b21f1f;
+            font-weight: bold;
+        }
+        
+        .execution-visual {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        
+        .step-indicator {
+            display: inline-block;
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin: 2px;
+            font-size: 0.9rem;
+        }
+        
+        .curry-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .benefit-card h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Currying Explained</h1>
+            <p class="subtitle">Transform multi-argument functions into chains of single-argument functions</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>What is Currying?</h2>
+                <p>Currying is a functional programming technique that transforms a function with multiple arguments into a sequence of functions, each taking a single argument.</p>
+                
+                <div class="curry-concepts">
+                    <div class="concept-card">
+                        <h4>🔗 Function Chains</h4>
+                        <p>Break down multi-arg functions</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🎯 Partial Application</h4>
+                        <p>Fix some arguments early</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>⚡ Reusability</h4>
+                        <p>Create specialized functions</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🎨 Composition</h4>
+                        <p>Build complex behavior from simple parts</p>
+                    </div>
+                </div>
+                
+                <div class="visualization">
+                    <div class="function-box">
+                        <h4>add(a, b, c)</h4>
+                        <div>Multi-argument function</div>
+                    </div>
+                    <div class="curried-box">
+                        <h4>add(a)</h4>
+                        <div>Returns function(b)</div>
+                    </div>
+                    <div class="partial-box">
+                        <h4>add(2)(3)(4)</h4>
+                        <div>Final result: 9</div>
+                    </div>
+                </div>
+                
+                <h3>How Currying Works</h3>
+                <div class="curry-flow">
+                    <div class="flow-step">1. Start with multi-argument function</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">2. Transform to take first argument</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">3. Return function that takes next argument</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">4. Continue until all arguments provided</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">5. Execute with final argument</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'basic-tab')">Basic Currying</div>
+                    <div class="tab" onclick="switchTab(event, 'advanced-tab')">Advanced Patterns</div>
+                    <div class="tab" onclick="switchTab(event, 'vs-partial-tab')">Currying vs Partial</div>
+                </div>
+                
+                <div id="basic-tab" class="tab-content active">
+                    <h4>Basic Currying Pattern</h4>
+                    <div class="code-block">
+<span class="code-title">Manual Currying</span>
+// Regular function
+function add(a, b, c) {
+    return a + b + c;
+}
+
+// Manually curried version
+function curriedAdd(a) {
+    return function(b) {
+        return function(c) {
+            return a + b + c;
+        };
+    };
+}
+
+// Usage
+const result = curriedAdd(2)(3)(4); // 9
+                    </div>
+                    <p><strong>Key Point:</strong> Each function returns another function until all arguments are collected.</p>
+                </div>
+                
+                <div id="advanced-tab" class="tab-content">
+                    <h4>Generic Curry Function</h4>
+                    <div class="code-block">
+<span class="code-title">Auto-currying utility</span>
+function curry(fn) {
+    return function curried(...args) {
+        if (args.length >= fn.length) {
+            return fn.apply(this, args);
+        } else {
+            return function(...nextArgs) {
+                return curried.apply(this, args.concat(nextArgs));
+            };
+        }
+    };
+}
+
+// Usage
+const curriedMultiply = curry((a, b, c) => a * b * c);
+const result = curriedMultiply(2)(3)(4); // 24
+                    </div>
+                </div>
+                
+                <div id="vs-partial-tab" class="tab-content">
+                    <h4>Currying vs Partial Application</h4>
+                    <div class="comparison">
+                        <div class="comparison-card">
+                            <h4>Currying</h4>
+                            <div class="code-block" style="font-size: 0.8rem;">
+// Always single arguments
+const add = a => b => c => a + b + c;
+add(1)(2)(3); // 6
+
+// Cannot do: add(1, 2)(3)
+                            </div>
+                        </div>
+                        <div class="comparison-card">
+                            <h4>Partial Application</h4>
+                            <div class="code-block" style="font-size: 0.8rem;">
+// Can fix some arguments
+function add(a, b, c) {
+    return a + b + c;
+}
+
+const addFive = add.bind(null, 5);
+addFive(2, 3); // 10
+
+// Can fix multiple args at once
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Insight:</strong> Currying enables function composition and creates more reusable, specialized functions by fixing arguments step by step.
+                </div>
+                
+                <h2>Benefits of Currying</h2>
+                
+                <div class="curry-benefits">
+                    <div class="benefit-card">
+                        <h4>🎯 Specialization</h4>
+                        <p>Create specific functions from general ones</p>
+                    </div>
+                    <div class="benefit-card">
+                        <h4>🔧 Reusability</h4>
+                        <p>Reuse partially applied functions</p>
+                    </div>
+                    <div class="benefit-card">
+                        <h4>🎨 Composition</h4>
+                        <p>Easily combine functions</p>
+                    </div>
+                    <div class="benefit-card">
+                        <h4>🧪 Testability</h4>
+                        <p>Easier to test and mock</p>
+                    </div>
+                </div>
+                
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Without Currying</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+function createUser(role, department, name) {
+    return { role, department, name };
+}
+
+// Must always pass all arguments
+const user1 = createUser('admin', 'IT', 'Alice');
+const user2 = createUser('admin', 'IT', 'Bob');
+const user3 = createUser('admin', 'HR', 'Charlie');
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>With Currying</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+const createUser = role => department => name => ({
+    role, department, name
+});
+
+// Create specialized functions
+const createAdmin = createUser('admin');
+const createITAdmin = createAdmin('IT');
+const createHRAdmin = createAdmin('HR');
+
+// Easy to create users
+const user1 = createITAdmin('Alice');
+const user2 = createITAdmin('Bob');
+const user3 = createHRAdmin('Charlie');
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Remember:</strong> Currying is particularly useful when you want to create specialized versions of general functions or when working with function composition.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Basic Math Operations</h3>
+                    <p>See currying in action with simple mathematical functions.</p>
+                    <div class="code-block">
+// Curried math functions
+const multiply = a => b => a * b;
+const add = a => b => a + b;
+const power = exponent => base => Math.pow(base, exponent);
+
+// Usage examples
+const double = multiply(2);
+const square = power(2);
+const addFive = add(5);
+
+console.log(double(5));    // 10
+console.log(square(3));    // 9
+console.log(addFive(3));   // 8
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="createMathFunctions()">Create Math Functions</button>
+                        <button onclick="testDouble()">Test Double</button>
+                        <button onclick="testSquare()">Test Square</button>
+                        <button onclick="testAddFive()">Test Add Five</button>
+                    </div>
+                    <div class="function-chain" id="math-chain">
+                        <!-- Function chain visualization will appear here -->
+                    </div>
+                    <div class="output" id="math-output">
+                        Create math functions to start
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Generic Curry Function</h3>
+                    <p>Implement and test a generic curry utility.</p>
+                    <div class="code-block">
+// Generic curry function
+function curry(fn) {
+    return function curried(...args) {
+        if (args.length >= fn.length) {
+            return fn.apply(this, args);
+        } else {
+            return function(...nextArgs) {
+                return curried.apply(this, args.concat(nextArgs));
+            };
+        }
+    };
+}
+
+// Test with different functions
+const sum = curry((a, b, c) => a + b + c);
+const concat = curry((a, b, c) => a + b + c);
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="implementCurry()">Implement Curry</button>
+                        <button onclick="testSumCurry()">Test Sum</button>
+                        <button onclick="testConcatCurry()">Test Concat</button>
+                        <button onclick="testMixedArgs()">Test Mixed Args</button>
+                    </div>
+                    <div class="execution-visual" id="curry-visual">
+                        <!-- Execution steps will appear here -->
+                    </div>
+                    <div class="output" id="curry-output">
+                        Implement the curry function to start
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: Real-world User Creation</h3>
+                    <p>Use currying to create specialized user creation functions.</p>
+                    <div class="code-block">
+// Curried user creation
+const createUser = role => department => name => ({
+    id: Math.random().toString(36),
+    role,
+    department,
+    name,
+    createdAt: new Date().toISOString()
+});
+
+// Create specialized factories
+const createAdmin = createUser('admin');
+const createEditor = createUser('editor');
+const createViewer = createUser('viewer');
+
+const createITAdmin = createAdmin('IT');
+const createHRAdmin = createAdmin('HR');
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="createUserSystem()">Create User System</button>
+                        <button onclick="createITAdminUser()">Create IT Admin</button>
+                        <button onclick="createHREditorUser()">Create HR Editor</button>
+                        <button onclick="showAllSpecialized()">Show All Specialized</button>
+                    </div>
+                    <div class="param-inputs">
+                        <input type="text" id="user-name" placeholder="Enter user name" value="Alice">
+                    </div>
+                    <div class="output" id="user-output">
+                        Create the user system to start
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Function Composition</h3>
+                    <p>Combine curried functions to create complex behavior.</p>
+                    <div class="code-block">
+// Curried utility functions
+const filter = predicate => array => array.filter(predicate);
+const map = transform => array => array.map(transform);
+const sort = compare => array => array.sort(compare);
+
+// Compose data processing pipeline
+const processUsers = filter(user => user.active)
+    .then(map(user => user.name))
+    .then(sort((a, b) => a.localeCompare(b)));
+
+// Or use function composition
+const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x);
+
+const processUsers2 = pipe(
+    filter(user => user.active),
+    map(user => user.name),
+    sort((a, b) => a.localeCompare(b))
+);
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="createCompositionUtils()">Create Utilities</button>
+                        <button onclick="testSimpleComposition()">Simple Composition</button>
+                        <button onclick="testComplexComposition()">Complex Composition</button>
+                        <button onclick="showCompositionChain()">Show Chain</button>
+                    </div>
+                    <div class="output" id="composition-output">
+                        Create composition utilities to start
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Advanced Currying Patterns</h3>
+                    <p>Explore placeholder currying and other advanced techniques.</p>
+                    <div class="code-block">
+// Advanced curry with placeholder support
+function advancedCurry(fn) {
+    const PLACEHOLDER = {};
+    
+    return function curried(...args) {
+        const actualArgs = args.slice(0, fn.length);
+        const hasPlaceholder = actualArgs.includes(PLACEHOLDER);
+        
+        if (actualArgs.length >= fn.length && !hasPlaceholder) {
+            return fn.apply(this, actualArgs);
+        } else {
+            return function(...nextArgs) {
+                const mergedArgs = actualArgs.map(arg => 
+                    arg === PLACEHOLDER ? nextArgs.shift() : arg
+                ).concat(nextArgs);
+                
+                return curried.apply(this, mergedArgs);
+            };
+        }
+    };
+}
+
+// Usage with placeholders
+const _ = PLACEHOLDER;
+const subtract = advancedCurry((a, b, c) => a - b - c);
+const subtractFromTen = subtract(_, 10, _);
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="implementAdvancedCurry()">Advanced Curry</button>
+                        <button onclick="testPlaceholders()">Test Placeholders</button>
+                        <button onclick="testMixedPlaceholders()">Mixed Placeholders</button>
+                    </div>
+                    <div class="output" id="advanced-output">
+                        Implement advanced curry to start
+                    </div>
+                </div>
+                
+                <div class="warning">
+                    <strong>Currying Best Practices:</strong>
+                    <ul>
+                        <li>Use with pure functions for predictable behavior</li>
+                        <li>Consider performance with deeply nested curried functions</li>
+                        <li>Use meaningful names for partially applied functions</li>
+                        <li>Combine with function composition for maximum power</li>
+                        <li>Consider using libraries like Ramda for production curry utilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ========== EXAMPLE 1: Basic Math Operations ==========
+        let multiply, add, power, double, square, addFive;
+
+        function createMathFunctions() {
+            // Curried math functions
+            multiply = a => b => a * b;
+            add = a => b => a + b;
+            power = exponent => base => Math.pow(base, exponent);
+
+            // Specialized functions
+            double = multiply(2);
+            square = power(2);
+            addFive = add(5);
+
+            const output = document.getElementById('math-output');
+            output.innerHTML = `
+                <span class="success">Math functions created!</span><br>
+                • multiply = a => b => a * b<br>
+                • add = a => b => a + b<br>
+                • power = exponent => base => base^exponent<br><br>
+                Specialized functions:<br>
+                • double = multiply(2)<br>
+                • square = power(2)<br>
+                • addFive = add(5)
+            `;
+
+            updateMathChain();
+        }
+
+        function testDouble() {
+            if (!double) {
+                document.getElementById('math-output').innerHTML = '<span class="error">Please create math functions first!</span>';
+                return;
+            }
+
+            const testValues = [1, 5, 10, 25];
+            const results = testValues.map(val => `${val} → ${double(val)}`);
+            
+            document.getElementById('math-output').innerHTML = `
+                <strong>Testing double function:</strong><br>
+                ${results.join('<br>')}
+            `;
+
+            showExecutionSteps('double', testValues);
+        }
+
+        function testSquare() {
+            if (!square) {
+                document.getElementById('math-output').innerHTML = '<span class="error">Please create math functions first!</span>';
+                return;
+            }
+
+            const testValues = [1, 2, 3, 4, 5];
+            const results = testValues.map(val => `${val}² = ${square(val)}`);
+            
+            document.getElementById('math-output').innerHTML = `
+                <strong>Testing square function:</strong><br>
+                ${results.join('<br>')}
+            `;
+
+            showExecutionSteps('square', testValues);
+        }
+
+        function testAddFive() {
+            if (!addFive) {
+                document.getElementById('math-output').innerHTML = '<span class="error">Please create math functions first!</span>';
+                return;
+            }
+
+            const testValues = [0, 5, 10, -3];
+            const results = testValues.map(val => `${val} + 5 = ${addFive(val)}`);
+            
+            document.getElementById('math-output').innerHTML = `
+                <strong>Testing addFive function:</strong><br>
+                ${results.join('<br>')}
+            `;
+
+            showExecutionSteps('addFive', testValues);
+        }
+
+        function updateMathChain() {
+            const chain = document.getElementById('math-chain');
+            chain.innerHTML = `
+                <div class="function-call">multiply(2)</div>
+                <div class="chain-arrow">→</div>
+                <div class="function-call">double(x)</div>
+                <div class="chain-arrow">→</div>
+                <div class="function-call">result</div>
+            `;
+        }
+
+        function showExecutionSteps(functionName, values) {
+            const chain = document.getElementById('math-chain');
+            let html = '';
+            
+            values.forEach(val => {
+                html += `
+                    <div class="function-call">${functionName}(${val})</div>
+                    <div class="chain-arrow">→</div>
+                `;
+            });
+            
+            html += `<div class="function-call">results</div>`;
+            chain.innerHTML = html;
+        }
+
+        // ========== EXAMPLE 2: Generic Curry Function ==========
+        let curry, curriedSum, curriedConcat;
+
+        function implementCurry() {
+            // Generic curry function
+            curry = function(fn) {
+                return function curried(...args) {
+                    const visual = document.getElementById('curry-visual');
+                    visual.innerHTML += `<div>curried called with: [${args.join(', ')}]</div>`;
+                    
+                    if (args.length >= fn.length) {
+                        visual.innerHTML += `<div class="success">✓ All arguments received, executing...</div>`;
+                        return fn.apply(this, args);
+                    } else {
+                        visual.innerHTML += `<div>→ Returning function waiting for ${fn.length - args.length} more args</div>`;
+                        return function(...nextArgs) {
+                            return curried.apply(this, args.concat(nextArgs));
+                        };
+                    }
+                };
+            };
+
+            // Create curried functions
+            curriedSum = curry((a, b, c) => a + b + c);
+            curriedConcat = curry((a, b, c) => a + b + c);
+
+            document.getElementById('curry-output').innerHTML = `
+                <span class="success">Generic curry function implemented!</span><br>
+                Created curried versions of sum and concat functions.
+            `;
+
+            document.getElementById('curry-visual').innerHTML = 'Curry implementation ready...';
+        }
+
+        function testSumCurry() {
+            if (!curriedSum) {
+                document.getElementById('curry-output').innerHTML = '<span class="error">Please implement curry first!</span>';
+                return;
+            }
+
+            document.getElementById('curry-visual').innerHTML = '<strong>Testing sum curry:</strong><br>';
+            
+            const result1 = curriedSum(1)(2)(3);
+            document.getElementById('curry-visual').innerHTML += `<div class="success">Final result: ${result1}</div>`;
+            
+            const result2 = curriedSum(1, 2)(3);
+            document.getElementById('curry-visual').innerHTML += `<div class="success">Final result: ${result2}</div>`;
+            
+            const result3 = curriedSum(1)(2, 3);
+            document.getElementById('curry-visual').innerHTML += `<div class="success">Final result: ${result3}</div>`;
+
+            document.getElementById('curry-output').innerHTML = `
+                <strong>Sum Results:</strong><br>
+                curriedSum(1)(2)(3) = ${result1}<br>
+                curriedSum(1, 2)(3) = ${result2}<br>
+                curriedSum(1)(2, 3) = ${result3}
+            `;
+        }
+
+        function testConcatCurry() {
+            if (!curriedConcat) {
+                document.getElementById('curry-output').innerHTML = '<span class="error">Please implement curry first!</span>';
+                return;
+            }
+
+            document.getElementById('curry-visual').innerHTML = '<strong>Testing concat curry:</strong><br>';
+            
+            const result1 = curriedConcat('Hello, ')('World')('!');
+            document.getElementById('curry-visual').innerHTML += `<div class="success">Final result: "${result1}"</div>`;
+            
+            const prefixHello = curriedConcat('Hello, ');
+            const helloWorld = prefixHello('World');
+            const finalResult = helloWorld('!');
+
+            document.getElementById('curry-output').innerHTML = `
+                <strong>Concat Results:</strong><br>
+                Direct: "${result1}"<br>
+                Step-by-step: "${finalResult}"
+            `;
+        }
+
+        function testMixedArgs() {
+            if (!curriedSum) {
+                document.getElementById('curry-output').innerHTML = '<span class="error">Please implement curry first!</span>';
+                return;
+            }
+
+            document.getElementById('curry-visual').innerHTML = '<strong>Testing mixed argument styles:</strong><br>';
+            
+            // Test various calling patterns
+            const patterns = [
+                { args: [1, 2, 3], desc: 'All at once' },
+                { args: [[1], [2], [3]], desc: 'One by one' },
+                { args: [[1, 2], [3]], desc: 'Two then one' },
+                { args: [[1], [2, 3]], desc: 'One then two' }
+            ];
+
+            patterns.forEach(pattern => {
+                let result = curriedSum;
+                let callDesc = '';
+                
+                pattern.args.forEach(argSet => {
+                    result = result(...argSet);
+                    callDesc += `(${argSet.join(', ')})`;
+                });
+                
+                document.getElementById('curry-visual').innerHTML += 
+                    `<div>${pattern.desc}: curriedSum${callDesc} = ${result}</div>`;
+            });
+
+            document.getElementById('curry-output').innerHTML = 
+                '<span class="success">All calling patterns work correctly!</span>';
+        }
+
+        // ========== EXAMPLE 3: User Creation System ==========
+        let createUser, createAdmin, createEditor, createViewer, createITAdmin, createHRAdmin;
+
+        function createUserSystem() {
+            // Curried user creation
+            createUser = role => department => name => ({
+                id: Math.random().toString(36).substr(2, 9),
+                role,
+                department,
+                name,
+                createdAt: new Date().toLocaleTimeString()
+            });
+
+            // Create specialized factories
+            createAdmin = createUser('admin');
+            createEditor = createUser('editor');
+            createViewer = createUser('viewer');
+
+            createITAdmin = createAdmin('IT');
+            createHRAdmin = createAdmin('HR');
+
+            document.getElementById('user-output').innerHTML = `
+                <span class="success">User creation system implemented!</span><br><br>
+                <strong>Available specialized functions:</strong><br>
+                • createAdmin (role fixed: 'admin')<br>
+                • createEditor (role fixed: 'editor')<br>
+                • createViewer (role fixed: 'viewer')<br>
+                • createITAdmin (role: 'admin', department: 'IT')<br>
+                • createHRAdmin (role: 'admin', department: 'HR')
+            `;
+        }
+
+        function createITAdminUser() {
+            if (!createITAdmin) {
+                document.getElementById('user-output').innerHTML = '<span class="error">Please create user system first!</span>';
+                return;
+            }
+
+            const name = document.getElementById('user-name').value || 'Anonymous';
+            const user = createITAdmin(name);
+
+            document.getElementById('user-output').innerHTML = `
+                <strong>Created IT Admin User:</strong><br>
+                <pre>${JSON.stringify(user, null, 2)}</pre><br>
+                <em>Function chain: createUser('admin')('IT')('${name}')</em>
+            `;
+        }
+
+        function createHREditorUser() {
+            if (!createEditor) {
+                document.getElementById('user-output').innerHTML = '<span class="error">Please create user system first!</span>';
+                return;
+            }
+
+            const name = document.getElementById('user-name').value || 'Anonymous';
+            const hrEditor = createEditor('HR');
+            const user = hrEditor(name);
+
+            document.getElementById('user-output').innerHTML = `
+                <strong>Created HR Editor User:</strong><br>
+                <pre>${JSON.stringify(user, null, 2)}</pre><br>
+                <em>Function chain: createUser('editor')('HR')('${name}')</em>
+            `;
+        }
+
+        function showAllSpecialized() {
+            if (!createUser) {
+                document.getElementById('user-output').innerHTML = '<span class="error">Please create user system first!</span>';
+                return;
+            }
+
+            const users = [
+                createITAdmin('Alice'),
+                createHRAdmin('Bob'),
+                createEditor('IT')('Charlie'),
+                createViewer('HR')('Diana')
+            ];
+
+            document.getElementById('user-output').innerHTML = `
+                <strong>All User Types Created:</strong><br>
+                ${users.map(user => 
+                    `${user.role}.${user.department}.${user.name} (${user.id})`
+                ).join('<br>')}
+            `;
+        }
+
+        // ========== EXAMPLE 4: Function Composition ==========
+        let filter, map, sort, pipe;
+
+        function createCompositionUtils() {
+            // Curried utility functions
+            filter = predicate => array => array.filter(predicate);
+            map = transform => array => array.map(transform);
+            sort = compare => array => array.sort(compare);
+
+            // Pipe function for composition
+            pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x);
+
+            document.getElementById('composition-output').innerHTML = `
+                <span class="success">Composition utilities created!</span><br><br>
+                <strong>Available functions:</strong><br>
+                • filter(predicate) → function<br>
+                • map(transform) → function<br>
+                • sort(compare) → function<br>
+                • pipe(...functions) → composed function
+            `;
+        }
+
+        function testSimpleComposition() {
+            if (!filter || !map || !sort) {
+                document.getElementById('composition-output').innerHTML = '<span class="error">Please create composition utilities first!</span>';
+                return;
+            }
+
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+            // Create specialized functions
+            const getEven = filter(x => x % 2 === 0);
+            const double = map(x => x * 2);
+            const sortDesc = sort((a, b) => b - a);
+
+            // Compose manually
+            const result1 = sortDesc(double(getEven(numbers)));
+
+            // Compose with pipe
+            const processNumbers = pipe(
+                getEven,
+                double,
+                sortDesc
+            );
+            const result2 = processNumbers(numbers);
+
+            document.getElementById('composition-output').innerHTML = `
+                <strong>Simple Composition Test:</strong><br>
+                Original: [${numbers.join(', ')}]<br>
+                Manual composition: [${result1.join(', ')}]<br>
+                Pipe composition: [${result2.join(', ')}]<br><br>
+                <em>Steps: filter(even) → map(double) → sort(descending)</em>
+            `;
+        }
+
+        function testComplexComposition() {
+            if (!pipe || !filter || !map) {
+                document.getElementById('composition-output').innerHTML = '<span class="error">Please create composition utilities first!</span>';
+                return;
+            }
+
+            const users = [
+                { name: 'Alice', age: 25, active: true },
+                { name: 'Bob', age: 30, active: false },
+                { name: 'Charlie', age: 22, active: true },
+                { name: 'Diana', age: 35, active: true },
+                { name: 'Eve', age: 28, active: false }
+            ];
+
+            // Create processing pipeline
+            const processUsers = pipe(
+                filter(user => user.active),
+                map(user => ({ ...user, name: user.name.toUpperCase() })),
+                sort((a, b) => a.age - b.age),
+                map(user => `${user.name} (${user.age})`)
+            );
+
+            const result = processUsers(users);
+
+            document.getElementById('composition-output').innerHTML = `
+                <strong>Complex User Processing:</strong><br>
+                <strong>Original users:</strong><br>
+                ${users.map(u => `${u.name}, ${u.age}, ${u.active ? 'active' : 'inactive'}`).join('<br>')}<br><br>
+                <strong>Processed (active, uppercase, sorted by age):</strong><br>
+                ${result.join('<br>')}
+            `;
+        }
+
+        function showCompositionChain() {
+            document.getElementById('composition-output').innerHTML = `
+                <strong>Function Composition Chain:</strong><br><br>
+                <div class="function-chain">
+                    <div class="function-call">filter(active)</div>
+                    <div class="chain-arrow">→</div>
+                    <div class="function-call">map(uppercase)</div>
+                    <div class="chain-arrow">→</div>
+                    <div class="function-call">sort(by age)</div>
+                    <div class="chain-arrow">→</div>
+                    <div class="function-call">result</div>
+                </div><br>
+                <em>Each function returns another function, enabling seamless composition</em>
+            `;
+        }
+
+        // ========== EXAMPLE 5: Advanced Currying ==========
+        function implementAdvancedCurry() {
+            document.getElementById('advanced-output').innerHTML = `
+                <span class="success">Advanced curry concept explained!</span><br><br>
+                <strong>Placeholder Currying Features:</strong><br>
+                • Support for placeholder arguments (_)<br>
+                • Flexible argument application<br>
+                • Maintains currying behavior<br>
+                • Enables more complex partial application<br><br>
+                <em>Implementation would require tracking placeholder positions and merging arguments intelligently.</em>
+            `;
+        }
+
+        function testPlaceholders() {
+            document.getElementById('advanced-output').innerHTML = `
+                <strong>Placeholder Usage Example:</strong><br><br>
+                <div class="code-block" style="font-size: 0.8rem;">
+const subtract = advancedCurry((a, b, c) => a - b - c);
+const _ = PLACEHOLDER;
+
+// Fix first and third arguments, leave second for later
+const subtractFromTen = subtract(10, _, 5);
+
+// Later provide the second argument
+const result = subtractFromTen(3); // 10 - 3 - 5 = 2
+                </div><br>
+                <span class="success">This enables very flexible partial application patterns!</span>
+            `;
+        }
+
+        function testMixedPlaceholders() {
+            document.getElementById('advanced-output').innerHTML = `
+                <strong>Mixed Placeholder Patterns:</strong><br><br>
+                <div class="code-block" style="font-size: 0.8rem;">
+const fn = advancedCurry((a, b, c, d) => a + b + c + d);
+
+// Various placeholder patterns
+const p1 = fn(1, _, 3, _);    // Wait for 2nd and 4th
+const p2 = fn(_, 2, _, 4);    // Wait for 1st and 3rd
+const p3 = fn(1, 2, _, _);    // Wait for 3rd and 4th
+
+console.log(p1(2, 4)); // 1 + 2 + 3 + 4 = 10
+console.log(p2(1, 3)); // 1 + 2 + 3 + 4 = 10
+console.log(p3(3, 4)); // 1 + 2 + 3 + 4 = 10
+                </div><br>
+                <em>Placeholders make curried functions even more powerful and flexible!</em>
+            `;
+        }
+
+        // Animation control
+        function animateCurrying() {
+            const functionBox = document.querySelector('.function-box');
+            const curriedBox = document.querySelector('.curried-box');
+            const partialBox = document.querySelector('.partial-box');
+            
+            functionBox.style.animation = 'none';
+            curriedBox.style.animation = 'none';
+            partialBox.style.animation = 'none';
+            
+            void functionBox.offsetWidth;
+            void curriedBox.offsetWidth;
+            void partialBox.offsetWidth;
+            
+            functionBox.style.animation = 'functionTransform 8s infinite';
+            curriedBox.style.animation = 'curriedFunction 8s infinite';
+            curriedBox.style.animationDelay = '2s';
+            partialBox.style.animation = 'partialApplication 8s infinite';
+            partialBox.style.animationDelay = '4s';
+        }
+        
+        window.addEventListener('load', animateCurrying);
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                animateCurrying();
+            }
+        });
+    </script>
+</body>
+</html>

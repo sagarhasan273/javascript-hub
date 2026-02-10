@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Hoisting Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .hoisting-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .concept-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .execution-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e17055;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .visualization {
+            position: relative;
+            height: 300px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        
+        .memory-space {
+            position: absolute;
+            width: 200px;
+            padding: 15px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .creation-phase {
+            top: 20px;
+            left: 50px;
+            background: #1a2a6c;
+        }
+        
+        .execution-phase {
+            top: 20px;
+            right: 50px;
+            background: #b21f1f;
+        }
+        
+        .variable-item {
+            background: white;
+            color: #333;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #fdbb2d;
+            animation: variableLift 4s infinite;
+        }
+        
+        @keyframes variableLift {
+            0% { transform: translateY(0); opacity: 0; }
+            25% { transform: translateY(-10px); opacity: 1; }
+            75% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0; }
+        }
+        
+        .function-item {
+            background: white;
+            color: #333;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #28a745;
+            animation: functionLift 4s infinite;
+            animation-delay: 1s;
+        }
+        
+        @keyframes functionLift {
+            0% { transform: translateY(0); opacity: 0; }
+            25% { transform: translateY(-10px); opacity: 1; }
+            75% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0; }
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .phase-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .phase-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .creation-card {
+            border-color: #1a2a6c;
+            background: #e7f3ff;
+        }
+        
+        .execution-card {
+            border-color: #b21f1f;
+            background: #fde8e8;
+        }
+        
+        .phase-card h4 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: inherit;
+        }
+        
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #b21f1f;
+            font-weight: bold;
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .code-line {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        
+        .code-line.highlighted {
+            background-color: #ffeb3b;
+        }
+        
+        .line-number {
+            color: #666;
+            margin-right: 10px;
+            font-family: 'Courier New', monospace;
+            min-width: 20px;
+        }
+        
+        .execution-timeline {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .timeline-step {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #1a2a6c;
+            background: white;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Hoisting Explained</h1>
+            <p class="subtitle">Understanding how JavaScript moves declarations to the top</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>What is Hoisting?</h2>
+                <p>Hoisting is JavaScript's behavior of moving declarations (variables and functions) to the top of their scope during the compilation phase, before code execution.</p>
+                
+                <div class="hoisting-concepts">
+                    <div class="concept-card">
+                        <h4>📈 Variable Hoisting</h4>
+                        <p>var declarations are hoisted and initialized with undefined</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>📈 Function Hoisting</h4>
+                        <p>Function declarations are fully hoisted</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🚫 let/const Hoisting</h4>
+                        <p>Hoisted but not initialized (Temporal Dead Zone)</p>
+                    </div>
+                </div>
+                
+                <div class="visualization">
+                    <div class="memory-space creation-phase">
+                        <h4>Creation Phase</h4>
+                        <div class="variable-item">x: undefined</div>
+                        <div class="function-item">sayHello: function</div>
+                    </div>
+                    <div class="memory-space execution-phase">
+                        <h4>Execution Phase</h4>
+                        <div class="variable-item">x: 5</div>
+                        <div class="function-item">sayHello: function</div>
+                    </div>
+                </div>
+                
+                <h3>JavaScript Execution Phases</h3>
+                <div class="execution-flow">
+                    <div class="flow-step">1. Creation Phase (Hoisting)</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">2. Memory Allocation</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">3. Execution Phase</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">4. Code Runs Line by Line</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'var-tab')">var Hoisting</div>
+                    <div class="tab" onclick="switchTab(event, 'function-tab')">Function Hoisting</div>
+                    <div class="tab" onclick="switchTab(event, 'let-const-tab')">let/const Hoisting</div>
+                </div>
+                
+                <div id="var-tab" class="tab-content active">
+                    <h4>Variable Hoisting with var</h4>
+                    <div class="code-block">
+<span class="code-title">How var variables are hoisted</span>
+// This code:
+console.log(x); // undefined
+var x = 5;
+console.log(x); // 5
+
+// Is interpreted as:
+var x;          // Declaration hoisted
+console.log(x); // undefined
+x = 5;          // Assignment stays
+console.log(x); // 5
+                    </div>
+                    <p><strong>Key Point:</strong> var declarations are hoisted and initialized with <code>undefined</code>.</p>
+                </div>
+                
+                <div id="function-tab" class="tab-content">
+                    <h4>Function Declaration Hoisting</h4>
+                    <div class="code-block">
+<span class="code-title">Function declarations are fully hoisted</span>
+// This works because the function is hoisted
+sayHello(); // "Hello!"
+
+function sayHello() {
+    console.log("Hello!");
+}
+
+// The function declaration is moved to the top:
+function sayHello() {
+    console.log("Hello!");
+}
+sayHello(); // "Hello!"
+                    </div>
+                    <p><strong>Key Point:</strong> Function declarations are completely hoisted - both the declaration and definition.</p>
+                </div>
+                
+                <div id="let-const-tab" class="tab-content">
+                    <h4>let and const Hoisting</h4>
+                    <div class="code-block">
+<span class="code-title">Temporal Dead Zone (TDZ)</span>
+// This throws ReferenceError
+console.log(x); // ReferenceError: Cannot access 'x' before initialization
+let x = 5;
+
+// But the declaration IS hoisted - it's in TDZ until assignment
+let x;          // Declaration hoisted (in TDZ)
+console.log(x); // ReferenceError - still in TDZ
+x = 5;          // Assignment - exits TDZ
+                    </div>
+                    <p><strong>Key Point:</strong> let/const are hoisted but not initialized, creating a Temporal Dead Zone.</p>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Insight:</strong> Hoisting happens because JavaScript code is processed in two phases: creation phase (hoisting) and execution phase (code runs).
+                </div>
+                
+                <h2>Execution Phases Comparison</h2>
+                
+                <div class="phase-comparison">
+                    <div class="phase-card creation-card">
+                        <h4>Creation Phase</h4>
+                        <ul>
+                            <li>Variable declarations hoisted</li>
+                            <li>Function declarations hoisted</li>
+                            <li>Memory space allocated</li>
+                            <li>Scope chain established</li>
+                            <li><code>var</code> initialized to undefined</li>
+                            <li><code>let/const</code> in TDZ</li>
+                        </ul>
+                    </div>
+                    <div class="phase-card execution-card">
+                        <h4>Execution Phase</h4>
+                        <ul>
+                            <li>Code executed line by line</li>
+                            <li>Assignments happen</li>
+                            <li>Function calls executed</li>
+                            <li>Variables get actual values</li>
+                            <li>TDZ restrictions apply</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Function Declaration</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+// Works - function is fully hoisted
+sayHello(); // "Hello"
+
+function sayHello() {
+    console.log("Hello");
+}
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Function Expression</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+// Error - only variable is hoisted
+sayHello(); // TypeError: sayHello is not a function
+
+var sayHello = function() {
+    console.log("Hello");
+};
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Remember:</strong> Only declarations are hoisted, not initializations. Function declarations are fully hoisted, but function expressions follow variable hoisting rules.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: var Hoisting Behavior</h3>
+                    <p>See how var variables are hoisted and initialized with undefined.</p>
+                    <div class="code-block">
+console.log(animal); // What happens?
+var animal = "cat";
+console.log(animal); // What happens?
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runVarHoisting()">Run Code</button>
+                        <button onclick="showVarExplanation()">Show Explanation</button>
+                        <button onclick="resetVarExample()">Reset</button>
+                    </div>
+                    <div class="execution-timeline" id="var-timeline">
+                        Click "Run Code" to see execution steps
+                    </div>
+                    <div class="output" id="var-output">
+                        Output will appear here
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Function vs Variable Hoisting</h3>
+                    <p>Compare how function declarations and variable declarations are hoisted differently.</p>
+                    <div class="code-block">
+console.log(typeof greet); // What happens?
+console.log(typeof sayHi); // What happens?
+
+var greet = "Hello";
+function sayHi() {
+    return "Hi!";
+}
+
+console.log(typeof greet); // What happens?
+console.log(typeof sayHi); // What happens?
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runFunctionVsVar()">Run Code</button>
+                        <button onclick="showFunctionVarExplanation()">Show Explanation</button>
+                        <button onclick="resetFunctionVar()">Reset</button>
+                    </div>
+                    <div class="output" id="function-var-output">
+                        Output will appear here
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: Temporal Dead Zone (let/const)</h3>
+                    <p>Explore the Temporal Dead Zone with let and const variables.</p>
+                    <div class="code-block">
+console.log("Before declaration:");
+console.log("letVar:", letVar);   // What happens?
+console.log("constVar:", constVar); // What happens?
+
+let letVar = "I'm let";
+const constVar = "I'm const";
+
+console.log("After declaration:");
+console.log("letVar:", letVar);
+console.log("constVar:", constVar);
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runTDZExample()">Run Code</button>
+                        <button onclick="showTDZExplanation()">Show Explanation</button>
+                        <button onclick="resetTDZ()">Reset</button>
+                    </div>
+                    <div class="output" id="tdz-output">
+                        Output will appear here
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Hoisting Order Precedence</h3>
+                    <p>See what happens when variables and functions have the same name.</p>
+                    <div class="code-block">
+console.log(typeof myValue); // What happens?
+
+var myValue = "I'm a variable";
+
+function myValue() {
+    return "I'm a function";
+}
+
+console.log(typeof myValue); // What happens?
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runHoistingOrder()">Run Code</button>
+                        <button onclick="showOrderExplanation()">Show Explanation</button>
+                        <button onclick="resetOrder()">Reset</button>
+                    </div>
+                    <div class="output" id="order-output">
+                        Output will appear here
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Real-world Hoisting Scenario</h3>
+                    <p>A practical example showing how hoisting can cause unexpected behavior.</p>
+                    <div class="code-block">
+var count = 5;
+
+function initialize() {
+    console.log("Count is:", count); // What happens?
+    
+    var count = 10;
+    console.log("Count is now:", count); // What happens?
+}
+
+initialize();
+console.log("Final count:", count); // What happens?
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runRealWorld()">Run Code</button>
+                        <button onclick="showRealWorldExplanation()">Show Explanation</button>
+                        <button onclick="resetRealWorld()">Reset</button>
+                    </div>
+                    <div class="output" id="realworld-output">
+                        Output will appear here
+                    </div>
+                </div>
+                
+                <div class="warning">
+                    <strong>Best Practices to Avoid Hoisting Issues:</strong>
+                    <ul>
+                        <li>Use <code>let</code> and <code>const</code> instead of <code>var</code></li>
+                        <li>Declare variables at the top of their scope</li>
+                        <li>Initialize variables when you declare them</li>
+                        <li>Use function expressions carefully</li>
+                        <li>Be aware of TDZ with let/const</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ========== EXAMPLE 1: var Hoisting ==========
+        function runVarHoisting() {
+            const output = document.getElementById('var-output');
+            const timeline = document.getElementById('var-timeline');
+            
+            output.innerHTML = '';
+            timeline.innerHTML = '<strong>Execution Timeline:</strong><br>';
+            
+            try {
+                // Simulate the hoisted code execution
+                timeline.innerHTML += '<div class="timeline-step">1. Creation Phase: var animal is hoisted and set to undefined</div>';
+                
+                timeline.innerHTML += '<div class="timeline-step">2. Execution: console.log(animal) → ' + 
+                    '<span class="success">undefined</span></div>';
+                output.innerHTML += 'undefined<br>';
+                
+                timeline.innerHTML += '<div class="timeline-step">3. Execution: animal = "cat" (assignment)</div>';
+                
+                timeline.innerHTML += '<div class="timeline-step">4. Execution: console.log(animal) → ' + 
+                    '<span class="success">"cat"</span></div>';
+                output.innerHTML += 'cat<br>';
+                
+            } catch (error) {
+                output.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+            }
+        }
+
+        function showVarExplanation() {
+            const timeline = document.getElementById('var-timeline');
+            timeline.innerHTML = `
+                <strong>How var Hoisting Works:</strong><br><br>
+                <strong>Original Code:</strong><br>
+                <code>
+                console.log(animal);<br>
+                var animal = "cat";<br>
+                console.log(animal);<br>
+                </code><br>
+                
+                <strong>After Hoisting (How JavaScript sees it):</strong><br>
+                <code>
+                var animal;          // Declaration hoisted to top<br>
+                console.log(animal); // undefined (variable exists but not assigned)<br>
+                animal = "cat";      // Assignment happens here<br>
+                console.log(animal); // "cat" (now assigned)<br>
+                </code><br>
+                
+                <span class="success">Key Point: var declarations are hoisted and initialized with undefined</span>
+            `;
+        }
+
+        function resetVarExample() {
+            document.getElementById('var-output').innerHTML = 'Output will appear here';
+            document.getElementById('var-timeline').innerHTML = 'Click "Run Code" to see execution steps';
+        }
+
+        // ========== EXAMPLE 2: Function vs Variable Hoisting ==========
+        function runFunctionVsVar() {
+            const output = document.getElementById('function-var-output');
+            output.innerHTML = '';
+            
+            try {
+                // This simulates the hoisted behavior
+                output.innerHTML += '<strong>Actual execution after hoisting:</strong><br>';
+                
+                // Hoisted function
+                function sayHi() {
+                    return "Hi!";
+                }
+                
+                // Hoisted variable
+                var greet;
+                
+                output.innerHTML += `console.log(typeof greet) → <span class="success">${typeof greet}</span><br>`;
+                output.innerHTML += `console.log(typeof sayHi) → <span class="success">${typeof sayHi}</span><br>`;
+                
+                // Assignment
+                greet = "Hello";
+                
+                output.innerHTML += `console.log(typeof greet) → <span class="success">${typeof greet}</span><br>`;
+                output.innerHTML += `console.log(typeof sayHi) → <span class="success">${typeof sayHi}</span><br>`;
+                
+            } catch (error) {
+                output.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+            }
+        }
+
+        function showFunctionVarExplanation() {
+            const output = document.getElementById('function-var-output');
+            output.innerHTML = `
+                <strong>Function vs Variable Hoisting Difference:</strong><br><br>
+                
+                <strong>Function Declarations:</strong><br>
+                • Completely hoisted - both declaration and definition<br>
+                • Available throughout the entire scope<br>
+                • Can be called before declaration<br><br>
+                
+                <strong>Variable Declarations (var):</strong><br>
+                • Only declaration is hoisted<br>
+                • Initialized with undefined<br>
+                • Assignment happens at execution<br><br>
+                
+                <strong>Function Expressions (assigned to var):</strong><br>
+                • Follow variable hoisting rules<br>
+                • Variable is hoisted as undefined<br>
+                • Function is not available until assignment<br><br>
+                
+                <code>
+                // Function declaration - fully hoisted<br>
+                function sayHi() { return "Hi!"; }<br><br>
+                
+                // Function expression - follows var rules<br>
+                var greet = function() { return "Hello!"; };<br>
+                </code>
+            `;
+        }
+
+        function resetFunctionVar() {
+            document.getElementById('function-var-output').innerHTML = 'Output will appear here';
+        }
+
+        // ========== EXAMPLE 3: Temporal Dead Zone ==========
+        function runTDZExample() {
+            const output = document.getElementById('tdz-output');
+            output.innerHTML = '';
+            
+            try {
+                output.innerHTML += '<strong>Before declaration:</strong><br>';
+                
+                // This would throw ReferenceError in real execution
+                output.innerHTML += `console.log("letVar:", letVar) → <span class="error">ReferenceError: Cannot access 'letVar' before initialization</span><br>`;
+                
+                // Stop execution here since we hit an error
+                return;
+                
+            } catch (error) {
+                output.innerHTML += `<span class="error">Error: ${error.message}</span><br>`;
+            }
+            
+            // This part won't execute due to the error above
+            try {
+                let letVar = "I'm let";
+                const constVar = "I'm const";
+                
+                output.innerHTML += '<strong>After declaration:</strong><br>';
+                output.innerHTML += `console.log("letVar:", letVar) → <span class="success">"I'm let"</span><br>`;
+                output.innerHTML += `console.log("constVar:", constVar) → <span class="success">"I'm const"</span><br>`;
+            } catch (error) {
+                output.innerHTML += `<span class="error">Error: ${error.message}</span>`;
+            }
+        }
+
+        function showTDZExplanation() {
+            const output = document.getElementById('tdz-output');
+            output.innerHTML = `
+                <strong>Temporal Dead Zone (TDZ) Explained:</strong><br><br>
+                
+                <strong>What is TDZ?</strong><br>
+                The time between entering scope and variable declaration where the variable exists but cannot be accessed.<br><br>
+                
+                <strong>How let/const hoisting works:</strong><br>
+                <code>
+                // Creation Phase:<br>
+                let letVar;          // Hoisted but in TDZ<br>
+                const constVar;      // Hoisted but in TDZ<br><br>
+                
+                // Execution Phase:<br>
+                console.log(letVar); // ❌ ReferenceError - in TDZ<br>
+                console.log(constVar); // ❌ ReferenceError - in TDZ<br><br>
+                
+                letVar = "value";    // ✅ Exits TDZ<br>
+                constVar = "value";  // ✅ Exits TDZ<br>
+                </code><br>
+                
+                <strong>Key Differences:</strong><br>
+                • <code>var</code>: Hoisted and initialized with undefined<br>
+                • <code>let/const</code>: Hoisted but NOT initialized (TDZ)<br>
+                • Accessing variables in TDZ throws ReferenceError<br><br>
+                
+                <span class="success">TDZ helps catch bugs by preventing access to uninitialized variables</span>
+            `;
+        }
+
+        function resetTDZ() {
+            document.getElementById('tdz-output').innerHTML = 'Output will appear here';
+        }
+
+        // ========== EXAMPLE 4: Hoisting Order Precedence ==========
+        function runHoistingOrder() {
+            const output = document.getElementById('order-output');
+            output.innerHTML = '';
+            
+            try {
+                // This simulates what actually happens
+                output.innerHTML += '<strong>What JavaScript actually does:</strong><br>';
+                
+                // Function declaration is hoisted first
+                function myValue() {
+                    return "I'm a function";
+                }
+                
+                // Then variable declaration (but function takes precedence)
+                var myValue;
+                
+                output.innerHTML += `console.log(typeof myValue) → <span class="success">${typeof myValue}</span><br>`;
+                
+                // Variable assignment
+                myValue = "I'm a variable";
+                
+                output.innerHTML += `console.log(typeof myValue) → <span class="success">${typeof myValue}</span><br>`;
+                
+            } catch (error) {
+                output.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+            }
+        }
+
+        function showOrderExplanation() {
+            const output = document.getElementById('order-output');
+            output.innerHTML = `
+                <strong>Hoisting Order Precedence:</strong><br><br>
+                
+                <strong>Order of Hoisting:</strong><br>
+                1. Function declarations (highest priority)<br>
+                2. Variable declarations<br>
+                3. Assignments and other code<br><br>
+                
+                <strong>What happens with same names:</strong><br>
+                • Function declarations take precedence over variable declarations<br>
+                • Later variable assignments can override function declarations<br>
+                • This can lead to confusing behavior<br><br>
+                
+                <strong>Original Code:</strong><br>
+                <code>
+                console.log(typeof myValue);<br>
+                var myValue = "I'm a variable";<br>
+                function myValue() {<br>
+                &nbsp;&nbsp;return "I'm a function";<br>
+                }<br>
+                console.log(typeof myValue);<br>
+                </code><br>
+                
+                <strong>After Hoisting:</strong><br>
+                <code>
+                // Function hoisted first<br>
+                function myValue() {<br>
+                &nbsp;&nbsp;return "I'm a function";<br>
+                }<br><br>
+                
+                // Variable declaration hoisted (ignored - function already exists)<br>
+                // var myValue;<br><br>
+                
+                console.log(typeof myValue); // "function"<br><br>
+                
+                // Variable assignment overrides function<br>
+                myValue = "I'm a variable";<br><br>
+                
+                console.log(typeof myValue); // "string"<br>
+                </code><br>
+                
+                <span class="warning">Avoid using same names for functions and variables!</span>
+            `;
+        }
+
+        function resetOrder() {
+            document.getElementById('order-output').innerHTML = 'Output will appear here';
+        }
+
+        // ========== EXAMPLE 5: Real-world Hoisting Scenario ==========
+        function runRealWorld() {
+            const output = document.getElementById('realworld-output');
+            output.innerHTML = '';
+            
+            try {
+                // Global scope
+                var count = 5;
+                
+                output.innerHTML += '<strong>Global scope:</strong><br>';
+                output.innerHTML += `var count = 5;<br>`;
+                
+                function initialize() {
+                    // This is what actually happens due to hoisting
+                    var count; // Declaration hoisted to top of function
+                    
+                    output.innerHTML += `<br><strong>Inside initialize() function:</strong><br>`;
+                    output.innerHTML += `console.log("Count is:", count) → <span class="success">Count is: undefined</span><br>`;
+                    
+                    count = 10; // Assignment
+                    
+                    output.innerHTML += `console.log("Count is now:", count) → <span class="success">Count is now: 10</span><br>`;
+                }
+                
+                initialize();
+                
+                output.innerHTML += `<br><strong>Back in global scope:</strong><br>`;
+                output.innerHTML += `console.log("Final count:", count) → <span class="success">Final count: 5</span><br>`;
+                
+            } catch (error) {
+                output.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+            }
+        }
+
+        function showRealWorldExplanation() {
+            const output = document.getElementById('realworld-output');
+            output.innerHTML = `
+                <strong>Real-world Hoisting Issue:</strong><br><br>
+                
+                <strong>The Problem:</strong><br>
+                Developers often expect the function to use the global variable, but hoisting creates a local variable that shadows the global one.<br><br>
+                
+                <strong>Original Code:</strong><br>
+                <code>
+                var count = 5;<br><br>
+                
+                function initialize() {<br>
+                &nbsp;&nbsp;console.log("Count is:", count); // Expected: 5, Actual: undefined<br>
+                &nbsp;&nbsp;var count = 10;<br>
+                &nbsp;&nbsp;console.log("Count is now:", count); // 10<br>
+                }<br><br>
+                
+                initialize();<br>
+                console.log("Final count:", count); // 5<br>
+                </code><br>
+                
+                <strong>What Actually Happens (due to hoisting):</strong><br>
+                <code>
+                var count = 5;<br><br>
+                
+                function initialize() {<br>
+                &nbsp;&nbsp;var count; // Hoisted - shadows global count<br>
+                &nbsp;&nbsp;console.log("Count is:", count); // undefined<br>
+                &nbsp;&nbsp;count = 10;<br>
+                &nbsp;&nbsp;console.log("Count is now:", count); // 10<br>
+                }<br><br>
+                
+                initialize();<br>
+                console.log("Final count:", count); // 5 (global unchanged)<br>
+                </code><br>
+                
+                <strong>Solution:</strong><br>
+                • Use different variable names<br>
+                • Use let/const which have block scope<br>
+                • Declare variables at the top of functions<br><br>
+                
+                <span class="success">Using let would throw a ReferenceError, making the bug obvious!</span>
+            `;
+        }
+
+        function resetRealWorld() {
+            document.getElementById('realworld-output').innerHTML = 'Output will appear here';
+        }
+
+        // Animation for the visualization
+        function animateHoisting() {
+            const variableItems = document.querySelectorAll('.variable-item');
+            const functionItems = document.querySelectorAll('.function-item');
+            
+            // Reset animations
+            variableItems.forEach(item => {
+                item.style.animation = 'none';
+            });
+            functionItems.forEach(item => {
+                item.style.animation = 'none';
+            });
+            
+            // Trigger reflow
+            void variableItems[0].offsetWidth;
+            void functionItems[0].offsetWidth;
+            
+            // Restart animations
+            variableItems.forEach(item => {
+                item.style.animation = 'variableLift 4s infinite';
+            });
+            functionItems.forEach(item => {
+                item.style.animation = 'functionLift 4s infinite';
+                item.style.animationDelay = '1s';
+            });
+        }
+        
+        // Start the animation when the page loads
+        window.addEventListener('load', animateHoisting);
+        
+        // Restart animation on tab focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                animateHoisting();
+            }
+        });
+    </script>
+</body>
+</html>

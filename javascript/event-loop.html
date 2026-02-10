@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Event Loop Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .event-loop-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .component {
+            border: 2px solid #1a2a6c;
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            margin: 10px 0;
+            background: white;
+            position: relative;
+        }
+        
+        .component h4 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1a2a6c;
+        }
+        
+        .task {
+            background: #fdbb2d;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .moving-task {
+            position: absolute;
+            background: #b21f1f;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            animation: moveTask 5s linear infinite;
+        }
+        
+        @keyframes moveTask {
+            0% { top: 50px; left: 50px; }
+            25% { top: 50px; left: 80%; }
+            50% { top: 200px; left: 80%; }
+            75% { top: 200px; left: 50px; }
+            100% { top: 50px; left: 50px; }
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .queue {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-height: 40px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .queue-item {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .microtask {
+            background: #b21f1f;
+        }
+        
+        .macrotask {
+            background: #1a2a6c;
+        }
+        
+        .animation-task {
+            background: #fdbb2d;
+            color: #333;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .visualization-container {
+            position: relative;
+            height: 300px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .execution-context {
+            position: absolute;
+            width: 120px;
+            padding: 10px;
+            background: rgba(26, 42, 108, 0.8);
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stack {
+            position: absolute;
+            bottom: 20px;
+            left: 50px;
+            width: 100px;
+        }
+        
+        .stack-item {
+            background: #1a2a6c;
+            color: white;
+            padding: 8px;
+            margin: 2px 0;
+            border-radius: 3px;
+            text-align: center;
+        }
+        
+        .web-apis {
+            position: absolute;
+            top: 20px;
+            left: 200px;
+            width: 150px;
+            padding: 10px;
+            background: rgba(253, 187, 45, 0.8);
+            border-radius: 5px;
+        }
+        
+        .callback-queue {
+            position: absolute;
+            bottom: 20px;
+            right: 50px;
+            width: 150px;
+            padding: 10px;
+            background: rgba(178, 31, 31, 0.8);
+            color: white;
+            border-radius: 5px;
+        }
+        
+        .event-loop {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .task-moving {
+            position: absolute;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Event Loop Explained</h1>
+            <p class="subtitle">Understanding how JavaScript handles asynchronous operations</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>What is the Event Loop?</h2>
+                <p>The event loop is JavaScript's mechanism for handling asynchronous operations. Despite being single-threaded, JavaScript can perform non-blocking operations through the event loop.</p>
+                
+                <div class="event-loop-visual">
+                    <div class="visualization-container">
+                        <div class="stack">
+                            <div class="stack-item">Global</div>
+                        </div>
+                        <div class="web-apis">
+                            <h4>Web APIs</h4>
+                            <div class="task">setTimeout</div>
+                            <div class="task">fetch</div>
+                            <div class="task">DOM events</div>
+                        </div>
+                        <div class="callback-queue">
+                            <h4>Callback Queue</h4>
+                            <div class="queue-item">Callback 1</div>
+                            <div class="queue-item">Callback 2</div>
+                        </div>
+                        <div class="event-loop">Event Loop</div>
+                        <div class="task-moving" style="top: 100px; left: 180px;">Task</div>
+                    </div>
+                </div>
+                
+                <h3>How the Event Loop Works</h3>
+                <p>JavaScript has a call stack, a task queue (macrotask queue), a microtask queue, and an event loop that coordinates everything.</p>
+                
+                <div class="component">
+                    <h4>Call Stack</h4>
+                    <p>Where function calls are executed in a Last-In-First-Out (LIFO) manner.</p>
+                </div>
+                
+                <div class="component">
+                    <h4>Web APIs</h4>
+                    <p>Browser-provided APIs for asynchronous operations (setTimeout, fetch, DOM events).</p>
+                </div>
+                
+                <div class="component">
+                    <h4>Task Queues</h4>
+                    <div class="queue">
+                        <div class="queue-item microtask">Microtasks</div>
+                        <div class="queue-item macrotask">Macrotasks</div>
+                        <div class="queue-item animation-task">Animation Frames</div>
+                    </div>
+                    <p>Microtasks have higher priority than macrotasks. The event loop processes all microtasks before moving to the next macrotask.</p>
+                </div>
+                
+                <div class="component">
+                    <h4>Event Loop</h4>
+                    <p>Continuously checks if the call stack is empty. If it is, it takes the first task from the queue and pushes it to the call stack.</p>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Point:</strong> JavaScript is single-threaded, but the browser provides Web APIs that run on separate threads. The event loop coordinates between the call stack and these APIs.
+                </div>
+                
+                <h3>Execution Order</h3>
+                <p>The event loop follows this general order:</p>
+                <ol>
+                    <li>Execute all synchronous code</li>
+                    <li>Execute all microtasks (Promises, queueMicrotask)</li>
+                    <li>Execute one macrotask (setTimeout, setInterval, I/O)</li>
+                    <li>Check if rendering is needed (animation frames)</li>
+                    <li>Repeat from step 2</li>
+                </ol>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Basic Execution Order</h3>
+                    <p>This example demonstrates the difference between synchronous code, microtasks, and macrotasks.</p>
+                    <div class="code-block">
+console.log('Script start');
+
+setTimeout(() => {
+    console.log('setTimeout');
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log('Promise 1');
+}).then(() => {
+    console.log('Promise 2');
+});
+
+console.log('Script end');
+                    </div>
+                    <button onclick="runExecutionOrder()">Run Code</button>
+                    <div class="output" id="execution-output">Click the button to see the execution order</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Microtasks vs Macrotasks</h3>
+                    <p>This example shows how microtasks are executed before macrotasks.</p>
+                    <div class="code-block">
+// Microtask (Promise)
+Promise.resolve().then(() => {
+    console.log('Microtask 1 executed');
+});
+
+// Macrotask (setTimeout)
+setTimeout(() => {
+    console.log('Macrotask 1 executed');
+}, 0);
+
+// Another microtask
+queueMicrotask(() => {
+    console.log('Microtask 2 executed');
+});
+
+console.log('Synchronous code executed');
+                    </div>
+                    <button onclick="runMicroVsMacro()">Run Code</button>
+                    <div class="output" id="micro-macro-output">Click the button to see the difference</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: Blocking the Event Loop</h3>
+                    <p>This example demonstrates what happens when you block the event loop with synchronous code.</p>
+                    <div class="code-block">
+console.log('Start');
+
+setTimeout(() => {
+    console.log('Timeout 1');
+}, 0);
+
+// Blocking operation
+const start = Date.now();
+while (Date.now() - start < 3000) {
+    // Block for 3 seconds
+}
+
+setTimeout(() => {
+    console.log('Timeout 2');
+}, 0);
+
+console.log('End');
+                    </div>
+                    <button onclick="runBlockingExample()">Run Blocking Code</button>
+                    <div class="output" id="blocking-output">Click the button to see the effect of blocking</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Animation Frame Scheduling</h3>
+                    <p>This example shows how requestAnimationFrame relates to the event loop.</p>
+                    <div class="code-block">
+let frameCount = 0;
+
+function animate() {
+    frameCount++;
+    console.log(`Animation frame ${frameCount}`);
+    
+    if (frameCount < 5) {
+        requestAnimationFrame(animate);
+    }
+}
+
+// Compare with setTimeout
+setTimeout(() => {
+    console.log('setTimeout callback');
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log('Promise callback');
+});
+
+console.log('Script start');
+requestAnimationFrame(animate);
+console.log('Script end');
+                    </div>
+                    <button onclick="runAnimationExample()">Run Animation Example</button>
+                    <div class="output" id="animation-output">Click the button to see animation frame timing</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Real-world Async Pattern</h3>
+                    <p>This example demonstrates a common async/await pattern and its execution order.</p>
+                    <div class="code-block">
+async function fetchData() {
+    console.log('Fetching data...');
+    
+    // Simulate API call
+    const data = await new Promise(resolve => {
+        setTimeout(() => {
+            resolve('Data received');
+        }, 1000);
+    });
+    
+    console.log(data);
+    return data;
+}
+
+console.log('Start');
+fetchData().then(() => {
+    console.log('Fetch completed');
+});
+console.log('End');
+                    </div>
+                    <button onclick="runAsyncExample()">Run Async Example</button>
+                    <div class="output" id="async-output">Click the button to see async/await in action</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example 1: Basic Execution Order
+        function runExecutionOrder() {
+            const output = document.getElementById('execution-output');
+            output.innerHTML = '';
+            
+            // Clear previous console messages
+            console.clear();
+            
+            // Add our messages with timestamps
+            const log = (msg) => {
+                console.log(msg);
+                output.innerHTML += `${msg}<br>`;
+            };
+            
+            log('Script start');
+            
+            setTimeout(() => {
+                log('setTimeout');
+            }, 0);
+            
+            Promise.resolve().then(() => {
+                log('Promise 1');
+            }).then(() => {
+                log('Promise 2');
+            });
+            
+            log('Script end');
+        }
+        
+        // Example 2: Microtasks vs Macrotasks
+        function runMicroVsMacro() {
+            const output = document.getElementById('micro-macro-output');
+            output.innerHTML = '';
+            
+            console.clear();
+            
+            const log = (msg) => {
+                console.log(msg);
+                output.innerHTML += `${msg}<br>`;
+            };
+            
+            // Microtask (Promise)
+            Promise.resolve().then(() => {
+                log('Microtask 1 executed');
+            });
+            
+            // Macrotask (setTimeout)
+            setTimeout(() => {
+                log('Macrotask 1 executed');
+            }, 0);
+            
+            // Another microtask
+            if (window.queueMicrotask) {
+                queueMicrotask(() => {
+                    log('Microtask 2 executed');
+                });
+            } else {
+                Promise.resolve().then(() => {
+                    log('Microtask 2 executed');
+                });
+            }
+            
+            log('Synchronous code executed');
+        }
+        
+        // Example 3: Blocking the Event Loop
+        function runBlockingExample() {
+            const output = document.getElementById('blocking-output');
+            output.innerHTML = '';
+            
+            console.clear();
+            
+            const log = (msg) => {
+                console.log(msg);
+                output.innerHTML += `${msg}<br>`;
+            };
+            
+            log('Start');
+            
+            setTimeout(() => {
+                log('Timeout 1');
+            }, 0);
+            
+            // Show a message that we're about to block
+            output.innerHTML += 'Blocking the event loop for 3 seconds...<br>';
+            
+            // Blocking operation
+            const start = Date.now();
+            while (Date.now() - start < 3000) {
+                // Block for 3 seconds
+            }
+            
+            setTimeout(() => {
+                log('Timeout 2');
+            }, 0);
+            
+            log('End');
+        }
+        
+        // Example 4: Animation Frame Scheduling
+        function runAnimationExample() {
+            const output = document.getElementById('animation-output');
+            output.innerHTML = '';
+            
+            console.clear();
+            
+            const log = (msg) => {
+                console.log(msg);
+                output.innerHTML += `${msg}<br>`;
+            };
+            
+            let frameCount = 0;
+            
+            function animate() {
+                frameCount++;
+                log(`Animation frame ${frameCount}`);
+                
+                if (frameCount < 5) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            
+            // Compare with setTimeout
+            setTimeout(() => {
+                log('setTimeout callback');
+            }, 0);
+            
+            Promise.resolve().then(() => {
+                log('Promise callback');
+            });
+            
+            log('Script start');
+            requestAnimationFrame(animate);
+            log('Script end');
+        }
+        
+        // Example 5: Real-world Async Pattern
+        function runAsyncExample() {
+            const output = document.getElementById('async-output');
+            output.innerHTML = '';
+            
+            console.clear();
+            
+            const log = (msg) => {
+                console.log(msg);
+                output.innerHTML += `${msg}<br>`;
+            };
+            
+            async function fetchData() {
+                log('Fetching data...');
+                
+                // Simulate API call
+                const data = await new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve('Data received');
+                    }, 1000);
+                });
+                
+                log(data);
+                return data;
+            }
+            
+            log('Start');
+            fetchData().then(() => {
+                log('Fetch completed');
+            });
+            log('End');
+            
+            // Add a note about the delay
+            output.innerHTML += '<br><em>Note: There will be a 1-second delay before "Data received" appears</em>';
+        }
+        
+        // Animation for the event loop visualization
+        function animateEventLoop() {
+            const container = document.querySelector('.visualization-container');
+            const movingTask = document.querySelector('.task-moving');
+            
+            let position = 0;
+            const path = [
+                { top: 100, left: 180 },  // Web APIs
+                { top: 200, left: 300 },  // Callback Queue
+                { top: 150, left: 400 },  // Event Loop
+                { top: 100, left: 180 }   // Back to start
+            ];
+            
+            function move() {
+                const point = path[position];
+                movingTask.style.top = point.top + 'px';
+                movingTask.style.left = point.left + 'px';
+                
+                position = (position + 1) % path.length;
+                setTimeout(move, 1000);
+            }
+            
+            move();
+        }
+        
+        // Start the animation when the page loads
+        window.addEventListener('load', animateEventLoop);
+    </script>
+</body>
+</html>
