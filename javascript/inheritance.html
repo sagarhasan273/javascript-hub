@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Inheritance Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+        }
+        
+        .inheritance-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .class-box {
+            border: 2px solid #1a2a6c;
+            border-radius: 10px;
+            padding: 15px;
+            width: 300px;
+            margin: 10px;
+            background: white;
+            position: relative;
+        }
+        
+        .class-box h4 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1a2a6c;
+        }
+        
+        .property {
+            background: #fdbb2d;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .method {
+            background: #b21f1f;
+            color: white;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+        
+        .inheritance-arrow {
+            font-size: 24px;
+            color: #1a2a6c;
+            margin: 5px 0;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: #1a2a6c;
+            color: white;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Inheritance Explained</h1>
+            <p class="subtitle">Understanding prototypal inheritance and class-based syntax in JavaScript</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>JavaScript Inheritance Models</h2>
+                <p>JavaScript uses prototypal inheritance, where objects can inherit properties and methods from other objects via their prototype chain.</p>
+                
+                <div class="inheritance-visual">
+                    <div class="class-box">
+                        <h4>Animal (Parent)</h4>
+                        <div class="property">name: "Generic Animal"</div>
+                        <div class="method">eat()</div>
+                        <div class="method">sleep()</div>
+                    </div>
+                    <div class="inheritance-arrow">↓</div>
+                    <div class="class-box">
+                        <h4>Dog (Child)</h4>
+                        <div class="property">name: "Buddy"</div>
+                        <div class="property">breed: "Golden Retriever"</div>
+                        <div class="method">eat() <span style="color: #ffeb3b;">(inherited)</span></div>
+                        <div class="method">sleep() <span style="color: #ffeb3b;">(inherited)</span></div>
+                        <div class="method">bark()</div>
+                    </div>
+                </div>
+                
+                <h3>Prototype Chain</h3>
+                <p>When you try to access a property or method on an object, JavaScript first looks at the object itself. If it doesn't find it, it looks at the object's prototype, then the prototype's prototype, and so on up the chain.</p>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'constructor-tab')">Constructor Functions</div>
+                    <div class="tab" onclick="switchTab(event, 'class-tab')">ES6 Classes</div>
+                    <div class="tab" onclick="switchTab(event, 'object-tab')">Object.create()</div>
+                </div>
+                
+                <div id="constructor-tab" class="tab-content active">
+                    <h4>Constructor Function Inheritance</h4>
+                    <div class="code-block">
+// Parent constructor
+function Animal(name) {
+    this.name = name;
+}
+
+// Parent methods
+Animal.prototype.eat = function() {
+    return `${this.name} is eating.`;
+};
+
+Animal.prototype.sleep = function() {
+    return `${this.name} is sleeping.`;
+};
+
+// Child constructor
+function Dog(name, breed) {
+    Animal.call(this, name); // Call parent constructor
+    this.breed = breed;
+}
+
+// Set up inheritance
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+
+// Child methods
+Dog.prototype.bark = function() {
+    return `${this.name} is barking!`;
+};
+
+// Create instance
+const myDog = new Dog("Buddy", "Golden Retriever");
+                    </div>
+                </div>
+                
+                <div id="class-tab" class="tab-content">
+                    <h4>ES6 Class Inheritance</h4>
+                    <div class="code-block">
+// Parent class
+class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    eat() {
+        return `${this.name} is eating.`;
+    }
+    
+    sleep() {
+        return `${this.name} is sleeping.`;
+    }
+}
+
+// Child class
+class Dog extends Animal {
+    constructor(name, breed) {
+        super(name); // Call parent constructor
+        this.breed = breed;
+    }
+    
+    bark() {
+        return `${this.name} is barking!`;
+    }
+}
+
+// Create instance
+const myDog = new Dog("Buddy", "Golden Retriever");
+                    </div>
+                </div>
+                
+                <div id="object-tab" class="tab-content">
+                    <h4>Object.create() Inheritance</h4>
+                    <div class="code-block">
+// Parent object
+const animal = {
+    init: function(name) {
+        this.name = name;
+        return this;
+    },
+    eat: function() {
+        return `${this.name} is eating.`;
+    },
+    sleep: function() {
+        return `${this.name} is sleeping.`;
+    }
+};
+
+// Create child object
+const dog = Object.create(animal);
+dog.init = function(name, breed) {
+    animal.init.call(this, name);
+    this.breed = breed;
+    return this;
+};
+dog.bark = function() {
+    return `${this.name} is barking!`;
+};
+
+// Create instance
+const myDog = Object.create(dog).init("Buddy", "Golden Retriever");
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Point:</strong> Despite the class syntax introduced in ES6, JavaScript still uses prototypal inheritance under the hood. The class syntax is primarily syntactic sugar.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Animal Inheritance Hierarchy</h3>
+                    <p>This example demonstrates a simple inheritance chain with different animal types.</p>
+                    <div class="code-block">
+class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        return `${this.name} makes a sound.`;
+    }
+}
+
+class Dog extends Animal {
+    speak() {
+        return `${this.name} barks.`;
+    }
+}
+
+class Cat extends Animal {
+    speak() {
+        return `${this.name} meows.`;
+    }
+}
+                    </div>
+                    <button onclick="createAnimal('generic')">Create Generic Animal</button>
+                    <button onclick="createAnimal('dog')">Create Dog</button>
+                    <button onclick="createAnimal('cat')">Create Cat</button>
+                    <div class="output" id="animal-output">Click buttons to create animals</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Employee Management System</h3>
+                    <p>This example shows a more practical inheritance use case with different employee types.</p>
+                    <div class="code-block">
+class Employee {
+    constructor(name, position, salary) {
+        this.name = name;
+        this.position = position;
+        this.salary = salary;
+    }
+    
+    getDetails() {
+        return `${this.name} - ${this.position}`;
+    }
+    
+    getAnnualSalary() {
+        return this.salary * 12;
+    }
+}
+
+class Manager extends Employee {
+    constructor(name, salary, department) {
+        super(name, "Manager", salary);
+        this.department = department;
+    }
+    
+    getDetails() {
+        return `${super.getDetails()} (${this.department})`;
+    }
+    
+    manageTeam() {
+        return `${this.name} is managing the ${this.department} team.`;
+    }
+}
+
+class Developer extends Employee {
+    constructor(name, salary, programmingLanguage) {
+        super(name, "Developer", salary);
+        this.programmingLanguage = programmingLanguage;
+    }
+    
+    getDetails() {
+        return `${super.getDetails()} - ${this.programmingLanguage}`;
+    }
+    
+    writeCode() {
+        return `${this.name} is writing code in ${this.programmingLanguage}.`;
+    }
+}
+                    </div>
+                    <select id="employee-type">
+                        <option value="manager">Manager</option>
+                        <option value="developer">Developer</option>
+                    </select>
+                    <input type="text" id="employee-name" placeholder="Name">
+                    <input type="number" id="employee-salary" placeholder="Monthly Salary">
+                    <input type="text" id="employee-specialty" placeholder="Department/Language">
+                    <button onclick="createEmployee()">Create Employee</button>
+                    <button onclick="showEmployeeDetails()">Show Details</button>
+                    <button onclick="showEmployeeAction()">Perform Action</button>
+                    <div class="output" id="employee-output">Create employees and interact with them</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: Method Overriding</h3>
+                    <p>This example demonstrates how child classes can override parent methods while still accessing the parent implementation.</p>
+                    <div class="code-block">
+class Vehicle {
+    constructor(type, speed) {
+        this.type = type;
+        this.speed = speed;
+    }
+    
+    move() {
+        return `The ${this.type} is moving at ${this.speed} mph.`;
+    }
+    
+    stop() {
+        return `The ${this.type} has stopped.`;
+    }
+}
+
+class Car extends Vehicle {
+    constructor(speed, brand) {
+        super("car", speed);
+        this.brand = brand;
+    }
+    
+    move() {
+        // Call parent method and extend functionality
+        return `${super.move()} The ${this.brand} is on the road!`;
+    }
+    
+    honk() {
+        return `The ${this.brand} is honking!`;
+    }
+}
+
+class Plane extends Vehicle {
+    constructor(speed, airline) {
+        super("plane", speed);
+        this.airline = airline;
+    }
+    
+    move() {
+        // Completely override parent method
+        return `The ${this.airline} plane is flying at ${this.speed} mph.`;
+    }
+    
+    takeOff() {
+        return `The ${this.airline} plane is taking off!`;
+    }
+}
+                    </div>
+                    <button onclick="createVehicle('car')">Create Car</button>
+                    <button onclick="createVehicle('plane')">Create Plane</button>
+                    <button onclick="testVehicleMove()">Test Move Method</button>
+                    <button onclick="testVehicleSpecial()">Test Special Method</button>
+                    <div class="output" id="vehicle-output">Create vehicles and test their methods</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Checking Inheritance</h3>
+                    <p>This example shows how to check inheritance relationships in JavaScript.</p>
+                    <div class="code-block">
+class A {}
+class B extends A {}
+class C extends B {}
+
+const a = new A();
+const b = new B();
+const c = new C();
+                    </div>
+                    <button onclick="checkInstanceof()">Check instanceof</button>
+                    <button onclick="checkPrototype()">Check Prototype Chain</button>
+                    <button onclick="checkConstructor()">Check Constructor</button>
+                    <div class="output" id="inheritance-check-output">Click buttons to check inheritance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Example 1: Animal Inheritance
+        class Animal {
+            constructor(name) {
+                this.name = name;
+            }
+            
+            speak() {
+                return `${this.name} makes a sound.`;
+            }
+        }
+
+        class Dog extends Animal {
+            speak() {
+                return `${this.name} barks.`;
+            }
+        }
+
+        class Cat extends Animal {
+            speak() {
+                return `${this.name} meows.`;
+            }
+        }
+        
+        let currentAnimal = null;
+        
+        function createAnimal(type) {
+            const output = document.getElementById('animal-output');
+            let animal;
+            
+            switch(type) {
+                case 'dog':
+                    animal = new Dog('Rex');
+                    break;
+                case 'cat':
+                    animal = new Cat('Whiskers');
+                    break;
+                default:
+                    animal = new Animal('Generic Animal');
+            }
+            
+            currentAnimal = animal;
+            output.innerHTML = `Created: ${animal.constructor.name}<br>`;
+            output.innerHTML += `Name: ${animal.name}<br>`;
+            output.innerHTML += `Sound: ${animal.speak()}`;
+        }
+        
+        // Example 2: Employee Management
+        class Employee {
+            constructor(name, position, salary) {
+                this.name = name;
+                this.position = position;
+                this.salary = salary;
+            }
+            
+            getDetails() {
+                return `${this.name} - ${this.position}`;
+            }
+            
+            getAnnualSalary() {
+                return this.salary * 12;
+            }
+        }
+
+        class Manager extends Employee {
+            constructor(name, salary, department) {
+                super(name, "Manager", salary);
+                this.department = department;
+            }
+            
+            getDetails() {
+                return `${super.getDetails()} (${this.department})`;
+            }
+            
+            manageTeam() {
+                return `${this.name} is managing the ${this.department} team.`;
+            }
+        }
+
+        class Developer extends Employee {
+            constructor(name, salary, programmingLanguage) {
+                super(name, "Developer", salary);
+                this.programmingLanguage = programmingLanguage;
+            }
+            
+            getDetails() {
+                return `${super.getDetails()} - ${this.programmingLanguage}`;
+            }
+            
+            writeCode() {
+                return `${this.name} is writing code in ${this.programmingLanguage}.`;
+            }
+        }
+        
+        let employees = [];
+        
+        function createEmployee() {
+            const type = document.getElementById('employee-type').value;
+            const name = document.getElementById('employee-name').value || 'Unknown';
+            const salary = parseInt(document.getElementById('employee-salary').value) || 0;
+            const specialty = document.getElementById('employee-specialty').value || 'Unknown';
+            
+            let employee;
+            
+            if (type === 'manager') {
+                employee = new Manager(name, salary, specialty);
+            } else {
+                employee = new Developer(name, salary, specialty);
+            }
+            
+            employees.push(employee);
+            
+            const output = document.getElementById('employee-output');
+            output.innerHTML = `Created ${employee.constructor.name}: ${employee.getDetails()}<br>`;
+            output.innerHTML += `Annual Salary: $${employee.getAnnualSalary()}`;
+        }
+        
+        function showEmployeeDetails() {
+            const output = document.getElementById('employee-output');
+            if (employees.length === 0) {
+                output.innerHTML = "No employees created yet.";
+                return;
+            }
+            
+            output.innerHTML = "<strong>All Employees:</strong><br>";
+            employees.forEach(emp => {
+                output.innerHTML += `${emp.getDetails()} - Annual: $${emp.getAnnualSalary()}<br>`;
+            });
+        }
+        
+        function showEmployeeAction() {
+            const output = document.getElementById('employee-output');
+            if (employees.length === 0) {
+                output.innerHTML = "No employees created yet.";
+                return;
+            }
+            
+            const lastEmployee = employees[employees.length - 1];
+            if (lastEmployee instanceof Manager) {
+                output.innerHTML = lastEmployee.manageTeam();
+            } else if (lastEmployee instanceof Developer) {
+                output.innerHTML = lastEmployee.writeCode();
+            }
+        }
+        
+        // Example 3: Method Overriding
+        class Vehicle {
+            constructor(type, speed) {
+                this.type = type;
+                this.speed = speed;
+            }
+            
+            move() {
+                return `The ${this.type} is moving at ${this.speed} mph.`;
+            }
+            
+            stop() {
+                return `The ${this.type} has stopped.`;
+            }
+        }
+
+        class Car extends Vehicle {
+            constructor(speed, brand) {
+                super("car", speed);
+                this.brand = brand;
+            }
+            
+            move() {
+                return `${super.move()} The ${this.brand} is on the road!`;
+            }
+            
+            honk() {
+                return `The ${this.brand} is honking!`;
+            }
+        }
+
+        class Plane extends Vehicle {
+            constructor(speed, airline) {
+                super("plane", speed);
+                this.airline = airline;
+            }
+            
+            move() {
+                return `The ${this.airline} plane is flying at ${this.speed} mph.`;
+            }
+            
+            takeOff() {
+                return `The ${this.airline} plane is taking off!`;
+            }
+        }
+        
+        let currentVehicle = null;
+        
+        function createVehicle(type) {
+            const output = document.getElementById('vehicle-output');
+            let vehicle;
+            
+            if (type === 'car') {
+                vehicle = new Car(60, 'Toyota');
+            } else {
+                vehicle = new Plane(500, 'Delta');
+            }
+            
+            currentVehicle = vehicle;
+            output.innerHTML = `Created: ${vehicle.constructor.name}<br>`;
+            output.innerHTML += `Type: ${vehicle.type}<br>`;
+            output.innerHTML += `Brand/Airline: ${vehicle.brand || vehicle.airline}<br>`;
+            output.innerHTML += `Speed: ${vehicle.speed} mph`;
+        }
+        
+        function testVehicleMove() {
+            const output = document.getElementById('vehicle-output');
+            if (!currentVehicle) {
+                output.innerHTML = "No vehicle created yet.";
+                return;
+            }
+            
+            output.innerHTML = currentVehicle.move();
+        }
+        
+        function testVehicleSpecial() {
+            const output = document.getElementById('vehicle-output');
+            if (!currentVehicle) {
+                output.innerHTML = "No vehicle created yet.";
+                return;
+            }
+            
+            if (currentVehicle instanceof Car) {
+                output.innerHTML = currentVehicle.honk();
+            } else if (currentVehicle instanceof Plane) {
+                output.innerHTML = currentVehicle.takeOff();
+            }
+        }
+        
+        // Example 4: Checking Inheritance
+        class A {}
+        class B extends A {}
+        class C extends B {}
+        
+        const a = new A();
+        const b = new B();
+        const c = new C();
+        
+        function checkInstanceof() {
+            const output = document.getElementById('inheritance-check-output');
+            output.innerHTML = "<strong>instanceof checks:</strong><br>";
+            output.innerHTML += `c instanceof C: ${c instanceof C}<br>`;
+            output.innerHTML += `c instanceof B: ${c instanceof B}<br>`;
+            output.innerHTML += `c instanceof A: ${c instanceof A}<br>`;
+            output.innerHTML += `b instanceof A: ${b instanceof A}<br>`;
+            output.innerHTML += `a instanceof C: ${a instanceof C}`;
+        }
+        
+        function checkPrototype() {
+            const output = document.getElementById('inheritance-check-output');
+            output.innerHTML = "<strong>Prototype chain for c:</strong><br>";
+            output.innerHTML += `c.__proto__ === C.prototype: ${c.__proto__ === C.prototype}<br>`;
+            output.innerHTML += `c.__proto__.__proto__ === B.prototype: ${c.__proto__.__proto__ === B.prototype}<br>`;
+            output.innerHTML += `c.__proto__.__proto__.__proto__ === A.prototype: ${c.__proto__.__proto__.__proto__ === A.prototype}<br>`;
+            output.innerHTML += `c.__proto__.__proto__.__proto__.__proto__ === Object.prototype: ${c.__proto__.__proto__.__proto__.__proto__ === Object.prototype}`;
+        }
+        
+        function checkConstructor() {
+            const output = document.getElementById('inheritance-check-output');
+            output.innerHTML = "<strong>Constructor checks:</strong><br>";
+            output.innerHTML += `c.constructor === C: ${c.constructor === C}<br>`;
+            output.innerHTML += `b.constructor === B: ${b.constructor === B}<br>`;
+            output.innerHTML += `a.constructor === A: ${a.constructor === A}<br>`;
+            output.innerHTML += `Object.getPrototypeOf(c).constructor === C: ${Object.getPrototypeOf(c).constructor === C}`;
+        }
+    </script>
+</body>
+</html>

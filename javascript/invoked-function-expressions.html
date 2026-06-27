@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript IIFEs Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .iife-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .concept-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .iife-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e17055;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .visualization {
+            position: relative;
+            height: 250px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        
+        .function-box {
+            position: absolute;
+            width: 160px;
+            padding: 12px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            animation: functionCreate 6s infinite;
+        }
+        
+        @keyframes functionCreate {
+            0% { top: 20px; left: 50px; opacity: 0; }
+            20% { top: 20px; left: 50px; opacity: 1; }
+            40% { top: 20px; left: 50px; opacity: 1; }
+            60% { top: 120px; left: 50px; opacity: 1; }
+            80% { top: 120px; left: 50px; opacity: 0; }
+            100% { top: 20px; left: 50px; opacity: 0; }
+        }
+        
+        .invocation-box {
+            position: absolute;
+            width: 160px;
+            padding: 12px;
+            background: #b21f1f;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            animation: functionInvoke 6s infinite;
+            animation-delay: 2s;
+        }
+        
+        @keyframes functionInvoke {
+            0% { top: 120px; left: 250px; opacity: 0; }
+            20% { top: 120px; left: 250px; opacity: 1; }
+            40% { top: 120px; left: 250px; opacity: 1; }
+            60% { top: 120px; left: 250px; opacity: 0; }
+            100% { top: 120px; left: 250px; opacity: 0; }
+        }
+        
+        .result-box {
+            position: absolute;
+            width: 160px;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            animation: functionResult 6s infinite;
+            animation-delay: 4s;
+        }
+        
+        @keyframes functionResult {
+            0% { top: 20px; left: 450px; opacity: 0; }
+            20% { top: 20px; left: 450px; opacity: 1; }
+            80% { top: 20px; left: 450px; opacity: 1; }
+            100% { top: 20px; left: 450px; opacity: 0; }
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .method-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .method-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #b21f1f;
+            font-weight: bold;
+        }
+        
+        .data-input {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .data-input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .scope-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .scope-box {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 200px;
+        }
+        
+        .scope-box h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .variable-item {
+            background: #e7f3ff;
+            padding: 5px 10px;
+            margin: 3px 0;
+            border-radius: 3px;
+            border-left: 3px solid #1a2a6c;
+        }
+        
+        .global-scope {
+            border-color: #b21f1f;
+        }
+        
+        .global-scope .variable-item {
+            border-left-color: #b21f1f;
+        }
+        
+        .iife-scope {
+            border-color: #28a745;
+        }
+        
+        .iife-scope .variable-item {
+            border-left-color: #28a745;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .syntax-variations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .syntax-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .syntax-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript IIFEs Explained</h1>
+            <p class="subtitle">Master Immediately Invoked Function Expressions</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>What are IIFEs?</h2>
+                <p>IIFE (Immediately Invoked Function Expression) is a JavaScript function that runs as soon as it is defined. It's a design pattern also known as a Self-Executing Anonymous Function.</p>
+                
+                <div class="iife-concepts">
+                    <div class="concept-card">
+                        <h4>⚡ Immediate Execution</h4>
+                        <p>Runs immediately after definition</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🛡️ Private Scope</h4>
+                        <p>Creates isolated variable scope</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🎯 No Global Pollution</h4>
+                        <p>Variables don't leak to global scope</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🔒 Data Encapsulation</h4>
+                        <p>Protects variables from external access</p>
+                    </div>
+                </div>
+                
+                <div class="visualization">
+                    <div class="function-box">Function Definition</div>
+                    <div class="invocation-box">Immediate Invocation</div>
+                    <div class="result-box">Result Returned</div>
+                </div>
+                
+                <h3>How IIFEs Work</h3>
+                <div class="iife-flow">
+                    <div class="flow-step">1. Define anonymous function</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">2. Wrap in parentheses</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">3. Add invocation parentheses</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">4. Function executes immediately</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">5. Creates private scope</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'basic-tab')">Basic Syntax</div>
+                    <div class="tab" onclick="switchTab(event, 'scope-tab')">Scope Control</div>
+                    <div class="tab" onclick="switchTab(event, 'variations-tab')">Syntax Variations</div>
+                </div>
+                
+                <div id="basic-tab" class="tab-content active">
+                    <h4>Basic IIFE Syntax</h4>
+                    <div class="code-block">
+<span class="code-title">Classic IIFE Pattern</span>
+// Basic IIFE structure
+(function() {
+    console.log('IIFE executed immediately!');
+})();
+
+// With parameters
+(function(name) {
+    console.log('Hello, ' + name);
+})('Alice');
+                    </div>
+                    <p><strong>Key Point:</strong> The parentheses around the function turn it into an expression, and the trailing <code>()</code> immediately invokes it.</p>
+                </div>
+                
+                <div id="scope-tab" class="tab-content">
+                    <h4>Scope Control with IIFEs</h4>
+                    <div class="code-block">
+<span class="code-title">Creating Private Scope</span>
+var globalVar = 'I am global';
+
+(function() {
+    var localVar = 'I am private';
+    console.log(globalVar); // Can access global
+    console.log(localVar);  // Can access local
+})();
+
+console.log(globalVar); // Works
+console.log(localVar);  // ReferenceError - localVar is not defined
+                    </div>
+                    <p><strong>Key Point:</strong> IIFEs create a new scope, preventing variable pollution in the global namespace.</p>
+                </div>
+                
+                <div id="variations-tab" class="tab-content">
+                    <h4>IIFE Syntax Variations</h4>
+                    <div class="syntax-variations">
+                        <div class="syntax-card">
+                            <h4>Classic Parentheses</h4>
+                            <div class="code-block" style="font-size: 0.8rem;">
+(function() {
+    // code here
+})();
+                            </div>
+                        </div>
+                        <div class="syntax-card">
+                            <h4>Parentheses Around Invocation</h4>
+                            <div class="code-block" style="font-size: 0.8rem;">
+(function() {
+    // code here
+}());
+                            </div>
+                        </div>
+                        <div class="syntax-card">
+                            <h4>Unary Operator</h4>
+                            <div class="code-block" style="font-size: 0.8rem;">
+!function() {
+    // code here
+}();
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Insight:</strong> IIFEs were crucial before ES6 modules for creating modular code and avoiding global namespace pollution. They're still useful for creating isolated scopes and immediate execution.
+                </div>
+                
+                <h2>Why Use IIFEs?</h2>
+                
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Without IIFE</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+var counter = 0;
+
+function increment() {
+    counter++;
+    return counter;
+}
+
+// counter is globally accessible
+console.log(counter); // 0
+increment();
+console.log(counter); // 1
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>With IIFE</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+var counterModule = (function() {
+    var counter = 0;
+    
+    return {
+        increment: function() {
+            counter++;
+            return counter;
+        },
+        getCount: function() {
+            return counter;
+        }
+    };
+})();
+
+// counter is private
+console.log(counterModule.getCount()); // 0
+counterModule.increment();
+console.log(counterModule.getCount()); // 1
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Remember:</strong> IIFEs are particularly useful for initialization code, creating modules, and avoiding variable conflicts in larger applications.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Basic IIFE Execution</h3>
+                    <p>See how IIFEs execute immediately and create isolated scope.</p>
+                    <div class="code-block">
+// Global scope variable
+var globalMessage = "Global message";
+
+(function() {
+    // IIFE scope variable
+    var localMessage = "Local IIFE message";
+    console.log("Inside IIFE:");
+    console.log(" - " + globalMessage);
+    console.log(" - " + localMessage);
+})();
+
+console.log("Outside IIFE:");
+console.log(" - " + globalMessage);
+// console.log(localMessage); // This would cause ReferenceError
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runBasicIIFE()">Run IIFE</button>
+                        <button onclick="showBasicExplanation()">Show Explanation</button>
+                        <button onclick="resetBasic()">Reset</button>
+                    </div>
+                    <div class="scope-visual">
+                        <div class="scope-box global-scope">
+                            <h4>Global Scope</h4>
+                            <div class="variable-item">globalMessage: "Global message"</div>
+                        </div>
+                        <div class="scope-box iife-scope">
+                            <h4>IIFE Scope</h4>
+                            <div class="variable-item">localMessage: "Local IIFE message"</div>
+                        </div>
+                    </div>
+                    <div class="output" id="basic-output">
+                        Click "Run IIFE" to see execution
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Module Pattern with IIFE</h3>
+                    <p>Create a counter module with private state using IIFE.</p>
+                    <div class="code-block">
+var Counter = (function() {
+    // Private variable
+    var count = 0;
+    
+    // Return public interface
+    return {
+        increment: function() {
+            count++;
+            return count;
+        },
+        decrement: function() {
+            count--;
+            return count;
+        },
+        getCount: function() {
+            return count;
+        },
+        reset: function() {
+            count = 0;
+            return count;
+        }
+    };
+})();
+
+// Usage
+console.log(Counter.getCount()); // 0
+Counter.increment();
+Counter.increment();
+console.log(Counter.getCount()); // 2
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="createCounterModule()">Create Counter</button>
+                        <button onclick="incrementCounter()">Increment</button>
+                        <button onclick="decrementCounter()">Decrement</button>
+                        <button onclick="getCounterValue()">Get Count</button>
+                        <button onclick="resetCounter()">Reset Counter</button>
+                    </div>
+                    <div class="output" id="counter-output">
+                        Create a counter module to start
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: IIFE with Parameters</h3>
+                    <p>Pass values to IIFEs and see how they create closures.</p>
+                    <div class="code-block">
+// IIFE with parameters
+var calculator = (function(initialValue) {
+    var result = initialValue;
+    
+    return {
+        add: function(x) {
+            result += x;
+            return this;
+        },
+        subtract: function(x) {
+            result -= x;
+            return this;
+        },
+        multiply: function(x) {
+            result *= x;
+            return this;
+        },
+        getResult: function() {
+            return result;
+        }
+    };
+})(10); // Start with 10
+
+// Method chaining
+var finalResult = calculator.add(5).multiply(2).subtract(3).getResult();
+console.log(finalResult); // (10 + 5) * 2 - 3 = 27
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="createCalculator()">Create Calculator</button>
+                        <input type="number" id="calc-value" placeholder="Enter number" value="5">
+                        <button onclick="addToCalc()">Add</button>
+                        <button onclick="multiplyCalc()">Multiply</button>
+                        <button onclick="getCalcResult()">Get Result</button>
+                    </div>
+                    <div class="output" id="calculator-output">
+                        Create a calculator to start
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: IIFE in Loops</h3>
+                    <p>Solve the classic loop closure problem with IIFEs.</p>
+                    <div class="code-block">
+// Problem: All callbacks log the same value
+for (var i = 0; i < 3; i++) {
+    setTimeout(function() {
+        console.log('Without IIFE: ' + i);
+    }, 100);
+}
+// Output: 3, 3, 3
+
+// Solution: Use IIFE to capture current value
+for (var i = 0; i < 3; i++) {
+    (function(currentI) {
+        setTimeout(function() {
+            console.log('With IIFE: ' + currentI);
+        }, 100);
+    })(i);
+}
+// Output: 0, 1, 2
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runLoopWithoutIIFE()">Without IIFE</button>
+                        <button onclick="runLoopWithIIFE()">With IIFE</button>
+                        <button onclick="resetLoop()">Reset</button>
+                    </div>
+                    <div class="output" id="loop-output">
+                        Click buttons to see the difference
+                    </div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Async IIFE with Await</h3>
+                    <p>Use async IIFEs for immediate async execution.</p>
+                    <div class="code-block">
+// Async IIFE pattern
+(async function() {
+    console.log('Starting async operation...');
+    
+    // Simulate API call
+    const data = await new Promise(resolve => {
+        setTimeout(() => {
+            resolve('Data loaded successfully!');
+        }, 1000);
+    });
+    
+    console.log(data);
+    console.log('Async operation completed!');
+})();
+
+console.log('This runs immediately (does not wait for IIFE)');
+                    </div>
+                    <div class="demo-controls">
+                        <button onclick="runAsyncIIFE()">Run Async IIFE</button>
+                        <button onclick="resetAsync()">Reset</button>
+                    </div>
+                    <div class="output" id="async-output">
+                        Click to run async IIFE
+                    </div>
+                </div>
+                
+                <div class="warning">
+                    <strong>Modern Alternatives:</strong>
+                    <ul>
+                        <li><strong>ES6 Modules</strong> - Use import/export for better code organization</li>
+                        <li><strong>Block Scope</strong> - let/const with {} blocks create natural scope</li>
+                        <li><strong>Classes</strong> - For object-oriented patterns with private fields</li>
+                        <li><strong>However, IIFEs are still useful for:</strong> Immediate execution, legacy code, and specific scope isolation needs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ========== EXAMPLE 1: Basic IIFE Execution ==========
+        function runBasicIIFE() {
+            const output = document.getElementById('basic-output');
+            output.innerHTML = '';
+            
+            try {
+                // Global scope variable
+                var globalMessage = "Global message";
+                
+                output.innerHTML += '<strong>Global scope:</strong><br>';
+                output.innerHTML += `var globalMessage = "Global message";<br><br>`;
+                
+                output.innerHTML += '<strong>IIFE execution:</strong><br>';
+                
+                // IIFE execution
+                (function() {
+                    var localMessage = "Local IIFE message";
+                    output.innerHTML += `Inside IIFE:<br>`;
+                    output.innerHTML += ` - ${globalMessage}<br>`;
+                    output.innerHTML += ` - ${localMessage}<br><br>`;
+                })();
+                
+                output.innerHTML += '<strong>Back to global scope:</strong><br>';
+                output.innerHTML += ` - ${globalMessage}<br>`;
+                output.innerHTML += ` - localMessage is not accessible here (ReferenceError)<br>`;
+                
+            } catch (error) {
+                output.innerHTML += `<span class="error">Error: ${error.message}</span><br>`;
+            }
+        }
+
+        function showBasicExplanation() {
+            const output = document.getElementById('basic-output');
+            output.innerHTML = `
+                <strong>How Basic IIFE Works:</strong><br><br>
+                
+                <strong>1. Function Definition:</strong><br>
+                <code>(function() { ... })</code><br>
+                • Creates an anonymous function<br>
+                • Parentheses make it a function expression<br><br>
+                
+                <strong>2. Immediate Invocation:</strong><br>
+                <code>(function() { ... })()</code><br>
+                • The trailing () immediately calls the function<br>
+                • No need to assign to a variable or call separately<br><br>
+                
+                <strong>3. Scope Isolation:</strong><br>
+                • Variables inside IIFE are not accessible outside<br>
+                • Prevents global namespace pollution<br>
+                • Creates a clean, isolated execution environment<br><br>
+                
+                <strong>Key Benefit:</strong> Execute code immediately while keeping variables private.
+            `;
+        }
+
+        function resetBasic() {
+            document.getElementById('basic-output').innerHTML = 'Click "Run IIFE" to see execution';
+        }
+
+        // ========== EXAMPLE 2: Module Pattern ==========
+        let Counter = null;
+
+        function createCounterModule() {
+            Counter = (function() {
+                // Private variable
+                var count = 0;
+                
+                // Return public interface
+                return {
+                    increment: function() {
+                        count++;
+                        return count;
+                    },
+                    decrement: function() {
+                        count--;
+                        return count;
+                    },
+                    getCount: function() {
+                        return count;
+                    },
+                    reset: function() {
+                        count = 0;
+                        return count;
+                    }
+                };
+            })();
+            
+            const output = document.getElementById('counter-output');
+            output.innerHTML = `
+                <span class="success">Counter module created!</span><br>
+                Current count: ${Counter.getCount()}<br>
+                <em>The count variable is private and cannot be accessed directly.</em>
+            `;
+        }
+
+        function incrementCounter() {
+            if (!Counter) {
+                document.getElementById('counter-output').innerHTML = '<span class="error">Please create a counter module first!</span>';
+                return;
+            }
+            
+            const newCount = Counter.increment();
+            const output = document.getElementById('counter-output');
+            output.innerHTML = `
+                Counter incremented!<br>
+                New count: <strong>${newCount}</strong><br>
+                <em>Try accessing Counter.count directly - it's undefined!</em>
+            `;
+        }
+
+        function decrementCounter() {
+            if (!Counter) {
+                document.getElementById('counter-output').innerHTML = '<span class="error">Please create a counter module first!</span>';
+                return;
+            }
+            
+            const newCount = Counter.decrement();
+            const output = document.getElementById('counter-output');
+            output.innerHTML = `
+                Counter decremented!<br>
+                New count: <strong>${newCount}</strong>
+            `;
+        }
+
+        function getCounterValue() {
+            if (!Counter) {
+                document.getElementById('counter-output').innerHTML = '<span class="error">Please create a counter module first!</span>';
+                return;
+            }
+            
+            const count = Counter.getCount();
+            const output = document.getElementById('counter-output');
+            output.innerHTML = `
+                Current count: <strong>${count}</strong><br>
+                Direct access test: Counter.count = <strong>${typeof Counter.count !== 'undefined' ? Counter.count : 'undefined'}</strong>
+            `;
+        }
+
+        function resetCounter() {
+            if (!Counter) {
+                document.getElementById('counter-output').innerHTML = '<span class="error">Please create a counter module first!</span>';
+                return;
+            }
+            
+            const count = Counter.reset();
+            const output = document.getElementById('counter-output');
+            output.innerHTML = `
+                Counter reset!<br>
+                Count: <strong>${count}</strong>
+            `;
+        }
+
+        // ========== EXAMPLE 3: IIFE with Parameters ==========
+        let calculator = null;
+
+        function createCalculator() {
+            calculator = (function(initialValue) {
+                var result = initialValue || 0;
+                
+                return {
+                    add: function(x) {
+                        result += x;
+                        return this;
+                    },
+                    subtract: function(x) {
+                        result -= x;
+                        return this;
+                    },
+                    multiply: function(x) {
+                        result *= x;
+                        return this;
+                    },
+                    getResult: function() {
+                        return result;
+                    }
+                };
+            })(10); // Start with 10
+            
+            const output = document.getElementById('calculator-output');
+            output.innerHTML = `
+                <span class="success">Calculator created with initial value 10!</span><br>
+                Current result: ${calculator.getResult()}<br>
+                <em>Try chaining operations: calculator.add(5).multiply(2).getResult()</em>
+            `;
+        }
+
+        function addToCalc() {
+            if (!calculator) {
+                document.getElementById('calculator-output').innerHTML = '<span class="error">Please create a calculator first!</span>';
+                return;
+            }
+            
+            const value = parseInt(document.getElementById('calc-value').value) || 0;
+            calculator.add(value);
+            const output = document.getElementById('calculator-output');
+            output.innerHTML = `
+                Added ${value}<br>
+                Current result: <strong>${calculator.getResult()}</strong>
+            `;
+        }
+
+        function multiplyCalc() {
+            if (!calculator) {
+                document.getElementById('calculator-output').innerHTML = '<span class="error">Please create a calculator first!</span>';
+                return;
+            }
+            
+            const value = parseInt(document.getElementById('calc-value').value) || 1;
+            calculator.multiply(value);
+            const output = document.getElementById('calculator-output');
+            output.innerHTML = `
+                Multiplied by ${value}<br>
+                Current result: <strong>${calculator.getResult()}</strong>
+            `;
+        }
+
+        function getCalcResult() {
+            if (!calculator) {
+                document.getElementById('calculator-output').innerHTML = '<span class="error">Please create a calculator first!</span>';
+                return;
+            }
+            
+            const result = calculator.getResult();
+            const output = document.getElementById('calculator-output');
+            output.innerHTML = `
+                Final result: <strong>${result}</strong><br>
+                <em>The internal 'result' variable is completely private!</em>
+            `;
+        }
+
+        // ========== EXAMPLE 4: IIFE in Loops ==========
+        function runLoopWithoutIIFE() {
+            const output = document.getElementById('loop-output');
+            output.innerHTML = '<strong>Without IIFE (classic problem):</strong><br>';
+            
+            for (var i = 0; i < 3; i++) {
+                setTimeout(function() {
+                    output.innerHTML += `Timeout ${i}: i = ${i}<br>`;
+                }, 100 * (i + 1));
+            }
+            
+            output.innerHTML += '<br><em>All timeouts share the same i variable (value: 3)</em>';
+        }
+
+        function runLoopWithIIFE() {
+            const output = document.getElementById('loop-output');
+            output.innerHTML = '<strong>With IIFE (problem solved):</strong><br>';
+            
+            for (var i = 0; i < 3; i++) {
+                (function(currentI) {
+                    setTimeout(function() {
+                        output.innerHTML += `Timeout ${currentI}: i = ${currentI}<br>`;
+                    }, 100 * (currentI + 1));
+                })(i);
+            }
+            
+            output.innerHTML += '<br><em>Each timeout captures its own i value</em>';
+        }
+
+        function resetLoop() {
+            document.getElementById('loop-output').innerHTML = 'Click buttons to see the difference';
+        }
+
+        // ========== EXAMPLE 5: Async IIFE ==========
+        function runAsyncIIFE() {
+            const output = document.getElementById('async-output');
+            output.innerHTML = '<strong>Running async IIFE:</strong><br>';
+            
+            (async function() {
+                output.innerHTML += '1. Starting async operation...<br>';
+                
+                // Simulate API call
+                const data = await new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve('2. Data loaded successfully!');
+                    }, 1000);
+                });
+                
+                output.innerHTML += data + '<br>';
+                output.innerHTML += '3. Async operation completed!<br>';
+            })();
+            
+            output.innerHTML += '4. This runs immediately (does not wait for IIFE)<br>';
+        }
+
+        function resetAsync() {
+            document.getElementById('async-output').innerHTML = 'Click to run async IIFE';
+        }
+
+        // Animation for the visualization
+        function animateIIFE() {
+            const functionBox = document.querySelector('.function-box');
+            const invocationBox = document.querySelector('.invocation-box');
+            const resultBox = document.querySelector('.result-box');
+            
+            // Reset animations
+            functionBox.style.animation = 'none';
+            invocationBox.style.animation = 'none';
+            resultBox.style.animation = 'none';
+            
+            // Trigger reflow
+            void functionBox.offsetWidth;
+            void invocationBox.offsetWidth;
+            void resultBox.offsetWidth;
+            
+            // Restart animations
+            functionBox.style.animation = 'functionCreate 6s infinite';
+            invocationBox.style.animation = 'functionInvoke 6s infinite';
+            invocationBox.style.animationDelay = '2s';
+            resultBox.style.animation = 'functionResult 6s infinite';
+            resultBox.style.animationDelay = '4s';
+        }
+        
+        // Start the animation when the page loads
+        window.addEventListener('load', animateIIFE);
+        
+        // Restart animation on tab focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                animateIIFE();
+            }
+        });
+    </script>
+</body>
+</html>

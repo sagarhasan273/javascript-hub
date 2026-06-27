@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Async/Await & Promises Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .promise-states {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .state-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .pending {
+            border-color: #fdbb2d;
+            background: #fff9e6;
+        }
+        
+        .fulfilled {
+            border-color: #28a745;
+            background: #e8f5e8;
+        }
+        
+        .rejected {
+            border-color: #b21f1f;
+            background: #fde8e8;
+        }
+        
+        .state-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .promise-chain {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .chain-step {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .chain-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e17055;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .visualization {
+            position: relative;
+            height: 250px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        
+        .promise-flow {
+            position: absolute;
+            width: 140px;
+            padding: 10px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            animation: promiseFlow 6s infinite;
+        }
+        
+        @keyframes promiseFlow {
+            0% { top: 20px; left: 20px; }
+            16% { top: 20px; left: calc(100% - 160px); }
+            32% { top: calc(100% - 60px); left: calc(100% - 160px); }
+            48% { top: calc(100% - 60px); left: 20px; }
+            64% { top: 20px; left: 20px; opacity: 1; }
+            80% { top: 20px; left: 20px; opacity: 0; }
+            100% { top: 20px; left: 20px; opacity: 1; }
+        }
+        
+        .async-flow {
+            position: absolute;
+            width: 140px;
+            padding: 10px;
+            background: #b21f1f;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            animation: asyncFlow 6s infinite;
+            animation-delay: 1s;
+        }
+        
+        @keyframes asyncFlow {
+            0% { top: 20px; left: 20px; opacity: 1; }
+            16% { top: 20px; left: 20px; opacity: 1; }
+            32% { top: 20px; left: calc(100% - 160px); opacity: 1; }
+            48% { top: calc(100% - 60px); left: calc(100% - 160px); opacity: 1; }
+            64% { top: calc(100% - 60px); left: 20px; opacity: 1; }
+            80% { top: 20px; left: 20px; opacity: 1; }
+            100% { top: 20px; left: 20px; opacity: 1; }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #1a2a6c;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .method-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .method-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #b21f1f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Async/Await & Promises</h1>
+            <p class="subtitle">Master asynchronous JavaScript with Promises and Async/Await</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>Understanding Promises</h2>
+                <p>A Promise is an object representing the eventual completion or failure of an asynchronous operation.</p>
+                
+                <div class="promise-states">
+                    <div class="state-card pending">
+                        <h4>⏳ Pending</h4>
+                        <p>Initial state, neither fulfilled nor rejected</p>
+                    </div>
+                    <div class="state-card fulfilled">
+                        <h4>✅ Fulfilled</h4>
+                        <p>Operation completed successfully</p>
+                    </div>
+                    <div class="state-card rejected">
+                        <h4>❌ Rejected</h4>
+                        <p>Operation failed</p>
+                    </div>
+                </div>
+                
+                <div class="visualization">
+                    <div class="promise-flow">Promise Created</div>
+                    <div class="async-flow">Async Operation</div>
+                </div>
+                
+                <h3>Promise Lifecycle</h3>
+                <div class="promise-chain">
+                    <div class="chain-step">1. Promise Created (Pending)</div>
+                    <div class="chain-arrow">↓</div>
+                    <div class="chain-step">2. Async Operation Starts</div>
+                    <div class="chain-arrow">↓</div>
+                    <div class="chain-step">3. Operation Completes</div>
+                    <div class="chain-arrow">↓</div>
+                    <div class="chain-step">4. Promise Settled (Fulfilled/Rejected)</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'creation-tab')">Creating Promises</div>
+                    <div class="tab" onclick="switchTab(event, 'consuming-tab')">Consuming Promises</div>
+                    <div class="tab" onclick="switchTab(event, 'methods-tab')">Promise Methods</div>
+                </div>
+                
+                <div id="creation-tab" class="tab-content active">
+                    <h4>Creating Promises</h4>
+                    <div class="code-block">
+<span class="code-title">Basic Promise Creation</span>
+const myPromise = new Promise((resolve, reject) => {
+    // Async operation here
+    const success = true;
+    
+    if (success) {
+        resolve('Operation completed successfully!');
+    } else {
+        reject('Operation failed!');
+    }
+});
+                    </div>
+                </div>
+                
+                <div id="consuming-tab" class="tab-content">
+                    <h4>Consuming Promises</h4>
+                    <div class="code-block">
+<span class="code-title">Using .then() and .catch()</span>
+myPromise
+    .then(result => {
+        console.log('Success:', result);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        console.log('Operation completed');
+    });
+                    </div>
+                </div>
+                
+                <div id="methods-tab" class="tab-content">
+                    <h4>Promise Static Methods</h4>
+                    <div class="method-grid">
+                        <div class="method-card">
+                            <h4>Promise.all()</h4>
+                            <p>Waits for all promises to resolve</p>
+                        </div>
+                        <div class="method-card">
+                            <h4>Promise.race()</h4>
+                            <p>Returns first settled promise</p>
+                        </div>
+                        <div class="method-card">
+                            <h4>Promise.any()</h4>
+                            <p>Returns first fulfilled promise</p>
+                        </div>
+                        <div class="method-card">
+                            <h4>Promise.allSettled()</h4>
+                            <p>Waits for all to settle</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Point:</strong> Promises help avoid "callback hell" and provide a cleaner way to handle asynchronous operations.
+                </div>
+                
+                <h2>Async/Await - Syntactic Sugar</h2>
+                <p>Async/await is built on Promises and makes asynchronous code look and behave like synchronous code.</p>
+                
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Promise Chain</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+fetchUser()
+    .then(user => fetchPosts(user.id))
+    .then(posts => fetchComments(posts[0].id))
+    .then(comments => {
+        console.log(comments);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Async/Await</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+async function getComments() {
+    try {
+        const user = await fetchUser();
+        const posts = await fetchPosts(user.id);
+        const comments = await fetchComments(posts[0].id);
+        console.log(comments);
+    } catch (error) {
+        console.error(error);
+    }
+}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Remember:</strong> Async functions always return a Promise, and await can only be used inside async functions.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Basic Promise</h3>
+                    <p>Create and consume a simple promise that simulates an API call.</p>
+                    <div class="code-block">
+function simulateAPI(success = true) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (success) {
+                resolve('Data fetched successfully!');
+            } else {
+                reject('Failed to fetch data');
+            }
+        }, 2000);
+    });
+}
+
+// Using the promise
+simulateAPI()
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
+                    </div>
+                    <button onclick="runBasicPromise(true)">Run Successful Promise</button>
+                    <button onclick="runBasicPromise(false)">Run Failing Promise</button>
+                    <div class="progress-bar">
+                        <div class="progress" id="basic-progress"></div>
+                    </div>
+                    <div class="output" id="basic-output">Click a button to run the example</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Promise Chaining</h3>
+                    <p>Chain multiple promises to perform sequential operations.</p>
+                    <div class="code-block">
+function getUser(id) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve({ id, name: 'John Doe' });
+        }, 1000);
+    });
+}
+
+function getPosts(userId) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(['Post 1', 'Post 2', 'Post 3']);
+        }, 1000);
+    });
+}
+
+function getComments(postId) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(['Comment 1', 'Comment 2']);
+        }, 1000);
+    });
+}
+
+// Promise chaining
+getUser(1)
+    .then(user => {
+        console.log('User:', user);
+        return getPosts(user.id);
+    })
+    .then(posts => {
+        console.log('Posts:', posts);
+        return getComments(posts[0]);
+    })
+    .then(comments => {
+        console.log('Comments:', comments);
+    });
+                    </div>
+                    <button onclick="runPromiseChain()">Run Promise Chain</button>
+                    <div class="progress-bar">
+                        <div class="progress" id="chain-progress"></div>
+                    </div>
+                    <div class="output" id="chain-output">Click the button to run the chain</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: Async/Await Conversion</h3>
+                    <p>Convert promise chains to cleaner async/await syntax.</p>
+                    <div class="code-block">
+<span class="code-title">Promise Chain</span>
+function fetchData() {
+    return fetchUser(1)
+        .then(user => fetchPosts(user.id))
+        .then(posts => fetchComments(posts[0]))
+        .then(comments => {
+            return { user, posts, comments };
+        });
+}
+
+<span class="code-title">Async/Await Version</span>
+async function fetchData() {
+    const user = await fetchUser(1);
+    const posts = await fetchPosts(user.id);
+    const comments = await fetchComments(posts[0]);
+    return { user, posts, comments };
+}
+                    </div>
+                    <button onclick="runAsyncVersion()">Run Async/Await Version</button>
+                    <div class="progress-bar">
+                        <div class="progress" id="async-progress"></div>
+                    </div>
+                    <div class="output" id="async-output">Click the button to run async/await</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Error Handling</h3>
+                    <p>Compare error handling in promises vs async/await.</p>
+                    <div class="code-block">
+<span class="code-title">Promise Error Handling</span>
+fetchData()
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+<span class="code-title">Async/Await Error Handling</span>
+async function loadData() {
+    try {
+        const data = await fetchData();
+        console.log('Success:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+                    </div>
+                    <button onclick="runErrorHandling(true)">Run Successful</button>
+                    <button onclick="runErrorHandling(false)">Run With Error</button>
+                    <div class="output" id="error-output">Click buttons to test error handling</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Promise Utility Methods</h3>
+                    <p>Explore Promise.all(), Promise.race(), and other utility methods.</p>
+                    <div class="code-block">
+const promise1 = fetchData('api/1');
+const promise2 = fetchData('api/2');
+const promise3 = fetchData('api/3');
+
+// Wait for all promises
+Promise.all([promise1, promise2, promise3])
+    .then(results => {
+        console.log('All data:', results);
+    });
+
+// Wait for first promise to settle
+Promise.race([promise1, promise2, promise3])
+    .then(firstResult => {
+        console.log('First result:', firstResult);
+    });
+                    </div>
+                    <button onclick="runPromiseAll()">Run Promise.all()</button>
+                    <button onclick="runPromiseRace()">Run Promise.race()</button>
+                    <button onclick="runPromiseAny()">Run Promise.any()</button>
+                    <div class="output" id="utility-output">Click buttons to test utility methods</div>
+                </div>
+                
+                <div class="warning">
+                    <strong>Common Pitfalls:</strong>
+                    <ul>
+                        <li>Forgetting to use await in async functions</li>
+                        <li>Not handling promise rejections</li>
+                        <li>Using async/await in non-async functions</li>
+                        <li>Overusing sequential awaits when parallel execution is possible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Utility function to simulate API calls
+        function simulateAPI(data, delay = 1000, success = true) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (success) {
+                        resolve(data);
+                    } else {
+                        reject(`Error fetching ${data}`);
+                    }
+                }, delay);
+            });
+        }
+        
+        // Update progress bar
+        function updateProgress(progressId, value) {
+            const progressBar = document.getElementById(progressId);
+            progressBar.style.width = value + '%';
+        }
+        
+        // Example 1: Basic Promise
+        function runBasicPromise(success) {
+            const output = document.getElementById('basic-output');
+            const progressId = 'basic-progress';
+            
+            output.innerHTML = 'Starting API call...';
+            updateProgress(progressId, 30);
+            
+            simulateAPI('Data fetched successfully!', 2000, success)
+                .then(data => {
+                    updateProgress(progressId, 100);
+                    output.innerHTML = `<span class="success">✅ ${data}</span>`;
+                    setTimeout(() => updateProgress(progressId, 0), 1000);
+                })
+                .catch(error => {
+                    updateProgress(progressId, 100);
+                    output.innerHTML = `<span class="error">❌ ${error}</span>`;
+                    setTimeout(() => updateProgress(progressId, 0), 1000);
+                });
+        }
+        
+        // Example 2: Promise Chaining
+        function runPromiseChain() {
+            const output = document.getElementById('chain-output');
+            const progressId = 'chain-progress';
+            
+            output.innerHTML = 'Starting promise chain...';
+            
+            function getUser(id) {
+                return simulateAPI({ id, name: 'John Doe' }, 1000);
+            }
+            
+            function getPosts(userId) {
+                return simulateAPI(['Post 1', 'Post 2', 'Post 3'], 1000);
+            }
+            
+            function getComments(postId) {
+                return simulateAPI(['Comment 1', 'Comment 2'], 1000);
+            }
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 5;
+                updateProgress(progressId, progress);
+                if (progress >= 100) clearInterval(progressInterval);
+            }, 150);
+            
+            getUser(1)
+                .then(user => {
+                    output.innerHTML += `<br>✅ User: ${user.name}`;
+                    return getPosts(user.id);
+                })
+                .then(posts => {
+                    output.innerHTML += `<br>✅ Posts: ${posts.join(', ')}`;
+                    return getComments(posts[0]);
+                })
+                .then(comments => {
+                    output.innerHTML += `<br>✅ Comments: ${comments.join(', ')}`;
+                    output.innerHTML += `<br><strong>Chain completed successfully!</strong>`;
+                    clearInterval(progressInterval);
+                    updateProgress(progressId, 100);
+                    setTimeout(() => updateProgress(progressId, 0), 1000);
+                })
+                .catch(error => {
+                    output.innerHTML += `<br><span class="error">❌ ${error}</span>`;
+                    clearInterval(progressInterval);
+                    updateProgress(progressId, 100);
+                    setTimeout(() => updateProgress(progressId, 0), 1000);
+                });
+        }
+        
+        // Example 3: Async/Await Conversion
+        async function runAsyncVersion() {
+            const output = document.getElementById('async-output');
+            const progressId = 'async-progress';
+            
+            output.innerHTML = 'Starting async operations...';
+            updateProgress(progressId, 25);
+            
+            async function fetchData() {
+                const user = await simulateAPI({ id: 1, name: 'Jane Smith' }, 1000);
+                updateProgress(progressId, 50);
+                output.innerHTML += `<br>✅ User: ${user.name}`;
+                
+                const posts = await simulateAPI(['Post A', 'Post B'], 1000);
+                updateProgress(progressId, 75);
+                output.innerHTML += `<br>✅ Posts: ${posts.join(', ')}`;
+                
+                const comments = await simulateAPI(['Great post!', 'Thanks for sharing'], 1000);
+                updateProgress(progressId, 100);
+                output.innerHTML += `<br>✅ Comments: ${comments.join(', ')}`;
+                
+                return { user, posts, comments };
+            }
+            
+            try {
+                const data = await fetchData();
+                output.innerHTML += `<br><strong>Async operations completed!</strong>`;
+                setTimeout(() => updateProgress(progressId, 0), 1000);
+            } catch (error) {
+                output.innerHTML += `<br><span class="error">❌ ${error}</span>`;
+                updateProgress(progressId, 100);
+                setTimeout(() => updateProgress(progressId, 0), 1000);
+            }
+        }
+        
+        // Example 4: Error Handling
+        async function runErrorHandling(success) {
+            const output = document.getElementById('error-output');
+            
+            output.innerHTML = 'Testing error handling...';
+            
+            // Async/await with try/catch
+            async function loadData() {
+                try {
+                    const data = await simulateAPI('Important data', 1000, success);
+                    output.innerHTML += `<br><span class="success">✅ Success: ${data}</span>`;
+                } catch (error) {
+                    output.innerHTML += `<br><span class="error">❌ Error: ${error}</span>`;
+                } finally {
+                    output.innerHTML += `<br>Operation completed (finally block)`;
+                }
+            }
+            
+            await loadData();
+        }
+        
+        // Example 5: Promise Utility Methods
+        async function runPromiseAll() {
+            const output = document.getElementById('utility-output');
+            output.innerHTML = 'Running Promise.all()...';
+            
+            const promises = [
+                simulateAPI('Data from API 1', 1000),
+                simulateAPI('Data from API 2', 1500),
+                simulateAPI('Data from API 3', 1200)
+            ];
+            
+            try {
+                const results = await Promise.all(promises);
+                output.innerHTML += `<br><span class="success">✅ All results: ${results.join(', ')}</span>`;
+            } catch (error) {
+                output.innerHTML += `<br><span class="error">❌ Error: ${error}</span>`;
+            }
+        }
+        
+        async function runPromiseRace() {
+            const output = document.getElementById('utility-output');
+            output.innerHTML = 'Running Promise.race()...';
+            
+            const promises = [
+                simulateAPI('Fast API', 500),
+                simulateAPI('Slow API', 2000),
+                simulateAPI('Medium API', 1000)
+            ];
+            
+            try {
+                const result = await Promise.race(promises);
+                output.innerHTML += `<br><span class="success">✅ First result: ${result}</span>`;
+            } catch (error) {
+                output.innerHTML += `<br><span class="error">❌ Error: ${error}</span>`;
+            }
+        }
+        
+        async function runPromiseAny() {
+            const output = document.getElementById('utility-output');
+            output.innerHTML = 'Running Promise.any()...';
+            
+            const promises = [
+                simulateAPI('', 1000, false), // This will fail
+                simulateAPI('First successful API', 1500, true),
+                simulateAPI('Second successful API', 1200, true)
+            ];
+            
+            try {
+                const result = await Promise.any(promises);
+                output.innerHTML += `<br><span class="success">✅ First successful result: ${result}</span>`;
+            } catch (error) {
+                output.innerHTML += `<br><span class="error">❌ All promises failed</span>`;
+            }
+        }
+        
+        // Animation for the visualization
+        function animateFlows() {
+            const promiseFlow = document.querySelector('.promise-flow');
+            const asyncFlow = document.querySelector('.async-flow');
+            
+            // Reset animations
+            promiseFlow.style.animation = 'none';
+            asyncFlow.style.animation = 'none';
+            
+            // Trigger reflow
+            void promiseFlow.offsetWidth;
+            void asyncFlow.offsetWidth;
+            
+            // Restart animations
+            promiseFlow.style.animation = 'promiseFlow 6s infinite';
+            asyncFlow.style.animation = 'asyncFlow 6s infinite';
+            asyncFlow.style.animationDelay = '1s';
+        }
+        
+        // Start the animation when the page loads
+        window.addEventListener('load', animateFlows);
+        
+        // Restart animation on tab focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                animateFlows();
+            }
+        });
+    </script>
+</body>
+</html>

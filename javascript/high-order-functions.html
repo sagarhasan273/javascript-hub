@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Higher-Order Functions Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .hof-concepts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .concept-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .function-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e17055;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .visualization {
+            position: relative;
+            height: 200px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        
+        .hof-function {
+            position: absolute;
+            width: 140px;
+            padding: 10px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            animation: hofFlow 6s infinite;
+        }
+        
+        @keyframes hofFlow {
+            0% { top: 20px; left: 20px; }
+            25% { top: 20px; left: calc(100% - 160px); }
+            50% { top: calc(100% - 60px); left: calc(100% - 160px); }
+            75% { top: calc(100% - 60px); left: 20px; }
+            100% { top: 20px; left: 20px; }
+        }
+        
+        .callback-function {
+            position: absolute;
+            width: 140px;
+            padding: 10px;
+            background: #b21f1f;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            animation: callbackFlow 6s infinite;
+            animation-delay: 1s;
+        }
+        
+        @keyframes callbackFlow {
+            0% { top: calc(100% - 60px); left: 20px; opacity: 0; }
+            25% { top: calc(100% - 60px); left: 20px; opacity: 1; }
+            50% { top: 20px; left: 20px; opacity: 1; }
+            75% { top: 20px; left: 20px; opacity: 0; }
+            100% { top: calc(100% - 60px); left: 20px; opacity: 0; }
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .method-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .method-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #b21f1f;
+        }
+        
+        .data-input {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .data-input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .array-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .array-item {
+            background: #1a2a6c;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .transformed-array {
+            background: #28a745;
+        }
+        
+        .filtered-array {
+            background: #b21f1f;
+        }
+        
+        .mapped-array {
+            background: #fdbb2d;
+            color: #333;
+        }
+        
+        .function-composition {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .function-box {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .compose-arrow {
+            font-size: 24px;
+            color: #1a2a6c;
+            margin: 0 10px;
+        }
+        
+        .hof-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .hof-type-card {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .hof-type-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Higher-Order Functions</h1>
+            <p class="subtitle">Master functions that operate on other functions</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>What are Higher-Order Functions?</h2>
+                <p>Higher-order functions are functions that either:</p>
+                <ul>
+                    <li>Take other functions as arguments, or</li>
+                    <li>Return functions as their result</li>
+                </ul>
+                
+                <div class="hof-concepts">
+                    <div class="concept-card">
+                        <h4>📥 Accepts Functions</h4>
+                        <p>Takes callback functions as parameters</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>📤 Returns Functions</h4>
+                        <p>Creates and returns new functions</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>🔄 Function Composition</h4>
+                        <p>Combines functions to create new behavior</p>
+                    </div>
+                </div>
+                
+                <div class="visualization">
+                    <div class="hof-function">Higher-Order Function</div>
+                    <div class="callback-function">Callback Function</div>
+                </div>
+                
+                <h3>How HOFs Work</h3>
+                <div class="function-flow">
+                    <div class="flow-step">1. Define a function (callback)</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">2. Pass it to a higher-order function</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">3. HOF executes callback at the right time</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">4. Get transformed result or new function</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'accepts-tab')">Accepts Functions</div>
+                    <div class="tab" onclick="switchTab(event, 'returns-tab')">Returns Functions</div>
+                    <div class="tab" onclick="switchTab(event, 'builtin-tab')">Built-in HOFs</div>
+                </div>
+                
+                <div id="accepts-tab" class="tab-content active">
+                    <h4>Functions That Accept Other Functions</h4>
+                    <div class="code-block">
+<span class="code-title">Array.map() - Accepts a transformation function</span>
+const numbers = [1, 2, 3, 4, 5];
+
+// Higher-order function (map) accepts a function
+const doubled = numbers.map(function(number) {
+    return number * 2;
+});
+
+console.log(doubled); // [2, 4, 6, 8, 10]
+                    </div>
+                </div>
+                
+                <div id="returns-tab" class="tab-content">
+                    <h4>Functions That Return Functions</h4>
+                    <div class="code-block">
+<span class="code-title">Function Factory - Returns new functions</span>
+function createMultiplier(multiplier) {
+    // Returns a new function
+    return function(number) {
+        return number * multiplier;
+    };
+}
+
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+
+console.log(double(5)); // 10
+console.log(triple(5)); // 15
+                    </div>
+                </div>
+                
+                <div id="builtin-tab" class="tab-content">
+                    <h4>Built-in Higher-Order Functions</h4>
+                    <div class="method-grid">
+                        <div class="method-card">
+                            <h4>map()</h4>
+                            <p>Transform each element</p>
+                        </div>
+                        <div class="method-card">
+                            <h4>filter()</h4>
+                            <p>Select elements by condition</p>
+                        </div>
+                        <div class="method-card">
+                            <h4>reduce()</h4>
+                            <p>Accumulate values</p>
+                        </div>
+                        <div class="method-card">
+                            <h4>forEach()</h4>
+                            <p>Execute for each element</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Insight:</strong> Higher-order functions enable powerful abstractions and make code more declarative and reusable.
+                </div>
+                
+                <h2>Common HOF Patterns</h2>
+                
+                <div class="hof-types">
+                    <div class="hof-type-card">
+                        <h4>Function Decorators</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+function withLogging(fn) {
+    return function(...args) {
+        console.log(`Calling ${fn.name} with:`, args);
+        const result = fn(...args);
+        console.log(`Result:`, result);
+        return result;
+    };
+}
+
+const add = (a, b) => a + b;
+const loggedAdd = withLogging(add);
+loggedAdd(2, 3); // Logs the call and result
+                        </div>
+                    </div>
+                    
+                    <div class="hof-type-card">
+                        <h4>Function Composition</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+const compose = (f, g) => x => f(g(x));
+const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x);
+
+const add5 = x => x + 5;
+const multiply3 = x => x * 3;
+const square = x => x * x;
+
+const transform = pipe(add5, multiply3, square);
+console.log(transform(2)); // ((2 + 5) * 3)² = 441
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Imperative Approach</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+const numbers = [1, 2, 3, 4, 5];
+const evenSquares = [];
+
+for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] % 2 === 0) {
+        evenSquares.push(numbers[i] * numbers[i]);
+    }
+}
+
+console.log(evenSquares); // [4, 16]
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Functional HOF Approach</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+const numbers = [1, 2, 3, 4, 5];
+const evenSquares = numbers
+    .filter(n => n % 2 === 0)
+    .map(n => n * n);
+
+console.log(evenSquares); // [4, 16]
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Remember:</strong> Higher-order functions make code more declarative, readable, and reusable by abstracting common patterns.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Array Method HOFs</h3>
+                    <p>Explore built-in array methods that are higher-order functions.</p>
+                    <div class="code-block">
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Higher-order functions in action
+const doubled = numbers.map(n => n * 2);
+const evens = numbers.filter(n => n % 2 === 0);
+const sum = numbers.reduce((acc, n) => acc + n, 0);
+const hasLarge = numbers.some(n => n > 8);
+
+console.log('Original:', numbers);
+console.log('Doubled:', doubled);
+console.log('Evens:', evens);
+console.log('Sum:', sum);
+console.log('Has number > 8:', hasLarge);
+                    </div>
+                    <button onclick="runArrayHOFs()">Run Array HOFs</button>
+                    <div class="array-visual" id="original-array"></div>
+                    <div class="output" id="array-output">Click the button to see HOFs in action</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Custom HOF - Function Factory</h3>
+                    <p>Create functions that return other functions.</p>
+                    <div class="code-block">
+// Function factory - returns new functions
+function createGreeting(greeting) {
+    return function(name) {
+        return `${greeting}, ${name}!`;
+    };
+}
+
+function createMathOperation(operation) {
+    return function(a, b) {
+        switch(operation) {
+            case 'add': return a + b;
+            case 'subtract': return a - b;
+            case 'multiply': return a * b;
+            case 'divide': return a / b;
+        }
+    };
+}
+
+// Create specialized functions
+const sayHello = createGreeting('Hello');
+const sayHi = createGreeting('Hi');
+const add = createMathOperation('add');
+const multiply = createMathOperation('multiply');
+
+console.log(sayHello('Alice')); // Hello, Alice!
+console.log(add(5, 3)); // 8
+                    </div>
+                    <button onclick="runFunctionFactory()">Run Function Factory</button>
+                    <div class="output" id="factory-output">Click the button to create and use function factories</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: HOF with Callbacks</h3>
+                    <p>Create higher-order functions that accept callback functions.</p>
+                    <div class="code-block">
+// Higher-order function that accepts a callback
+function processArray(arr, callback) {
+    const result = [];
+    for (let i = 0; i < arr.length; i++) {
+        result.push(callback(arr[i], i, arr));
+    }
+    return result;
+}
+
+function filterArray(arr, predicate) {
+    const result = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (predicate(arr[i], i, arr)) {
+            result.push(arr[i]);
+        }
+    }
+    return result;
+}
+
+// Using the HOFs with different callbacks
+const numbers = [1, 2, 3, 4, 5];
+const squared = processArray(numbers, n => n * n);
+const largeNumbers = filterArray(numbers, n => n > 2);
+
+console.log('Squared:', squared);
+console.log('Large numbers:', largeNumbers);
+                    </div>
+                    <button onclick="runCustomHOF()">Run Custom HOF</button>
+                    <div class="output" id="custom-output">Click the button to see custom HOFs</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Function Composition & Currying</h3>
+                    <p>Combine functions and create specialized versions.</p>
+                    <div class="code-block">
+// Function composition
+const compose = (...fns) => x => fns.reduceRight((acc, fn) => fn(acc), x);
+const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x);
+
+// Currying - transforming multi-argument functions
+const curry = (fn) => {
+    return function curried(...args) {
+        if (args.length >= fn.length) {
+            return fn.apply(this, args);
+        } else {
+            return function(...args2) {
+                return curried.apply(this, args.concat(args2));
+            };
+        }
+    };
+};
+
+// Example functions
+const add = (a, b) => a + b;
+const multiply = (a, b) => a * b;
+const square = x => x * x;
+
+// Create composed and curried functions
+const curriedAdd = curry(add);
+const add5 = curriedAdd(5);
+const transform = pipe(add5, square, x => x * 2);
+
+console.log(add5(3)); // 8 (5 + 3)
+console.log(transform(2)); // 98 (((2 + 5)²) * 2)
+                    </div>
+                    <button onclick="runCompositionCurrying()">Run Composition & Currying</button>
+                    <div class="output" id="composition-output">Click the button to see composition and currying</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Real-world HOF Pattern - Debouncing</h3>
+                    <p>Implement a practical debounce higher-order function.</p>
+                    <div class="code-block">
+// Debounce HOF - returns a new function
+function debounce(func, delay) {
+    let timeoutId;
+    
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+// Throttle HOF - limits function execution
+function throttle(func, limit) {
+    let inThrottle;
+    
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// Usage example
+const expensiveOperation = () => {
+    console.log('Expensive operation executed!');
+};
+
+const debouncedOperation = debounce(expensiveOperation, 300);
+const throttledOperation = throttle(expensiveOperation, 1000);
+                    </div>
+                    <button onclick="runDebounceExample()">Test Debounce</button>
+                    <button onclick="runThrottleExample()">Test Throttle</button>
+                    <div class="output" id="debounce-output">Click buttons rapidly to see debouncing/throttling</div>
+                </div>
+                
+                <div class="warning">
+                    <strong>HOF Benefits:</strong>
+                    <ul>
+                        <li>Code reusability and DRY principle</li>
+                        <li>More declarative and readable code</li>
+                        <li>Better abstraction and separation of concerns</li>
+                        <li>Easier function composition</li>
+                        <li>Enhanced testability</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Example 1: Array Method HOFs
+        function runArrayHOFs() {
+            const output = document.getElementById('array-output');
+            const arrayVisual = document.getElementById('original-array');
+            
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            
+            // Display original array
+            arrayVisual.innerHTML = '<strong>Original Array:</strong><br>';
+            numbers.forEach(num => {
+                arrayVisual.innerHTML += `<div class="array-item">${num}</div>`;
+            });
+            
+            // Higher-order functions in action
+            const doubled = numbers.map(n => n * 2);
+            const evens = numbers.filter(n => n % 2 === 0);
+            const sum = numbers.reduce((acc, n) => acc + n, 0);
+            const hasLarge = numbers.some(n => n > 8);
+            const allPositive = numbers.every(n => n > 0);
+            const firstLarge = numbers.find(n => n > 7);
+            
+            output.innerHTML = `
+                <strong>Array Higher-Order Functions:</strong><br><br>
+                
+                <strong>Original:</strong> [${numbers.join(', ')}]<br><br>
+                
+                <strong>map(n => n * 2):</strong><br>
+                <div class="array-visual">
+                    ${doubled.map(n => `<div class="array-item mapped-array">${n}</div>`).join('')}
+                </div><br>
+                
+                <strong>filter(n => n % 2 === 0):</strong><br>
+                <div class="array-visual">
+                    ${evens.map(n => `<div class="array-item filtered-array">${n}</div>`).join('')}
+                </div><br>
+                
+                <strong>reduce((acc, n) => acc + n, 0):</strong><br>
+                Sum = ${sum}<br><br>
+                
+                <strong>some(n => n > 8):</strong><br>
+                Has number greater than 8: ${hasLarge}<br><br>
+                
+                <strong>every(n => n > 0):</strong><br>
+                All numbers positive: ${allPositive}<br><br>
+                
+                <strong>find(n => n > 7):</strong><br>
+                First number greater than 7: ${firstLarge}<br><br>
+                
+                <span class="success">✅ All these array methods are higher-order functions!</span>
+            `;
+        }
+        
+        // Example 2: Function Factory
+        function runFunctionFactory() {
+            const output = document.getElementById('factory-output');
+            
+            // Function factory - returns new functions
+            function createGreeting(greeting) {
+                return function(name) {
+                    return `${greeting}, ${name}!`;
+                };
+            }
+            
+            function createMathOperation(operation) {
+                return function(a, b) {
+                    switch(operation) {
+                        case 'add': return a + b;
+                        case 'subtract': return a - b;
+                        case 'multiply': return a * b;
+                        case 'divide': return a / b;
+                        default: return NaN;
+                    }
+                };
+            }
+            
+            function createMultiplier(factor) {
+                return function(number) {
+                    return number * factor;
+                };
+            }
+            
+            // Create specialized functions
+            const sayHello = createGreeting('Hello');
+            const sayHi = createGreeting('Hi');
+            const add = createMathOperation('add');
+            const multiply = createMathOperation('multiply');
+            const double = createMultiplier(2);
+            const triple = createMultiplier(3);
+            
+            output.innerHTML = `
+                <strong>Function Factory Examples:</strong><br><br>
+                
+                <strong>Greeting Functions:</strong><br>
+                sayHello('Alice') = "${sayHello('Alice')}"<br>
+                sayHi('Bob') = "${sayHi('Bob')}"<br><br>
+                
+                <strong>Math Operation Functions:</strong><br>
+                add(5, 3) = ${add(5, 3)}<br>
+                multiply(4, 6) = ${multiply(4, 6)}<br><br>
+                
+                <strong>Multiplier Functions:</strong><br>
+                double(7) = ${double(7)}<br>
+                triple(7) = ${triple(7)}<br><br>
+                
+                <span class="success">✅ Function factories create specialized functions!</span>
+            `;
+        }
+        
+        // Example 3: Custom HOF with Callbacks
+        function runCustomHOF() {
+            const output = document.getElementById('custom-output');
+            
+            // Custom higher-order functions
+            function processArray(arr, callback) {
+                const result = [];
+                for (let i = 0; i < arr.length; i++) {
+                    result.push(callback(arr[i], i, arr));
+                }
+                return result;
+            }
+            
+            function filterArray(arr, predicate) {
+                const result = [];
+                for (let i = 0; i < arr.length; i++) {
+                    if (predicate(arr[i], i, arr)) {
+                        result.push(arr[i]);
+                    }
+                }
+                return result;
+            }
+            
+            function forEachCustom(arr, action) {
+                for (let i = 0; i < arr.length; i++) {
+                    action(arr[i], i, arr);
+                }
+            }
+            
+            // Test data
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+            const names = ['Alice', 'Bob', 'Charlie', 'Diana'];
+            
+            // Using custom HOFs with different callbacks
+            const squared = processArray(numbers, n => n * n);
+            const largeNumbers = filterArray(numbers, n => n > 4);
+            const nameLengths = processArray(names, name => name.length);
+            const longNames = filterArray(names, name => name.length > 4);
+            
+            let forEachResult = [];
+            forEachCustom(numbers, n => forEachResult.push(n * 3));
+            
+            output.innerHTML = `
+                <strong>Custom Higher-Order Functions:</strong><br><br>
+                
+                <strong>Original Numbers:</strong> [${numbers.join(', ')}]<br>
+                <strong>Original Names:</strong> [${names.join(', ')}]<br><br>
+                
+                <strong>processArray(numbers, n => n * n):</strong><br>
+                Squared: [${squared.join(', ')}]<br><br>
+                
+                <strong>filterArray(numbers, n => n > 4):</strong><br>
+                Numbers > 4: [${largeNumbers.join(', ')}]<br><br>
+                
+                <strong>processArray(names, name => name.length):</strong><br>
+                Name lengths: [${nameLengths.join(', ')}]<br><br>
+                
+                <strong>filterArray(names, name => name.length > 4):</strong><br>
+                Long names: [${longNames.join(', ')}]<br><br>
+                
+                <strong>forEachCustom(numbers, n => result.push(n * 3)):</strong><br>
+                Tripled numbers: [${forEachResult.join(', ')}]<br><br>
+                
+                <span class="success">✅ Custom HOFs provide flexible data processing!</span>
+            `;
+        }
+        
+        // Example 4: Function Composition & Currying
+        function runCompositionCurrying() {
+            const output = document.getElementById('composition-output');
+            
+            // Function composition utilities
+            const compose = (...fns) => x => fns.reduceRight((acc, fn) => fn(acc), x);
+            const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x);
+            
+            // Currying implementation
+            const curry = (fn) => {
+                return function curried(...args) {
+                    if (args.length >= fn.length) {
+                        return fn.apply(this, args);
+                    } else {
+                        return function(...args2) {
+                            return curried.apply(this, args.concat(args2));
+                        };
+                    }
+                };
+            };
+            
+            // Example functions
+            const add = (a, b) => a + b;
+            const multiply = (a, b) => a * b;
+            const square = x => x * x;
+            const double = x => x * 2;
+            const subtract = (a, b) => a - b;
+            
+            // Create composed and curried functions
+            const curriedAdd = curry(add);
+            const curriedMultiply = curry(multiply);
+            const add5 = curriedAdd(5);
+            const multiplyBy3 = curriedMultiply(3);
+            
+            // Composition examples
+            const addThenSquare = compose(square, add5);
+            const complexTransform = pipe(add5, square, double, x => x - 10);
+            const businessLogic = pipe(
+                x => x * 100,      // Convert to cents
+                x => x * 1.1,      // Add 10% tax
+                x => Math.round(x)  // Round to nearest cent
+            );
+            
+            output.innerHTML = `
+                <strong>Function Composition & Currying:</strong><br><br>
+                
+                <strong>Basic Functions:</strong><br>
+                add(2, 3) = ${add(2, 3)}<br>
+                multiply(4, 5) = ${multiply(4, 5)}<br>
+                square(5) = ${square(5)}<br><br>
+                
+                <strong>Currying Examples:</strong><br>
+                add5 = curriedAdd(5)<br>
+                add5(3) = ${add5(3)}<br>
+                multiplyBy3 = curriedMultiply(3)<br>
+                multiplyBy3(4) = ${multiplyBy3(4)}<br>
+                curriedAdd(2)(3) = ${curriedAdd(2)(3)}<br><br>
+                
+                <strong>Composition Examples:</strong><br>
+                addThenSquare(3) = square(add5(3)) = square(8) = ${addThenSquare(3)}<br>
+                complexTransform(2) = double(square(add5(2))) - 10 = double(square(7)) - 10 = double(49) - 10 = ${complexTransform(2)}<br>
+                businessLogic(25) = round(1.1 * (25 * 100)) = ${businessLogic(25)}<br><br>
+                
+                <span class="success">✅ Composition and currying enable powerful function combinations!</span>
+            `;
+        }
+        
+        // Example 5: Debouncing and Throttling
+        let clickCount = 0;
+        
+        function runDebounceExample() {
+            const output = document.getElementById('debounce-output');
+            clickCount++;
+            
+            output.innerHTML = `Button clicked ${clickCount} times (rapid clicks will be debounced)<br>`;
+            
+            // Debounce implementation
+            function debounce(func, delay) {
+                let timeoutId;
+                
+                return function(...args) {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        func.apply(this, args);
+                    }, delay);
+                };
+            }
+            
+            // Create debounced function
+            const debouncedLog = debounce(() => {
+                output.innerHTML += '<span class="success">✅ Debounced: Operation executed after pause!</span><br>';
+            }, 500);
+            
+            debouncedLog();
+        }
+        
+        function runThrottleExample() {
+            const output = document.getElementById('debounce-output');
+            
+            output.innerHTML = 'Testing throttle (function will execute at most once per second):<br>';
+            
+            // Throttle implementation
+            function throttle(func, limit) {
+                let inThrottle;
+                
+                return function(...args) {
+                    if (!inThrottle) {
+                        func.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            }
+            
+            // Create throttled function
+            const throttledLog = throttle(() => {
+                const now = new Date().toLocaleTimeString();
+                output.innerHTML += `<span class="success">✅ Throttled: Executed at ${now}</span><br>`;
+            }, 1000);
+            
+            throttledLog();
+        }
+        
+        // Animation for the visualization
+        function animateHOF() {
+            const hofFunction = document.querySelector('.hof-function');
+            const callbackFunction = document.querySelector('.callback-function');
+            
+            // Reset animations
+            hofFunction.style.animation = 'none';
+            callbackFunction.style.animation = 'none';
+            
+            // Trigger reflow
+            void hofFunction.offsetWidth;
+            void callbackFunction.offsetWidth;
+            
+            // Restart animations
+            hofFunction.style.animation = 'hofFlow 6s infinite';
+            callbackFunction.style.animation = 'callbackFlow 6s infinite';
+            callbackFunction.style.animationDelay = '1s';
+        }
+        
+        // Start the animation when the page loads
+        window.addEventListener('load', animateHOF);
+        
+        // Restart animation on tab focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                animateHOF();
+            }
+        });
+    </script>
+</body>
+</html>
