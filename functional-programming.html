@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Functional Programming Explained</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .explanation, .examples {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #b21f1f;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #b21f1f;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 5px;
+            min-height: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .fp-principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .principle-card {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .principle-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .data-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #1a2a6c;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e17055;
+            margin: 15px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .visualization {
+            position: relative;
+            height: 200px;
+            border: 2px dashed #1a2a6c;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        
+        .data-item {
+            position: absolute;
+            width: 120px;
+            padding: 10px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            animation: dataFlow 8s infinite;
+        }
+        
+        @keyframes dataFlow {
+            0% { top: 20px; left: 20px; background: #1a2a6c; }
+            25% { top: 20px; left: calc(100% - 140px); background: #b21f1f; }
+            50% { top: calc(100% - 70px); left: calc(100% - 140px); background: #fdbb2d; color: #333; }
+            75% { top: calc(100% - 70px); left: 20px; background: #28a745; }
+            100% { top: 20px; left: 20px; background: #1a2a6c; }
+        }
+        
+        .transformed-data {
+            position: absolute;
+            width: 120px;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            animation: transformData 8s infinite;
+            animation-delay: 2s;
+        }
+        
+        @keyframes transformData {
+            0% { top: calc(100% - 70px); left: 20px; opacity: 0; }
+            25% { top: calc(100% - 70px); left: 20px; opacity: 1; }
+            50% { top: 20px; left: 20px; opacity: 1; }
+            75% { top: 20px; left: 20px; opacity: 0; }
+            100% { top: calc(100% - 70px); left: 20px; opacity: 0; }
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .method-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .method-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #b21f1f;
+        }
+        
+        .data-input {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .data-input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .array-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .array-item {
+            background: #1a2a6c;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .transformed-array {
+            background: #28a745;
+        }
+        
+        .filtered-array {
+            background: #b21f1f;
+        }
+        
+        .function-composition {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .function-box {
+            background: white;
+            border: 2px solid #1a2a6c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .compose-arrow {
+            font-size: 24px;
+            color: #1a2a6c;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Functional Programming</h1>
+            <p class="subtitle">Learn pure functions, immutability, and declarative code</p>
+        </header>
+        
+        <div class="content">
+            <div class="explanation">
+                <h2>Core Principles of Functional Programming</h2>
+                <p>Functional Programming (FP) is a paradigm that treats computation as the evaluation of mathematical functions and avoids changing state and mutable data.</p>
+                
+                <div class="fp-principles">
+                    <div class="principle-card">
+                        <h4>🧹 Pure Functions</h4>
+                        <p>Same input always returns same output, no side effects</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🛡️ Immutability</h4>
+                        <p>Data cannot be changed after creation</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔗 Function Composition</h4>
+                        <p>Combining simple functions to build complex ones</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🎯 Declarative Code</h4>
+                        <p>Focus on what to do, not how to do it</p>
+                    </div>
+                </div>
+                
+                <div class="visualization">
+                    <div class="data-item">Input Data</div>
+                    <div class="transformed-data">Transformed Data</div>
+                </div>
+                
+                <h3>Data Transformation Flow</h3>
+                <div class="data-flow">
+                    <div class="flow-step">1. Original Data</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">2. Pure Function Applied</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">3. New Data Created (Immutable)</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">4. Result Without Side Effects</div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(event, 'pure-tab')">Pure Functions</div>
+                    <div class="tab" onclick="switchTab(event, 'immutable-tab')">Immutability</div>
+                    <div class="tab" onclick="switchTab(event, 'higherorder-tab')">Higher-Order Functions</div>
+                </div>
+                
+                <div id="pure-tab" class="tab-content active">
+                    <h4>Pure Functions</h4>
+                    <div class="code-block">
+<span class="code-title">Pure Function Example</span>
+// Pure function - same input always gives same output
+function square(x) {
+    return x * x;
+}
+
+// Impure function - has side effects
+let counter = 0;
+function impureIncrement() {
+    counter++; // Modifies external state
+    return counter;
+}
+                    </div>
+                    <p><strong>Benefits:</strong> Predictable, testable, cacheable, and easier to reason about.</p>
+                </div>
+                
+                <div id="immutable-tab" class="tab-content">
+                    <h4>Immutability</h4>
+                    <div class="code-block">
+<span class="code-title">Mutable vs Immutable</span>
+// Mutable approach (bad)
+const person = { name: 'John', age: 30 };
+person.age = 31; // Original object modified
+
+// Immutable approach (good)
+const updatedPerson = { ...person, age: 31 };
+// Original person remains unchanged
+                    </div>
+                    <p><strong>Benefits:</strong> Prevents unexpected changes, makes state predictable.</p>
+                </div>
+                
+                <div id="higherorder-tab" class="tab-content">
+                    <h4>Higher-Order Functions</h4>
+                    <div class="code-block">
+<span class="code-title">Functions that take or return functions</span>
+// Function that returns a function
+function multiplier(factor) {
+    return function(x) {
+        return x * factor;
+    };
+}
+
+const double = multiplier(2);
+const triple = multiplier(3);
+
+console.log(double(5)); // 10
+console.log(triple(5)); // 15
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Key Insight:</strong> Functional programming encourages writing small, reusable functions that can be composed together to build complex functionality.
+                </div>
+                
+                <h2>Essential FP Concepts in JavaScript</h2>
+                
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h4>map()</h4>
+                        <p>Transform each element</p>
+                    </div>
+                    <div class="method-card">
+                        <h4>filter()</h4>
+                        <p>Select elements by condition</p>
+                    </div>
+                    <div class="method-card">
+                        <h4>reduce()</h4>
+                        <p>Accumulate values</p>
+                    </div>
+                    <div class="method-card">
+                        <h4>compose()</h4>
+                        <p>Combine functions</p>
+                    </div>
+                </div>
+                
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Imperative Approach</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+const numbers = [1, 2, 3, 4, 5];
+const doubled = [];
+
+for (let i = 0; i < numbers.length; i++) {
+    doubled.push(numbers[i] * 2);
+}
+
+console.log(doubled); // [2, 4, 6, 8, 10]
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h4>Functional Approach</h4>
+                        <div class="code-block" style="font-size: 0.8rem;">
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+
+console.log(doubled); // [2, 4, 6, 8, 10]
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>Remember:</strong> Functional code is often more concise, readable, and less error-prone than imperative code.
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h2>Interactive Examples</h2>
+                
+                <div class="interactive-demo">
+                    <h3>Example 1: Pure vs Impure Functions</h3>
+                    <p>Compare pure and impure functions and their effects.</p>
+                    <div class="code-block">
+// Pure function
+function pureAdd(a, b) {
+    return a + b;
+}
+
+// Impure function
+let total = 0;
+function impureAdd(a, b) {
+    total = a + b; // Side effect: modifies external state
+    return total;
+}
+                    </div>
+                    <div class="data-input">
+                        <input type="number" id="pure-input-a" placeholder="Enter number A" value="5">
+                        <input type="number" id="pure-input-b" placeholder="Enter number B" value="3">
+                    </div>
+                    <button onclick="testPureFunction()">Test Pure Function</button>
+                    <button onclick="testImpureFunction()">Test Impure Function</button>
+                    <div class="output" id="pure-output">Click buttons to test functions</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 2: Array Transformations</h3>
+                    <p>Use map, filter, and reduce to transform data functionally.</p>
+                    <div class="code-block">
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Functional transformations
+const doubled = numbers.map(n => n * 2);
+const evens = numbers.filter(n => n % 2 === 0);
+const sum = numbers.reduce((acc, n) => acc + n, 0);
+
+console.log('Original:', numbers);
+console.log('Doubled:', doubled);
+console.log('Evens:', evens);
+console.log('Sum:', sum);
+                    </div>
+                    <button onclick="runArrayTransformations()">Run Array Transformations</button>
+                    <div class="array-visual" id="original-array"></div>
+                    <div class="output" id="array-output">Click the button to see transformations</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 3: Function Composition</h3>
+                    <p>Combine simple functions to create complex behavior.</p>
+                    <div class="code-block">
+// Simple, reusable functions
+const add = (a, b) => a + b;
+const multiply = (a, b) => a * b;
+const square = x => x * x;
+
+// Function composition
+const addThenSquare = (a, b) => square(add(a, b));
+const addThenMultiply = (a, b, c) => multiply(add(a, b), c);
+
+// Using compose utility
+const compose = (...fns) => x => fns.reduceRight((acc, fn) => fn(acc), x);
+const addSquareDouble = compose(
+    x => x * 2,
+    square,
+    x => add(x, 5)
+);
+                    </div>
+                    <div class="function-composition">
+                        <div class="function-box">add(2, 3)</div>
+                        <div class="compose-arrow">→</div>
+                        <div class="function-box">square(5)</div>
+                        <div class="compose-arrow">→</div>
+                        <div class="function-box">25</div>
+                    </div>
+                    <button onclick="runFunctionComposition()">Run Function Composition</button>
+                    <div class="output" id="composition-output">Click the button to see composition in action</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 4: Immutability in Practice</h3>
+                    <p>Work with data immutably using modern JavaScript features.</p>
+                    <div class="code-block">
+// Mutable approach (avoid)
+const mutableUser = { name: 'Alice', age: 25 };
+mutableUser.age = 26; // Direct mutation
+
+// Immutable approaches
+const immutableUser = { name: 'Alice', age: 25 };
+
+// 1. Spread operator
+const updatedUser = { ...immutableUser, age: 26 };
+
+// 2. Object.assign
+const updatedUser2 = Object.assign({}, immutableUser, { age: 26 });
+
+// 3. With arrays
+const numbers = [1, 2, 3];
+const newNumbers = [...numbers, 4]; // Instead of numbers.push(4)
+                    </div>
+                    <button onclick="demoImmutability()">Demo Immutability</button>
+                    <div class="output" id="immutability-output">Click the button to see immutability</div>
+                </div>
+                
+                <div class="interactive-demo">
+                    <h3>Example 5: Real-world FP Pattern</h3>
+                    <p>Process user data using functional programming patterns.</p>
+                    <div class="code-block">
+const users = [
+    { id: 1, name: 'John', age: 25, active: true },
+    { id: 2, name: 'Jane', age: 30, active: false },
+    { id: 3, name: 'Bob', age: 22, active: true },
+    { id: 4, name: 'Alice', age: 35, active: true }
+];
+
+// Functional data processing pipeline
+const activeUsers = users
+    .filter(user => user.active)
+    .map(user => ({
+        ...user,
+        name: user.name.toUpperCase(),
+        isAdult: user.age >= 18
+    }))
+    .sort((a, b) => a.age - b.age);
+
+console.log('Active users:', activeUsers);
+                    </div>
+                    <button onclick="runUserProcessing()">Process User Data</button>
+                    <div class="output" id="user-output">Click the button to process user data</div>
+                </div>
+                
+                <div class="warning">
+                    <strong>Common FP Benefits:</strong>
+                    <ul>
+                        <li>Easier debugging and testing</li>
+                        <li>More predictable code</li>
+                        <li>Better code reuse</li>
+                        <li>Easier parallel processing</li>
+                        <li>Reduced side effects and bugs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Example 1: Pure vs Impure Functions
+        let externalState = 0;
+        
+        function testPureFunction() {
+            const output = document.getElementById('pure-output');
+            const a = parseInt(document.getElementById('pure-input-a').value) || 0;
+            const b = parseInt(document.getElementById('pure-input-b').value) || 0;
+            
+            // Pure function
+            function pureAdd(x, y) {
+                return x + y;
+            }
+            
+            const result1 = pureAdd(a, b);
+            const result2 = pureAdd(a, b); // Same result every time
+            
+            output.innerHTML = `
+                <strong>Pure Function Test:</strong><br>
+                Input: ${a} + ${b}<br>
+                First call: ${result1}<br>
+                Second call: ${result2}<br>
+                <span class="success">✅ Same input always gives same output!</span>
+            `;
+        }
+        
+        function testImpureFunction() {
+            const output = document.getElementById('pure-output');
+            const a = parseInt(document.getElementById('pure-input-a').value) || 0;
+            const b = parseInt(document.getElementById('pure-input-b').value) || 0;
+            
+            // Impure function
+            function impureAdd(x, y) {
+                externalState = x + y; // Modifies external state
+                return externalState;
+            }
+            
+            const initialState = externalState;
+            const result1 = impureAdd(a, b);
+            const result2 = impureAdd(a, b); // Different result!
+            
+            output.innerHTML = `
+                <strong>Impure Function Test:</strong><br>
+                Input: ${a} + ${b}<br>
+                Initial external state: ${initialState}<br>
+                First call: ${result1}<br>
+                Second call: ${result2}<br>
+                Final external state: ${externalState}<br>
+                <span class="error">❌ Same input gives different output (has side effects)!</span>
+            `;
+        }
+        
+        // Example 2: Array Transformations
+        function runArrayTransformations() {
+            const output = document.getElementById('array-output');
+            const arrayVisual = document.getElementById('original-array');
+            
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            
+            // Display original array
+            arrayVisual.innerHTML = '<strong>Original Array:</strong><br>';
+            numbers.forEach(num => {
+                arrayVisual.innerHTML += `<div class="array-item">${num}</div>`;
+            });
+            
+            // Functional transformations
+            const doubled = numbers.map(n => n * 2);
+            const evens = numbers.filter(n => n % 2 === 0);
+            const sum = numbers.reduce((acc, n) => acc + n, 0);
+            const squared = numbers.map(n => n * n);
+            
+            output.innerHTML = `
+                <strong>Array Transformations:</strong><br><br>
+                
+                <strong>Original:</strong> [${numbers.join(', ')}]<br><br>
+                
+                <strong>map(n => n * 2):</strong><br>
+                <div class="array-visual">
+                    ${doubled.map(n => `<div class="array-item transformed-array">${n}</div>`).join('')}
+                </div><br>
+                
+                <strong>filter(n => n % 2 === 0):</strong><br>
+                <div class="array-visual">
+                    ${evens.map(n => `<div class="array-item filtered-array">${n}</div>`).join('')}
+                </div><br>
+                
+                <strong>reduce((acc, n) => acc + n, 0):</strong><br>
+                Sum = ${sum}<br><br>
+                
+                <strong>Chained operations (squared even numbers):</strong><br>
+                <div class="array-visual">
+                    ${numbers
+                        .filter(n => n % 2 === 0)
+                        .map(n => n * n)
+                        .map(n => `<div class="array-item" style="background: #fdbb2d; color: #333;">${n}</div>`)
+                        .join('')}
+                </div>
+            `;
+        }
+        
+        // Example 3: Function Composition
+        function runFunctionComposition() {
+            const output = document.getElementById('composition-output');
+            
+            // Simple, reusable functions
+            const add = (a, b) => a + b;
+            const multiply = (a, b) => a * b;
+            const square = x => x * x;
+            const double = x => x * 2;
+            const subtract = (a, b) => a - b;
+            
+            // Manual composition
+            const addThenSquare = (a, b) => square(add(a, b));
+            const addThenMultiply = (a, b, c) => multiply(add(a, b), c);
+            
+            // compose utility function (right-to-left)
+            const compose = (...fns) => x => fns.reduceRight((acc, fn) => fn(acc), x);
+            
+            // pipe utility function (left-to-right)
+            const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x);
+            
+            // Example compositions
+            const addFiveThenSquare = compose(square, x => add(x, 5));
+            const squareThenDouble = pipe(square, double);
+            const complexOperation = pipe(
+                x => add(x, 10),
+                square,
+                x => subtract(x, 5),
+                double
+            );
+            
+            output.innerHTML = `
+                <strong>Function Composition Examples:</strong><br><br>
+                
+                <strong>Basic Functions:</strong><br>
+                add(2, 3) = ${add(2, 3)}<br>
+                multiply(4, 5) = ${multiply(4, 5)}<br>
+                square(5) = ${square(5)}<br><br>
+                
+                <strong>Manual Composition:</strong><br>
+                addThenSquare(2, 3) = add(2,3) → square(5) = ${addThenSquare(2, 3)}<br>
+                addThenMultiply(2, 3, 4) = add(2,3) → multiply(5,4) = ${addThenMultiply(2, 3, 4)}<br><br>
+                
+                <strong>Using compose (right-to-left):</strong><br>
+                addFiveThenSquare(5) = add(5,5) → square(10) = ${addFiveThenSquare(5)}<br><br>
+                
+                <strong>Using pipe (left-to-right):</strong><br>
+                squareThenDouble(4) = square(4) → double(16) = ${squareThenDouble(4)}<br>
+                complexOperation(5) = add(5,10) → square(15) → subtract(225,5) → double(220) = ${complexOperation(5)}<br><br>
+                
+                <span class="success">✅ Small functions composed into complex behavior!</span>
+            `;
+        }
+        
+        // Example 4: Immutability
+        function demoImmutability() {
+            const output = document.getElementById('immutability-output');
+            
+            // Original data
+            const originalUser = { name: 'Alice', age: 25, hobbies: ['reading', 'coding'] };
+            const originalNumbers = [1, 2, 3];
+            
+            // Immutable updates
+            const updatedUser = { ...originalUser, age: 26 };
+            const updatedUserWithHobby = {
+                ...originalUser,
+                hobbies: [...originalUser.hobbies, 'gaming']
+            };
+            
+            const newNumbers = [...originalNumbers, 4];
+            const doubledNumbers = originalNumbers.map(n => n * 2);
+            
+            output.innerHTML = `
+                <strong>Immutability Demo:</strong><br><br>
+                
+                <strong>Original User:</strong><br>
+                ${JSON.stringify(originalUser, null, 2)}<br><br>
+                
+                <strong>Updated User (immutable):</strong><br>
+                ${JSON.stringify(updatedUser, null, 2)}<br><br>
+                
+                <strong>Original User (unchanged):</strong><br>
+                ${JSON.stringify(originalUser, null, 2)}<br><br>
+                
+                <strong>User with new hobby (immutable):</strong><br>
+                ${JSON.stringify(updatedUserWithHobby, null, 2)}<br><br>
+                
+                <strong>Original Numbers:</strong> [${originalNumbers.join(', ')}]<br>
+                <strong>New Numbers:</strong> [${newNumbers.join(', ')}]<br>
+                <strong>Doubled Numbers:</strong> [${doubledNumbers.join(', ')}]<br><br>
+                
+                <span class="success">✅ Original data remains unchanged!</span>
+            `;
+        }
+        
+        // Example 5: Real-world FP Pattern
+        function runUserProcessing() {
+            const output = document.getElementById('user-output');
+            
+            const users = [
+                { id: 1, name: 'John', age: 25, active: true },
+                { id: 2, name: 'Jane', age: 30, active: false },
+                { id: 3, name: 'Bob', age: 17, active: true },
+                { id: 4, name: 'Alice', age: 35, active: true },
+                { id: 5, name: 'Charlie', age: 28, active: false },
+                { id: 6, name: 'Diana', age: 22, active: true }
+            ];
+            
+            // Functional data processing pipeline
+            const processedUsers = users
+                .filter(user => user.active)                    // Only active users
+                .map(user => ({
+                    ...user,
+                    name: user.name.toUpperCase(),            // Transform name
+                    isAdult: user.age >= 18,                  // Add computed property
+                    ageGroup: user.age < 25 ? 'Young' : user.age < 35 ? 'Adult' : 'Senior'
+                }))
+                .sort((a, b) => a.age - b.age);               // Sort by age
+            
+            output.innerHTML = `
+                <strong>User Data Processing Pipeline:</strong><br><br>
+                
+                <strong>Original Users (${users.length} total):</strong><br>
+                ${users.map(u => `${u.name} (${u.age}, ${u.active ? 'active' : 'inactive'})`).join(', ')}<br><br>
+                
+                <strong>Processing Steps:</strong><br>
+                1. filter(user => user.active) - Keep only active users<br>
+                2. map() - Transform data (uppercase names, add computed properties)<br>
+                3. sort((a, b) => a.age - b.age) - Sort by age<br><br>
+                
+                <strong>Processed Users (${processedUsers.length} active):</strong><br>
+                <pre>${JSON.stringify(processedUsers, null, 2)}</pre><br>
+                
+                <span class="success">✅ Clean, declarative data processing!</span>
+            `;
+        }
+        
+        // Animation for the visualization
+        function animateDataFlow() {
+            const dataItem = document.querySelector('.data-item');
+            const transformedData = document.querySelector('.transformed-data');
+            
+            // Reset animations
+            dataItem.style.animation = 'none';
+            transformedData.style.animation = 'none';
+            
+            // Trigger reflow
+            void dataItem.offsetWidth;
+            void transformedData.offsetWidth;
+            
+            // Restart animations
+            dataItem.style.animation = 'dataFlow 8s infinite';
+            transformedData.style.animation = 'transformData 8s infinite';
+            transformedData.style.animationDelay = '2s';
+        }
+        
+        // Start the animation when the page loads
+        window.addEventListener('load', animateDataFlow);
+        
+        // Restart animation on tab focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                animateDataFlow();
+            }
+        });
+    </script>
+</body>
+</html>
