@@ -1,6 +1,22 @@
 import { Menu, X, ChevronRight, Code, PlusCircle, Search, XCircle } from 'lucide-react';
 import { Question } from '../data/types';
 import { useState, useMemo } from 'react';
+import {
+  Box,
+  Drawer,
+  IconButton,
+  Typography,
+  TextField,
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Button,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 interface SidebarProps {
   questions: Question[];
@@ -15,6 +31,8 @@ export default function Sidebar({
   onSelectQuestion,
   onAddNew,
 }: SidebarProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -33,122 +51,295 @@ export default function Sidebar({
     });
   }, [questions, searchQuery]);
 
+  const sidebarContent = (
+    <Box
+      sx={{
+        width: 288,
+        height: '100vh',
+        bgcolor: 'grey.900',
+        backgroundImage: 'linear-gradient(to bottom, #0f172a, #020617)',
+        color: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: 8,
+        position: 'sticky',
+        top: 0,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Header - Fixed */}
+      <Box
+        sx={{
+          p: 3,
+          borderBottom: '1px solid',
+          borderColor: 'rgba(255,255,255,0.1)',
+          flexShrink: 0,
+        }}
+      >
+        <Typography
+          variant="h6"
+          component="h2"
+          sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontWeight: 'bold' }}
+        >
+          <Code size={26} style={{ color: '#fbbf24' }} />
+          My Q&A Builder
+        </Typography>
+        <Typography variant="caption" sx={{ color: 'grey.400', mt: 0.5, display: 'block' }}>
+          Add unlimited questions
+        </Typography>
+      </Box>
+
+      {/* Search Bar - Fixed */}
+      <Box
+        sx={{
+          px: 2,
+          py: 2,
+          borderBottom: '1px solid',
+          borderColor: 'rgba(255,255,255,0.1)',
+          flexShrink: 0,
+        }}
+      >
+        <TextField
+          variant="outlined"
+          fullWidth
+          size="small"
+          placeholder="Search by # or text..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              bgcolor: 'rgba(30, 41, 59, 0.8)',
+              borderRadius: 2,
+              '& fieldset': {
+                borderColor: 'rgba(51, 65, 85, 1)',
+              },
+              '&:hover fieldset': {
+                borderColor: 'rgba(51, 65, 85, 1)',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#3b82f6',
+                borderWidth: 2,
+              },
+            },
+            '& .MuiInputBase-input': {
+              color: 'white',
+              '&::placeholder': {
+                color: 'grey.500',
+                opacity: 1,
+              },
+            },
+          }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={18} style={{ color: 'grey.400' }} />
+                </InputAdornment>
+              ),
+              endAdornment: searchQuery && (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => setSearchQuery('')}
+                    sx={{ color: 'grey.400', '&:hover': { color: 'white' } }}
+                  >
+                    <XCircle size={16} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+        {searchQuery && (
+          <Typography variant="caption" sx={{ color: 'grey.400', mt: 1, display: 'block' }}>
+            {filteredQuestions.length === 0
+              ? 'No matches found'
+              : `${filteredQuestions.length} question${filteredQuestions.length !== 1 ? 's' : ''} found`}
+          </Typography>
+        )}
+      </Box>
+
+      {/* Question Navigation - Scrollable */}
+      <Box
+        sx={{
+          flex: 1,
+          overflowY: 'auto',
+          p: 1.5,
+          '&::-webkit-scrollbar': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'rgba(255,255,255,0.05)',
+            borderRadius: '3px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderRadius: '3px',
+            '&:hover': {
+              backgroundColor: 'rgba(255,255,255,0.3)',
+            },
+          },
+        }}
+      >
+        <List disablePadding>
+          {filteredQuestions.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 4, color: 'grey.500' }}>
+              <Search size={28} style={{ margin: '0 auto 8px', opacity: 0.5 }} />
+              <Typography variant="body2">No questions match</Typography>
+            </Box>
+          ) : (
+            filteredQuestions.map((question, index) => (
+              <ListItem key={question.id} disablePadding sx={{ mb: 0.5 }}>
+                <ListItemButton
+                  onClick={() => {
+                    onSelectQuestion(question.id);
+                    if (isMobile) setIsOpen(false);
+                  }}
+                  sx={{
+                    borderRadius: 2,
+                    py: 1.5,
+                    px: 2,
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      bgcolor: 'rgba(255,255,255,0.1)',
+                    },
+                    ...(currentQuestion === question.id && {
+                      bgcolor: '#2563eb',
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+                      '&:hover': {
+                        bgcolor: '#2563eb',
+                      },
+                    }),
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    <Code
+                      size={16}
+                      style={{
+                        color: currentQuestion === question.id ? 'white' : 'grey.500',
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: currentQuestion === question.id ? 'white' : 'grey.300',
+                          fontWeight: currentQuestion === question.id ? 600 : 400,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {`${index + 1}. ${question.title}`}
+                      </Typography>
+                    }
+                  />
+                  <ChevronRight
+                    size={16}
+                    style={{
+                      color: currentQuestion === question.id ? 'white' : 'grey.500',
+                      opacity: currentQuestion === question.id ? 1 : 0.5,
+                      transform: currentQuestion === question.id ? 'rotate(90deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s',
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))
+          )}
+        </List>
+      </Box>
+
+      {/* Add New Button - Fixed */}
+      <Box
+        sx={{
+          p: 2,
+          borderTop: '1px solid',
+          borderColor: 'rgba(255,255,255,0.1)',
+          flexShrink: 0,
+        }}
+      >
+        <Button
+          fullWidth
+          variant="contained"
+          startIcon={<PlusCircle size={20} />}
+          onClick={() => {
+            onAddNew();
+            if (isMobile) setIsOpen(false);
+          }}
+          sx={{
+            py: 1.5,
+            borderRadius: 2,
+            bgcolor: '#2563eb',
+            fontWeight: 600,
+            textTransform: 'none',
+            '&:hover': {
+              bgcolor: '#1d4ed8',
+            },
+          }}
+        >
+          Add New Question
+        </Button>
+      </Box>
+    </Box>
+  );
+
   return (
     <>
       {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-slate-800 transition-colors"
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Overlay for mobile */}
-      {isOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-30"
-          onClick={() => setIsOpen(false)}
-        />
+      {isMobile && (
+        <IconButton
+          onClick={() => setIsOpen(!isOpen)}
+          sx={{
+            position: 'fixed',
+            top: 16,
+            left: 16,
+            zIndex: 50,
+            bgcolor: 'grey.900',
+            color: 'white',
+            borderRadius: 2,
+            boxShadow: 3,
+            '&:hover': {
+              bgcolor: 'grey.800',
+            },
+          }}
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </IconButton>
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed lg:static inset-y-0 left-0 z-40 w-72 bg-gradient-to-b from-slate-900 to-slate-950 text-white
-          flex flex-col shadow-2xl flex-shrink-0 transform transition-transform duration-300 ease-in-out
-          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
-      >
-        {/* Header */}
-        <div className="p-6 border-b border-white/10">
-          <h2 className="text-xl font-bold flex items-center gap-3">
-            <Code size={26} className="text-amber-400" />
-            My Q&A Builder
-          </h2>
-          <p className="text-slate-400 text-sm mt-1">Add unlimited questions</p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="px-4 py-4 border-b border-white/10">
-          <div className="relative">
-            <Search
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-            <input
-              type="text"
-              placeholder="Search by # or text..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-10 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white
-                placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
-              >
-                <XCircle size={16} />
-              </button>
-            )}
-          </div>
-          {searchQuery && (
-            <p className="mt-2 text-xs text-slate-400">
-              {filteredQuestions.length === 0
-                ? 'No matches found'
-                : `${filteredQuestions.length} question${filteredQuestions.length !== 1 ? 's' : ''} found`}
-            </p>
-          )}
-        </div>
-
-        {/* Question Navigation */}
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
-          {filteredQuestions.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <Search size={28} className="mx-auto mb-2 opacity-50" />
-              <p className="text-sm">No questions match</p>
-            </div>
-          ) : (
-            filteredQuestions.map((question, index) => (
-              <button
-                key={question.id}
-                onClick={() => {
-                  onSelectQuestion(question.id);
-                  setIsOpen(false);
-                }}
-                className={`w-full group flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200
-                  ${currentQuestion === question.id
-                    ? 'bg-blue-600 text-white font-semibold shadow-lg shadow-blue-500/30'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
-                  }`}
-              >
-                <Code size={16} className={currentQuestion === question.id ? 'text-white' : 'text-slate-500'} />
-                <span className="flex-1 text-sm truncate">
-                  {index + 1}. {question.title}
-                </span>
-                <ChevronRight
-                  size={16}
-                  className={`flex-shrink-0 opacity-50 group-hover:opacity-100 transition-transform
-                    ${currentQuestion === question.id ? 'rotate-90' : ''}`}
-                />
-              </button>
-            ))
-          )}
-        </nav>
-
-        {/* Add New Button */}
-        <div className="p-4 border-t border-white/10">
-          <button
-            onClick={() => {
-              onAddNew();
-              setIsOpen(false);
-            }}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl
-              font-semibold hover:bg-blue-700 transition-colors"
-          >
-            <PlusCircle size={20} />
-            Add New Question
-          </button>
-        </div>
-      </aside>
+      {/* Mobile Drawer */}
+      {isMobile ? (
+        <Drawer
+          anchor="left"
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: 288,
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          {sidebarContent}
+        </Drawer>
+      ) : (
+        // Desktop Sidebar - Fixed position
+        <Box
+          sx={{
+            display: 'flex',
+            flexShrink: 0,
+            position: 'sticky',
+            top: 0,
+            height: '100vh',
+            overflow: 'hidden',
+          }}
+        >
+          {sidebarContent}
+        </Box>
+      )}
     </>
   );
 }

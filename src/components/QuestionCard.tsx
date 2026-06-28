@@ -2,6 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { Eye, EyeOff, Edit, Trash2 } from 'lucide-react';
 import { Question } from '../data/types';
 import { highlightCodeBlocks } from '../utils/highlight';
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  Chip,
+  Stack,
+  alpha,
+} from '@mui/material';
 
 interface QuestionCardProps {
   question: Question;
@@ -31,71 +40,186 @@ export default function QuestionCard({
   const highlightedAnswer = highlightCodeBlocks(question.answer || '');
 
   return (
-    <div
+    <Paper
       ref={cardRef}
       id={`question-${question.id}`}
-      className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 transition-all"
+      elevation={0}
+      sx={{
+        p: 4,
+        borderRadius: 3,
+        border: '1px solid',
+        borderColor: 'grey.200',
+        transition: 'all 0.2s',
+        '&:hover': {
+          borderColor: 'grey.300',
+          boxShadow: 1,
+        },
+      }}
     >
       {/* Header */}
-      <div className="flex justify-between items-start gap-4 mb-5 flex-wrap">
-        <h3 className="text-xl font-bold flex items-center gap-3 text-slate-800">
-          <span className="bg-blue-600 text-white rounded-full px-4 py-1 text-base font-bold">
-            {index + 1}
-          </span>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: 2,
+          mb: 3,
+          flexWrap: 'wrap',
+        }}
+      >
+        <Typography
+          component="h2"
+          variant="h5"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            color: 'grey.800',
+            fontWeight: 'bold',
+          }}
+        >
+          <Chip
+            label={index + 1}
+            size="medium"
+            sx={{
+              bgcolor: '#2563eb',
+              color: 'white',
+              fontWeight: 'bold',
+              borderRadius: 50,
+              px: 1,
+              '& .MuiChip-label': {
+                px: 1.5,
+              },
+            }}
+          />
           {question.title}
-        </h3>
+        </Typography>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <button
+        <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
+          <Button
+            variant={isAnswerVisible ? 'outlined' : 'contained'}
+            startIcon={isAnswerVisible ? <Eye size={18} /> : <EyeOff size={18} />}
             onClick={() => setIsAnswerVisible(!isAnswerVisible)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-all
-              ${isAnswerVisible
-                ? 'bg-slate-100 text-slate-700 hover:bg-blue-600 hover:text-white'
-                : 'bg-blue-600 text-white'
-              }`}
+            sx={{
+              borderRadius: 50,
+              px: 3,
+              py: 1,
+              fontWeight: 600,
+              textTransform: 'none',
+              ...(isAnswerVisible && {
+                bgcolor: 'grey.100',
+                color: 'grey.700',
+                borderColor: 'transparent',
+                '&:hover': {
+                  bgcolor: '#2563eb',
+                  color: 'white',
+                  borderColor: 'transparent',
+                },
+              }),
+            }}
           >
-            {isAnswerVisible ? <Eye size={18} /> : <EyeOff size={18} />}
             {isAnswerVisible ? 'Hide' : 'Show'}
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="outlined"
+            startIcon={<Edit size={16} />}
             onClick={() => onEdit(question)}
-            className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold bg-slate-100 text-slate-700 hover:bg-blue-600 hover:text-white transition-all"
+            sx={{
+              borderRadius: 50,
+              px: 3,
+              py: 1,
+              fontWeight: 600,
+              textTransform: 'none',
+              bgcolor: 'grey.100',
+              color: 'grey.700',
+              borderColor: 'transparent',
+              '&:hover': {
+                bgcolor: '#2563eb',
+                color: 'white',
+                borderColor: 'transparent',
+              },
+            }}
           >
-            <Edit size={16} />
             Edit
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="outlined"
+            startIcon={<Trash2 size={16} />}
             onClick={() => {
               if (window.confirm('Delete this question?')) {
                 onDelete(question.id);
               }
             }}
-            className="flex items-center gap-2 px-3 py-2 rounded-full text-red-600 border border-red-200 hover:bg-red-50 transition-all text-sm font-medium"
+            sx={{
+              borderRadius: 50,
+              px: 2.5,
+              py: 1,
+              fontWeight: 600,
+              textTransform: 'none',
+              color: '#dc2626',
+              borderColor: alpha('#dc2626', 0.2),
+              '&:hover': {
+                bgcolor: alpha('#dc2626', 0.05),
+                borderColor: alpha('#dc2626', 0.3),
+              },
+            }}
           >
-            <Trash2 size={16} />
             Del
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Stack>
+      </Box>
 
       {/* Answer Body */}
-      <div
-        className={`transition-all duration-200 overflow-hidden ${isAnswerVisible ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}
+      <Box
+        sx={{
+          overflow: 'hidden',
+          transition: 'all 0.2s',
+          maxHeight: isAnswerVisible ? '5000px' : '0',
+          opacity: isAnswerVisible ? 1 : 0,
+        }}
       >
         {/* Definition Box */}
-        <div className="bg-blue-50 border-l-4 border-blue-600 rounded-xl p-5 mb-5">
-          <strong className="text-slate-700">Definition:</strong>{' '}
-          <span className="text-slate-600">{question.definition || 'N/A'}</span>
-        </div>
+        <Box
+          sx={{
+            bgcolor: alpha('#2563eb', 0.05),
+            borderLeft: '4px solid',
+            borderColor: '#2563eb',
+            borderRadius: 2,
+            p: 2.5,
+            mb: 3,
+          }}
+        >
+          <Typography component="span" sx={{ fontWeight: 'bold', color: 'grey.700' }}>
+            Definition:{' '}
+          </Typography>
+          <Typography component="span" sx={{ color: 'grey.600' }}>
+            {question.definition || 'N/A'}
+          </Typography>
+        </Box>
 
         {/* Answer HTML Content with highlighted code */}
-        <div
+        <Box
           className="prose prose-slate max-w-none"
+          sx={{
+            '& > *': {
+              maxWidth: '100%',
+            },
+            '& pre': {
+              bgcolor: 'grey.900',
+              color: 'grey.100',
+              p: 3,
+              borderRadius: 2,
+              overflow: 'auto',
+            },
+            '& code': {
+              fontFamily: 'monospace',
+            },
+          }}
           dangerouslySetInnerHTML={{ __html: highlightedAnswer }}
         />
-      </div>
-    </div>
+      </Box>
+    </Paper>
   );
 }
