@@ -1,7 +1,9 @@
 // components/content/CodeComponent.tsx
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { Button, Stack, Typography, Box, alpha } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { Button, Stack, Typography, Box, alpha, IconButton, Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -12,6 +14,8 @@ interface CodeComponentProps {
   title?: string;
   showLineNumbers?: boolean;
   wrapLines?: boolean;
+  defaultOpen?: boolean;
+  showToggle?: boolean;
 }
 
 export function CodeComponent({ 
@@ -20,8 +24,11 @@ export function CodeComponent({
   title = 'JavaScript.js',
   showLineNumbers = true,
   wrapLines = true,
+  defaultOpen = true,
+  showToggle = true,
 }: CodeComponentProps) {
   const [isCopied, setIsCopied] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const copyToClipboard = () => {
     navigator.clipboard
@@ -41,17 +48,19 @@ export function CodeComponent({
 
   // Detect language from code if not specified
   const detectLanguage = (code: string): string => {
-    if (code.includes('class') || code.includes('constructor')) return 'javascript';
-    if (code.includes('<!DOCTYPE') || code.includes('<html>')) return 'html';
-    if (code.includes('SELECT') || code.includes('INSERT')) return 'sql';
-    if (code.includes('import React')) return 'jsx';
+    if (code.includes('class') || code.includes('constructor') || code.includes('=>')) return 'javascript';
+    if (code.includes('<!DOCTYPE') || code.includes('<html>') || code.includes('</div>')) return 'html';
+    if (code.includes('SELECT') || code.includes('INSERT') || code.includes('UPDATE')) return 'sql';
+    if (code.includes('import React') || code.includes('export default')) return 'jsx';
+    if (code.includes('<?php')) return 'php';
+    if (code.includes('def ') || code.includes('import ')) return 'python';
     return language;
   };
 
   const detectedLanguage = detectLanguage(code);
 
   return (
-    <Stack
+    <Stack 
       sx={{ 
         mb: 2,
         background: '#1a1a1a', 
@@ -69,7 +78,7 @@ export function CodeComponent({
           alignItems: 'center',
           p: '8px 16px',
           bgcolor: '#2a2a2a',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          borderBottom: isOpen ? '1px solid rgba(255,255,255,0.05)' : 'none',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -91,51 +100,70 @@ export function CodeComponent({
           </Typography>
         </Box>
         
-        <Button
-          size="small"
-          sx={{
-            color: '#dbdbdb',
-            textTransform: 'capitalize',
-            fontSize: '0.75rem',
-            '&:hover': {
-              background: alpha('#ffffff', 0.05),
-            },
-            '& .MuiButton-startIcon': {
-              marginRight: 0.5,
-            },
-          }}
-          onClick={copyToClipboard}
-          startIcon={isCopied ? <DoneAllIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
-          disableRipple
-        >
-          {isCopied ? 'Copied!' : 'Copy code'}
-        </Button>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Button
+            size="small"
+            sx={{
+              color: '#dbdbdb',
+              textTransform: 'capitalize',
+              fontSize: '0.75rem',
+              '&:hover': {
+                background: alpha('#ffffff', 0.05),
+              },
+              '& .MuiButton-startIcon': {
+                marginRight: 0.5,
+              },
+            }}
+            onClick={copyToClipboard}
+            startIcon={isCopied ? <DoneAllIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+            disableRipple
+          >
+            {isCopied ? 'Copied!' : 'Copy code'}
+          </Button>
+          
+          {showToggle && (
+            <IconButton
+              size="small"
+              onClick={() => setIsOpen(!isOpen)}
+              sx={{
+                color: '#dbdbdb',
+                '&:hover': {
+                  background: alpha('#ffffff', 0.05),
+                },
+              }}
+            >
+              {isOpen ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+            </IconButton>
+          )}
+        </Box>
       </Stack>
 
-      {/* Code */}
-      <Stack className="javascript_code" sx={{ p: 0 }}>
-        <SyntaxHighlighter
-          language={detectedLanguage}
-          style={okaidia}
-          showLineNumbers={showLineNumbers}
-          wrapLines={wrapLines}
-          customStyle={{
-            fontSize: '14px',
-            margin: 0,
-            padding: '16px',
-            background: 'transparent',
-            borderRadius: 0,
-          }}
-          lineNumberStyle={{
-            color: '#666',
-            minWidth: '2.5em',
-            paddingRight: '1em',
-            userSelect: 'none',
-          }}
-        >
-          {code}
-        </SyntaxHighlighter>
-      </Stack>
+      {/* Code with Collapse */}
+      <Collapse in={isOpen}>
+        <Stack className="javascript_code" sx={{ p: 0 }}>
+          <SyntaxHighlighter
+            language={detectedLanguage}
+            style={okaidia}
+            showLineNumbers={showLineNumbers}
+            wrapLines={wrapLines}
+            customStyle={{
+              fontSize: '14px',
+              margin: 0,
+              padding: '16px',
+              background: 'transparent',
+              borderRadius: 0,
+            }}
+            lineNumberStyle={{
+              color: '#666',
+              minWidth: '2.5em',
+              paddingRight: '1em',
+              userSelect: 'none',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </Stack>
+      </Collapse>
     </Stack>
   );
 }
