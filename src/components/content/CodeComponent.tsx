@@ -16,6 +16,8 @@ interface CodeComponentProps {
   wrapLines?: boolean;
   defaultOpen?: boolean;
   showToggle?: boolean;
+  showTitle?: boolean;
+  showCopyButton?: boolean;
 }
 
 export function CodeComponent({ 
@@ -26,6 +28,8 @@ export function CodeComponent({
   wrapLines = true,
   defaultOpen = true,
   showToggle = true,
+  showTitle = false,
+  showCopyButton = true,
 }: CodeComponentProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -54,11 +58,92 @@ export function CodeComponent({
     if (code.includes('import React') || code.includes('export default')) return 'jsx';
     if (code.includes('<?php')) return 'php';
     if (code.includes('def ') || code.includes('import ')) return 'python';
+    if (code.includes('{') && code.includes('}') && code.includes(':')) return 'json';
     return language;
   };
 
   const detectedLanguage = detectLanguage(code);
 
+  // If no title bar, just show the code with copy button
+  if (!showTitle) {
+    return (
+      <Stack 
+        sx={{ 
+          mb: 2,
+          background: '#1a1a1a', 
+          borderRadius: '8px',
+          overflow: 'hidden',
+          border: '1px solid rgba(255,255,255,0.05)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+          position: 'relative',
+        }}
+      >
+        {/* Copy button overlay - top right */}
+        {showCopyButton && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              zIndex: 1,
+            }}
+          >
+            <Button
+              size="small"
+              sx={{
+                color: 'rgba(255,255,255,0.6)',
+                textTransform: 'capitalize',
+                fontSize: '0.7rem',
+                background: 'rgba(0,0,0,0.4)',
+                backdropFilter: 'blur(8px)',
+                borderRadius: '6px',
+                px: 1.5,
+                py: 0.5,
+                '&:hover': {
+                  background: 'rgba(0,0,0,0.6)',
+                  color: 'white',
+                },
+                '& .MuiButton-startIcon': {
+                  marginRight: 0.5,
+                },
+              }}
+              onClick={copyToClipboard}
+              startIcon={isCopied ? <DoneAllIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+              disableRipple
+            >
+              {isCopied ? 'Copied!' : 'Copy'}
+            </Button>
+          </Box>
+        )}
+
+        <Stack className="javascript_code" sx={{ p: 0 }}>
+          <SyntaxHighlighter
+            language={detectedLanguage}
+            style={okaidia}
+            showLineNumbers={showLineNumbers}
+            wrapLines={wrapLines}
+            customStyle={{
+              fontSize: '14px',
+              margin: 0,
+              padding: '16px',
+              background: 'transparent',
+              borderRadius: 0,
+            }}
+            lineNumberStyle={{
+              color: '#666',
+              minWidth: '2.5em',
+              paddingRight: '1em',
+              userSelect: 'none',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </Stack>
+      </Stack>
+    );
+  }
+
+  // Full version with title bar
   return (
     <Stack 
       sx={{ 
@@ -101,25 +186,27 @@ export function CodeComponent({
         </Box>
         
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Button
-            size="small"
-            sx={{
-              color: '#dbdbdb',
-              textTransform: 'capitalize',
-              fontSize: '0.75rem',
-              '&:hover': {
-                background: alpha('#ffffff', 0.05),
-              },
-              '& .MuiButton-startIcon': {
-                marginRight: 0.5,
-              },
-            }}
-            onClick={copyToClipboard}
-            startIcon={isCopied ? <DoneAllIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
-            disableRipple
-          >
-            {isCopied ? 'Copied!' : 'Copy code'}
-          </Button>
+          {showCopyButton && (
+            <Button
+              size="small"
+              sx={{
+                color: '#dbdbdb',
+                textTransform: 'capitalize',
+                fontSize: '0.75rem',
+                '&:hover': {
+                  background: alpha('#ffffff', 0.05),
+                },
+                '& .MuiButton-startIcon': {
+                  marginRight: 0.5,
+                },
+              }}
+              onClick={copyToClipboard}
+              startIcon={isCopied ? <DoneAllIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+              disableRipple
+            >
+              {isCopied ? 'Copied!' : 'Copy code'}
+            </Button>
+          )}
           
           {showToggle && (
             <IconButton
@@ -167,3 +254,5 @@ export function CodeComponent({
     </Stack>
   );
 }
+
+export default CodeComponent;
