@@ -13,3 +13,4 @@ export { PlainText } from "./PlainText";
 export { Title } from "./Title";
 export { UnorderedList } from "./UnorderedList";
 export { Note } from "./Note";
+export { TableComponent } from "./TableComponent";

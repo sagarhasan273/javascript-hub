@@ -12,8 +12,8 @@ export const question01Meta: QuestionMeta = {
 
 export const question02Meta: QuestionMeta = {
   id: 2,
-  title: "What is the difference between null and undefined?",
-  definition: "Both represent 'nothing' but with different meanings: undefined means not assigned, null means intentionally empty.",
+  title: "What is a prototype chain?",
+  definition: "A prototype chain is the mechanism by which JavaScript objects inherit properties and methods from their prototype.",
 };
 
 
