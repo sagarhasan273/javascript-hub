@@ -1,7 +1,22 @@
+// utils/highlight.ts
+
+// Decode HTML entities in the entire content
+function decodeHtmlEntities(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+}
+
 // JavaScript syntax highlighter
 export function highlightJS(code: string): string {
-  // Escape HTML first
-  let highlighted = escapeHtml(code);
+  // First decode any HTML entities in the code
+  let highlighted = decodeHtmlEntities(code);
 
   // Keywords (purple/blue)
   highlighted = highlighted.replace(
@@ -21,15 +36,9 @@ export function highlightJS(code: string): string {
     '.<span class="text-cyan-400">$1</span>'
   );
 
-  // Strings (green) - handle both single and double quotes
+  // Strings (green) - handle double quotes, single quotes, and template literals
   highlighted = highlighted.replace(
-    /(&quot;[^&]*&quot;|&#x27;[^&]*&#x27;|"[^"]*"|'[^']*')/g,
-    '<span class="text-emerald-400">$1</span>'
-  );
-
-  // Template literals
-  highlighted = highlighted.replace(
-    /(`[^`]*`)/g,
+    /("[^"\\]*(\\.[^"\\]*)*"|'[^'\\]*(\\.[^'\\]*)*'|`[^`\\]*(\\.[^`\\]*)*`)/g,
     '<span class="text-emerald-400">$1</span>'
   );
 
@@ -39,10 +48,10 @@ export function highlightJS(code: string): string {
     '<span class="text-orange-400">$1</span>'
   );
 
-  // Comments (gray italic) - single line
+  // Single-line comments
   highlighted = highlighted.replace(
-    /(\/\/.*?)(\n|$)/g,
-    '<span class="text-slate-500 italic">$1</span>$2'
+    /(\/\/.*?)(?=\n|$)/g,
+    '<span class="text-slate-500 italic">$1</span>'
   );
 
   // Multi-line comments
@@ -51,46 +60,59 @@ export function highlightJS(code: string): string {
     '<span class="text-slate-500 italic">$1</span>'
   );
 
-  // Arrow functions
+  // Arrow functions and comparison operators
   highlighted = highlighted.replace(
-    /(&gt;|>)/g,
+    /(=>|>=|<=|==|===|!=|!==)/g,
     '<span class="text-pink-400">$1</span>'
   );
 
-  // Operators
+  // Other operators (but avoid messing with arrow functions)
   highlighted = highlighted.replace(
-    /([=+\-*/%!&|^~?:])/g,
+    /([+\-*/%&|^~?])/g,
     '<span class="text-pink-300">$1</span>'
   );
 
   return highlighted;
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
-}
-
-// Process HTML content and highlight code blocks
+// Main function to highlight code blocks in HTML content
 export function highlightCodeBlocks(html: string): string {
-  // Find all <pre><code> blocks and highlight them
-  return html.replace(
+  if (!html) return '';
+  
+  // First, decode all HTML entities in the entire content
+  let decodedHtml = decodeHtmlEntities(html);
+  
+  // Find and highlight all <pre><code> blocks
+  decodedHtml = decodedHtml.replace(
     /<pre><code>([\s\S]*?)<\/code><\/pre>/g,
     (match, code) => {
-      // Decode HTML entities
-      const decodedCode = code
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#x27;/g, "'");
-
-      const highlighted = highlightJS(decodedCode);
-      return `<pre><code>${highlighted}</code></pre>`;
+      // The code is already decoded from the previous step
+      const highlighted = highlightJS(code);
+      // Return with the highlighted code inside pre tags
+      return `<pre class="bg-slate-900 rounded-xl p-4 overflow-x-auto"><code class="text-sm font-mono">${highlighted}</code></pre>`;
     }
   );
+  
+  // Handle inline <code> tags (not inside pre)
+  // Only if they don't already have highlighting classes
+  decodedHtml = decodedHtml.replace(
+    /<code(?![^>]*class="[^"]*text-)[^>]*>([\s\S]*?)<\/code>/g,
+    (match, code) => {
+      // Decode the content
+      const decodedCode = decodeHtmlEntities(code);
+      // Apply basic highlighting to inline code
+      const highlighted = highlightJS(decodedCode);
+      return `<code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600">${highlighted}</code>`;
+    }
+  );
+  
+  return decodedHtml;
+}
+
+// Alternative: Minimal processing version if you just want to fix the display
+export function highlightCodeBlocksMinimal(html: string): string {
+  if (!html) return '';
+  
+  // Just decode HTML entities and return
+  return decodeHtmlEntities(html);
 }

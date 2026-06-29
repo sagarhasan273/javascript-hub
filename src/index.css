@@ -189,3 +189,49 @@
     overflow: hidden;
   }
 }
+
+/* Syntax highlighting for code */
+.prose pre {
+  background: #0a0f1e !important;
+  border-radius: 0.75rem !important;
+  padding: 1rem !important;
+  overflow-x: auto !important;
+}
+
+.prose pre code {
+  color: #e2e8f0 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.7 !important;
+}
+
+/* Color classes for syntax highlighting */
+.text-purple-400 {
+  color: #c084fc !important;
+}
+.text-yellow-300 {
+  color: #fcd34d !important;
+}
+.text-cyan-400 {
+  color: #22d3ee !important;
+}
+.text-emerald-400 {
+  color: #34d399 !important;
+}
+.text-orange-400 {
+  color: #fb923c !important;
+}
+.text-pink-400 {
+  color: #f472b6 !important;
+}
+.text-pink-300 {
+  color: #f9a8d4 !important;
+}
+.text-slate-500 {
+  color: #64748b !important;
+}
+.font-semibold {
+  font-weight: 600 !important;
+}
+.italic {
+  font-style: italic !important;
+}
