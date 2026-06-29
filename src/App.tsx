@@ -1,13 +1,217 @@
 // App.tsx
-import { QuestionsList } from './components/QuestionList';
-import { Box, Container } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Container, Stack, Fab, Typography } from '@mui/material';
+import { ChevronUp, ChevronDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Sidebar } from './components/Sidebar';
+import { questionRegistry, questionMetadata } from './data/questions/registry';
 
 function App() {
+  const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(null);
+  const [questionIds, setQuestionIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Get sorted question IDs from registry
+    const ids = questionRegistry.map(q => q.id).sort((a, b) => a - b);
+    setQuestionIds(ids);
+    if (ids.length > 0) {
+      setCurrentQuestionId(ids[0]);
+    }
+  }, []);
+
+  const handleSelectQuestion = (id: number) => {
+    setCurrentQuestionId(id);
+    setTimeout(() => {
+      const element = document.getElementById(`question-${id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
+  const handleAddNew = () => {
+    // Handle adding new question
+    console.log('Add new question');
+  };
+
+  const handleNext = () => {
+    const currentIndex = questionIds.indexOf(currentQuestionId!);
+    if (currentIndex < questionIds.length - 1) {
+      handleSelectQuestion(questionIds[currentIndex + 1]);
+    }
+  };
+
+  const handlePrevious = () => {
+    const currentIndex = questionIds.indexOf(currentQuestionId!);
+    if (currentIndex > 0) {
+      handleSelectQuestion(questionIds[currentIndex - 1]);
+    }
+  };
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleScrollToBottom = () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  };
+
+  // Get current question info for display
+  const currentIndex = currentQuestionId ? questionIds.indexOf(currentQuestionId) : -1;
+
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'grey.100', py: 4 }}>
-      <Container maxWidth="lg">
-        <QuestionsList />
-      </Container>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'grey.100', display: 'flex' }}>
+      {/* Sidebar */}
+      <Sidebar
+        questions={questionMetadata}
+        currentQuestion={currentQuestionId}
+        onSelectQuestion={handleSelectQuestion}
+        onAddNew={handleAddNew}
+      />
+
+      {/* Main Content */}
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          overflowY: 'auto',
+          bgcolor: 'background.paper',
+          p: { xs: 3, lg: 4 },
+          minHeight: '100vh',
+          position: 'relative',
+        }}
+      >
+        <Container maxWidth="lg">
+          {/* Progress Indicator */}
+          {currentQuestionId && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 3,
+                pb: 2,
+                borderBottom: '1px solid',
+                borderColor: 'grey.200',
+              }}
+            >
+              <Typography variant="body2" color="grey.600">
+                Question {currentIndex + 1} of {questionIds.length}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Typography variant="body2" color="grey.600">
+                  {Math.round(((currentIndex + 1) / questionIds.length) * 100)}% complete
+                </Typography>
+              </Box>
+            </Box>
+          )}
+
+          {/* Render Questions */}
+          <Stack spacing={4}>
+            {questionRegistry.map(({ id, component: QuestionComponent }, index) => (
+              <QuestionComponent
+                key={id}
+                index={index}
+                isActive={currentQuestionId === id}
+              />
+            ))}
+          </Stack>
+        </Container>
+
+        {/* Navigation Controls - Floating */}
+        {currentQuestionId && (
+          <Box
+            sx={{
+              position: 'fixed',
+              bottom: 24,
+              right: 24,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              zIndex: 1000,
+            }}
+          >
+            {/* Progress indicator */}
+            <Box
+              sx={{
+                bgcolor: 'white',
+                borderRadius: 2,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                p: 1,
+                mb: 1,
+                textAlign: 'center',
+                border: '1px solid',
+                borderColor: 'grey.200',
+              }}
+            >
+              <Typography variant="caption" color="grey.600" sx={{ display: 'block' }}>
+                {currentIndex + 1}/{questionIds.length}
+              </Typography>
+            </Box>
+
+            {/* Navigation buttons */}
+            <Fab
+              size="small"
+              onClick={handlePrevious}
+              disabled={currentIndex === 0}
+              sx={{
+                bgcolor: '#2563eb',
+                color: 'white',
+                '&:hover': { bgcolor: '#1d4ed8' },
+                '&.Mui-disabled': { 
+                  bgcolor: 'grey.300', 
+                  color: 'grey.500',
+                  opacity: 0.5,
+                },
+              }}
+            >
+              <ArrowUp size={18} />
+            </Fab>
+
+            <Fab
+              size="small"
+              onClick={handleNext}
+              disabled={currentIndex === questionIds.length - 1}
+              sx={{
+                bgcolor: '#2563eb',
+                color: 'white',
+                '&:hover': { bgcolor: '#1d4ed8' },
+                '&.Mui-disabled': { 
+                  bgcolor: 'grey.300', 
+                  color: 'grey.500',
+                  opacity: 0.5,
+                },
+              }}
+            >
+              <ArrowDown size={18} />
+            </Fab>
+
+            {/* Quick scroll buttons */}
+            <Fab
+              size="small"
+              onClick={handleScrollToTop}
+              sx={{
+                bgcolor: 'grey.200',
+                color: 'grey.700',
+                '&:hover': { bgcolor: 'grey.300' },
+              }}
+            >
+              <ChevronUp size={18} />
+            </Fab>
+
+            <Fab
+              size="small"
+              onClick={handleScrollToBottom}
+              sx={{
+                bgcolor: 'grey.200',
+                color: 'grey.700',
+                '&:hover': { bgcolor: 'grey.300' },
+              }}
+            >
+              <ChevronDown size={18} />
+            </Fab>
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 }

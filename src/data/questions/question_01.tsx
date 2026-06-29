@@ -1,29 +1,28 @@
-// components/questions/Question01.tsx
+// data/questions/Question01.tsx
 import { QuestionWrapper } from '../../components/QuestionWrapper';
 import {
   Title,
   PlainText,
   Bold,
-  CodeComponent,
   OrderedList,
   Divider,
   Gap,
   HLText,
   CardComponent,
   CentralText,
+  CodeComponent,
 } from '../../components/content';
 
-interface Question01Props {
-  index?: number;
-  isActive?: boolean;
-}
+import { question01Meta } from './registry';
 
-export function Question01({ index = 0, isActive = false }: Question01Props) {
+
+
+export function Question01({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
   return (
     <QuestionWrapper
-      id={1}
-      title="What are the possible ways to create objects in JavaScript"
-      definition="There are multiple ways to create objects: object literals, constructors, Object.create(), functions, classes, and singletons."
+      id={question01Meta.id}
+      title={question01Meta.title}
+      definition={question01Meta.definition}
       index={index}
       isActive={isActive}
     >
@@ -34,9 +33,9 @@ export function Question01({ index = 0, isActive = false }: Question01Props) {
       <OrderedList
         items={[
           <><Bold>Object literal syntax:</Bold> The easiest way using curly braces.</>,
-          <><Bold>Object constructor:</Bold> Using <CodeComponent inline>new Object()</CodeComponent> (not recommended).</>,
+          <><Bold>Object constructor:</Bold> Using <code style={{ background: '#f0f0f0', padding: '2px 6px', borderRadius: '4px' }}>new Object()</code> (not recommended).</>,
           <><Bold>Object's create method:</Bold> Creates object with specified prototype.</>,
-          <><Bold>Function constructor:</Bold> Using function with <CodeComponent inline>new</CodeComponent> keyword.</>,
+          <><Bold>Function constructor:</Bold> Using function with <code style={{ background: '#f0f0f0', padding: '2px 6px', borderRadius: '4px' }}>new</code> keyword.</>,
           <><Bold>Function constructor with prototype:</Bold> Shared properties across instances.</>,
           <><Bold>Object's assign method:</Bold> Copy properties from source objects.</>,
           <><Bold>ES6 Class syntax:</Bold> Syntactic sugar over prototype system.</>,
@@ -46,7 +45,8 @@ export function Question01({ index = 0, isActive = false }: Question01Props) {
 
       <Title level={3}>Code Examples</Title>
       
-      <CodeComponent>{`// Object literal
+      <CodeComponent
+        code={`// Object literal
 const person = {
   name: "Sudheer",
   age: 34,
@@ -82,7 +82,10 @@ class PersonClass {
     console.log(\`Hello, I'm \${this.name}\`);
   }
 }
-const person4 = new PersonClass("Sudheer", 34);`}</CodeComponent>
+const person4 = new PersonClass("Sudheer", 34);`}
+        language="javascript"
+        title="object-creation.js"
+      />
 
       <Divider />
 
@@ -97,7 +100,7 @@ const person4 = new PersonClass("Sudheer", 34);`}</CodeComponent>
       </CardComponent>
 
       <CardComponent variant="warning" title="⚠️ When to Avoid Constructors">
-        <PlainText>Avoid using <CodeComponent inline>new Object()</CodeComponent> as it's more verbose and slower.</PlainText>
+        <PlainText>Avoid using <code style={{ background: '#f0f0f0', padding: '2px 6px', borderRadius: '4px' }}>new Object()</code> as it's more verbose and slower.</PlainText>
       </CardComponent>
 
       <Gap size={3} />

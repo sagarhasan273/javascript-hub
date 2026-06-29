@@ -8,3 +8,8 @@ export interface Question {
   answer: string | ReactNode; // Now supports JSX!
 }
 
+export interface QuestionMeta {
+    id: number;
+    title: string;
+    definition: string;
+}

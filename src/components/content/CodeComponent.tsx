@@ -1,92 +1,141 @@
 // components/content/CodeComponent.tsx
-import { Box, Paper, alpha } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { Button, Stack, Typography, Box, alpha } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface CodeComponentProps {
-  children: string;
+  code: string;
   language?: string;
-  inline?: boolean;
+  title?: string;
+  showLineNumbers?: boolean;
+  wrapLines?: boolean;
 }
 
 export function CodeComponent({ 
-  children, 
+  code, 
   language = 'javascript', 
-  inline = false 
+  title = 'JavaScript.js',
+  showLineNumbers = true,
+  wrapLines = true,
 }: CodeComponentProps) {
-  if (inline) {
-    return (
-      <Box
-        component="code"
-        sx={{
-          bgcolor: alpha('#2563eb', 0.06),
-          px: 1,
-          py: 0.5,
-          borderRadius: 1,
-          fontFamily: '"Fira Code", "Consolas", monospace',
-          fontSize: '0.875rem',
-          color: '#2563eb',
-          display: 'inline-block',
-        }}
-      >
-        {children}
-      </Box>
-    );
-  }
+  const [isCopied, setIsCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(code)
+      .then(() => setIsCopied(true))
+      .catch((err) => console.error('Failed to copy code: ', err));
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isCopied]);
+
+  // Detect language from code if not specified
+  const detectLanguage = (code: string): string => {
+    if (code.includes('class') || code.includes('constructor')) return 'javascript';
+    if (code.includes('<!DOCTYPE') || code.includes('<html>')) return 'html';
+    if (code.includes('SELECT') || code.includes('INSERT')) return 'sql';
+    if (code.includes('import React')) return 'jsx';
+    return language;
+  };
+
+  const detectedLanguage = detectLanguage(code);
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        bgcolor: '#0a0f1e',
-        borderRadius: 2,
+    <Stack
+      sx={{ 
+        mb: 2,
+        background: '#1a1a1a', 
+        borderRadius: '8px',
         overflow: 'hidden',
         border: '1px solid rgba(255,255,255,0.05)',
-        my: 2,
+        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
       }}
     >
-      <Box
-        sx={{
-          px: 3,
-          py: 1.5,
-          bgcolor: 'rgba(255,255,255,0.03)',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
-          display: 'flex',
-          justifyContent: 'space-between',
+      {/* Header */}
+      <Stack 
+        sx={{ 
+          flexDirection: 'row', 
+          justifyContent: 'space-between', 
           alignItems: 'center',
+          p: '8px 16px',
+          bgcolor: '#2a2a2a',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
         }}
       >
-        <Box sx={{ display: 'flex', gap: 1.5 }}>
-          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ef4444' }} />
-          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#f59e0b' }} />
-          <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#22c55e' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Window controls */}
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ff5f56' }} />
+            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ffbd2e' }} />
+            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#27c93f' }} />
+          </Box>
+          <Typography 
+            sx={{ 
+              color: '#dbdbdb', 
+              fontSize: '0.8rem',
+              fontWeight: 500,
+              ml: 1,
+            }}
+          >
+            {title}
+          </Typography>
         </Box>
-        <Box
-          component="span"
+        
+        <Button
+          size="small"
           sx={{
-            color: 'grey.500',
-            fontSize: '0.7rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
+            color: '#dbdbdb',
+            textTransform: 'capitalize',
+            fontSize: '0.75rem',
+            '&:hover': {
+              background: alpha('#ffffff', 0.05),
+            },
+            '& .MuiButton-startIcon': {
+              marginRight: 0.5,
+            },
+          }}
+          onClick={copyToClipboard}
+          startIcon={isCopied ? <DoneAllIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+          disableRipple
+        >
+          {isCopied ? 'Copied!' : 'Copy code'}
+        </Button>
+      </Stack>
+
+      {/* Code */}
+      <Stack className="javascript_code" sx={{ p: 0 }}>
+        <SyntaxHighlighter
+          language={detectedLanguage}
+          style={okaidia}
+          showLineNumbers={showLineNumbers}
+          wrapLines={wrapLines}
+          customStyle={{
+            fontSize: '14px',
+            margin: 0,
+            padding: '16px',
+            background: 'transparent',
+            borderRadius: 0,
+          }}
+          lineNumberStyle={{
+            color: '#666',
+            minWidth: '2.5em',
+            paddingRight: '1em',
+            userSelect: 'none',
           }}
         >
-          {language}
-        </Box>
-      </Box>
-      <Box
-        component="pre"
-        sx={{
-          p: 3,
-          margin: 0,
-          overflow: 'auto',
-          '& code': {
-            fontFamily: '"Fira Code", "Consolas", monospace',
-            fontSize: '0.875rem',
-            lineHeight: 1.8,
-            color: '#e2e8f0',
-          },
-        }}
-      >
-        <code>{children}</code>
-      </Box>
-    </Paper>
+          {code}
+        </SyntaxHighlighter>
+      </Stack>
+    </Stack>
   );
 }

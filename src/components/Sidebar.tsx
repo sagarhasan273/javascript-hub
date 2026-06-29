@@ -1,6 +1,6 @@
-import { Menu, X, ChevronRight, Code, PlusCircle, Search, XCircle, Sparkles } from 'lucide-react';
-import { Question } from '../data/types';
+// components/Sidebar.tsx
 import { useState, useMemo } from 'react';
+import { Menu, X, ChevronRight, Code, PlusCircle, Search, XCircle } from 'lucide-react';
 import {
   Box,
   Drawer,
@@ -20,14 +20,20 @@ import {
   Fade,
 } from '@mui/material';
 
+interface QuestionMeta {
+  id: number;
+  title: string;
+  definition: string;
+}
+
 interface SidebarProps {
-  questions: Question[];
+  questions: QuestionMeta[];
   currentQuestion: number | null;
   onSelectQuestion: (id: number) => void;
   onAddNew: () => void;
 }
 
-export default function Sidebar({
+export function Sidebar({
   questions,
   currentQuestion,
   onSelectQuestion,
@@ -38,6 +44,7 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Filter questions based on search query
   const filteredQuestions = useMemo(() => {
     if (!searchQuery.trim()) return questions;
 
@@ -69,7 +76,7 @@ export default function Sidebar({
         borderRight: '1px solid rgba(255,255,255,0.05)',
       }}
     >
-      {/* Header - Enhanced */}
+      {/* Header */}
       <Box
         sx={{
           p: 3,
@@ -120,15 +127,12 @@ export default function Sidebar({
             }}
           />
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="caption" sx={{ color: 'grey.400', display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Sparkles size={12} style={{ color: '#fbbf24' }} />
-            Build your knowledge base
-          </Typography>
-        </Box>
+        <Typography variant="caption" sx={{ color: 'grey.400', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          Build your knowledge base
+        </Typography>
       </Box>
 
-      {/* Search Bar - Enhanced */}
+      {/* Search Bar */}
       <Box
         sx={{
           px: 2.5,
@@ -238,7 +242,7 @@ export default function Sidebar({
         )}
       </Box>
 
-      {/* Question Navigation - Enhanced Scrollable */}
+      {/* Question List */}
       <Box
         sx={{
           flex: 1,
@@ -424,14 +428,14 @@ export default function Sidebar({
                 Progress
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 600, color: 'grey.300' }}>
-                {Math.round((currentQuestion ? 1 : 0) / questions.length * 100)}%
+                {questions.length > 0 ? Math.round((currentQuestion ? 1 : 0) / questions.length * 100) : 0}%
               </Typography>
             </Box>
           </Box>
         )}
       </Box>
 
-      {/* Add New Button - Enhanced */}
+      {/* Add New Button */}
       <Box
         sx={{
           p: 2.5,
@@ -476,6 +480,7 @@ export default function Sidebar({
 
   return (
     <>
+      {/* Mobile Menu Button */}
       {isMobile && (
         <IconButton
           onClick={() => setIsOpen(!isOpen)}
@@ -498,6 +503,7 @@ export default function Sidebar({
         </IconButton>
       )}
 
+      {/* Mobile Drawer */}
       {isMobile ? (
         <Drawer
           anchor="left"
@@ -514,6 +520,7 @@ export default function Sidebar({
           {sidebarContent}
         </Drawer>
       ) : (
+        // Desktop Sidebar - Fixed position
         <Box
           sx={{
             display: 'flex',

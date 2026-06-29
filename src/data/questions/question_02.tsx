@@ -1,26 +1,23 @@
-// components/questions/Question02.tsx
+// data/questions/Question02.tsx
 import { QuestionWrapper } from '../../components/QuestionWrapper';
 import {
   Title,
   PlainText,
   Bold,
-  CodeComponent,
   Divider,
   CardComponent,
   HLText,
+  CodeComponent,
 } from '../../components/content';
+import { question02Meta } from './registry';
 
-interface Question02Props {
-  index?: number;
-  isActive?: boolean;
-}
 
-export function Question02({ index = 0, isActive = false }: Question02Props) {
+export function Question02({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
   return (
     <QuestionWrapper
-      id={2}
-      title="What is the difference between null and undefined?"
-      definition="Both represent 'nothing' but with different meanings: undefined means not assigned, null means intentionally empty."
+      id={question02Meta.id}
+      title={question02Meta.title}
+      definition={question02Meta.definition}
       index={index}
       isActive={isActive}
     >
@@ -28,12 +25,17 @@ export function Question02({ index = 0, isActive = false }: Question02Props) {
       <PlainText>
         undefined is the default value for variables that have been declared but not assigned a value.
       </PlainText>
-      <CodeComponent>{`// undefined examples
+      
+      <CodeComponent
+        code={`// undefined examples
 let name;                    // undefined
 const obj = {};             
 console.log(obj.age);        // undefined
 function greet() {}
-console.log(greet());        // undefined`}</CodeComponent>
+console.log(greet());        // undefined`}
+        language="javascript"
+        title="undefined-examples.js"
+      />
 
       <Divider />
 
@@ -41,17 +43,24 @@ console.log(greet());        // undefined`}</CodeComponent>
       <PlainText>
         null is a value that represents 'nothing' or 'empty' and must be explicitly assigned.
       </PlainText>
-      <CodeComponent>{`// null examples
+      
+      <CodeComponent
+        code={`// null examples
 let name = null;             // explicitly empty
 const obj = { age: null };   // property intentionally empty
 function findUser(id) {
   if (!id) return null;      // explicitly returning nothing
-}`}</CodeComponent>
+}`}
+        language="javascript"
+        title="null-examples.js"
+      />
 
       <Divider />
 
       <Title level={3}>Key Differences</Title>
-      <CodeComponent>{`// Key differences
+      
+      <CodeComponent
+        code={`// Key differences
 // 1. Type
 typeof undefined;    // "undefined"
 typeof null;         // "object" (historical bug)
@@ -69,7 +78,10 @@ console.log(y);      // null
 
 // 4. JSON
 JSON.stringify({ value: undefined }); // {}
-JSON.stringify({ value: null });      // {"value":null}`}</CodeComponent>
+JSON.stringify({ value: null });      // {"value":null}`}
+        language="javascript"
+        title="null-vs-undefined.js"
+      />
 
       <CardComponent variant="info">
         <PlainText>
