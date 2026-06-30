@@ -31,6 +31,7 @@ export function LevelToggle() {
     event: React.MouseEvent<HTMLElement>,
     newLevel: ContentLevel | null,
   ) => {
+    event.preventDefault(); // Prevent default behavior to avoid losing focus
     if (newLevel !== null) {
       setLevel(newLevel);
     }
