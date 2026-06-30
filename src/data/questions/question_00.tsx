@@ -16,7 +16,7 @@ import {
 import { question00Meta } from './registry';
 import { useLevel } from '../../context/LevelContext';
 
-export function Question00({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+export function Question00({ isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
 
   return (
@@ -24,7 +24,6 @@ export function Question00({ index = 0, isActive = false }: { index?: number; is
       id={question00Meta.id}
       title={question00Meta.title}
       definition={question00Meta.definition}
-      index={index}
       isActive={isActive}
     >
       {/* Introduction - Shown at all levels */}

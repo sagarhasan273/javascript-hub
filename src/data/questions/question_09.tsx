@@ -20,7 +20,6 @@ import { Box } from "@mui/material";
 import { useLevel } from "../../context/LevelContext";
 
 export function Question09({
-  index = 0,
   isActive = false,
 }: {
   index?: number;
@@ -33,7 +32,6 @@ export function Question09({
       id={question09Meta.id}
       title={question09Meta.title}
       definition={question09Meta.definition}
-      index={index}
       isActive={isActive}
     >
       {/* Introduction - Shown at all levels */}

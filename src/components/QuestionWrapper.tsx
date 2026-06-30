@@ -31,7 +31,6 @@ export function QuestionWrapper({
   title,
   definition,
   children,
-  index = 0,
   isActive = false,
 }: QuestionWrapperProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -173,7 +172,7 @@ export function QuestionWrapper({
                   zIndex: 1,
                 }}
               >
-                #{String(index + 1).padStart(2, "0")}
+                #{String(id).padStart(2, "0")}
               </Typography>
             </Box>
 
