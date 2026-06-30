@@ -1,13 +1,14 @@
 // components/content/Title.tsx
-import { Typography } from '@mui/material';
+import { SxProps, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface TitleProps {
   children: ReactNode;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
+  sx?: SxProps;
 }
 
-export function Title({ children, level = 2 }: TitleProps) {
+export function Title({ children, level = 2, sx }: TitleProps) {
   const variantMap: Record<1 | 2 | 3 | 4 | 5 | 6, 'h4' | 'h5' | 'h6' | 'subtitle1' | 'subtitle2' | 'body1'> = {
     1: 'h4',
     2: 'h5',
@@ -25,6 +26,7 @@ export function Title({ children, level = 2 }: TitleProps) {
         color: 'grey.800',
         mb: 1.5,
         mt: level === 1 ? 0 : 2,
+        ...sx
       }}
     >
       {children}
