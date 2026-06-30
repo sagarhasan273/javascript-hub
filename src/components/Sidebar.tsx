@@ -1,7 +1,7 @@
 // components/Sidebar.tsx
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { 
-  Menu, X, ChevronRight, Code, PlusCircle, Search, XCircle, 
+  Menu, X, ChevronRight, Code, Search, XCircle, 
   GripVertical, Sparkles, BookOpen, TrendingUp, Zap 
 } from 'lucide-react';
 import {
@@ -16,7 +16,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Button,
   useMediaQuery,
   useTheme,
   Badge,
@@ -34,7 +33,6 @@ interface SidebarProps {
   questions: QuestionMeta[];
   currentQuestion: number | null;
   onSelectQuestion: (id: number) => void;
-  onAddNew: () => void;
   defaultWidth?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -44,7 +42,6 @@ export function Sidebar({
   questions,
   currentQuestion,
   onSelectQuestion,
-  onAddNew,
   defaultWidth = 420,
   minWidth = 420,
   maxWidth = 540,
@@ -721,72 +718,6 @@ export function Sidebar({
             ))}
           </Box>
         )}
-      </Box>
-
-      {/* Add New Button */}
-      <Box
-        sx={{
-          p: 2.5,
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-          flexShrink: 0,
-          background: 'linear-gradient(0deg, rgba(0,0,0,0.4) 0%, transparent 100%)',
-          position: 'relative',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: '10%',
-            right: '10%',
-            height: '1px',
-            background: 'linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.3), transparent)',
-          },
-        }}
-      >
-        <Button
-          fullWidth
-          variant="contained"
-          startIcon={<PlusCircle size={20} />}
-          onClick={() => {
-            onAddNew();
-            if (isMobile) setIsOpen(false);
-          }}
-          sx={{
-            py: 1.8,
-            borderRadius: 3,
-            background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
-            fontWeight: 700,
-            textTransform: 'none',
-            fontSize: '0.95rem',
-            letterSpacing: '0.3px',
-            boxShadow: '0 4px 20px rgba(37,99,235,0.3)',
-            transition: 'all 0.3s ease',
-            position: 'relative',
-            overflow: 'hidden',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: '-100%',
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-              transition: 'all 0.5s ease',
-            },
-            '&:hover': {
-              background: 'linear-gradient(135deg, #1d4ed8, #6d28d9)',
-              transform: 'translateY(-2px)',
-              boxShadow: '0 6px 30px rgba(37,99,235,0.4)',
-              '&::before': {
-                left: '100%',
-              },
-            },
-            '&:active': {
-              transform: 'translateY(0)',
-            },
-          }}
-        >
-          Add New Question
-        </Button>
       </Box>
     </Box>
   );
