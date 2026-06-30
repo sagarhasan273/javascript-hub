@@ -4,6 +4,7 @@ import { Question00 } from './question_00';
 import { Question01 } from './question_01';
 import { Question02 } from './question_02';
 import { Question03 } from './question_03';
+import { Question04 } from './question_04';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -30,6 +31,12 @@ export const question03Meta: QuestionMeta = {
   definition: "call, apply, and bind are methods that allow you to explicitly set the this value in a function, but they differ in how they accept arguments and when they execute.",
 };
 
+export const question04Meta: QuestionMeta = {
+  id: 5,
+  title: "What is JSON and its common operations?",
+  definition: "JSON (JavaScript Object Notation) is a lightweight, text-based data interchange format that is easy for humans to read and write, and easy for machines to parse and generate.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -46,6 +53,10 @@ export const questionRegistry = [
   {
     ...question03Meta,
     component: Question03,
+  },
+  {
+    ...question04Meta,
+    component: Question04,
   },
   // Add more here
 ];
