@@ -1,6 +1,7 @@
 // data/questions/Question06.tsx
 import { Box } from '@mui/material';
 import { QuestionWrapper } from '../../components/QuestionWrapper';
+import { LevelContent } from '../../components/LevelContent';
 import {
   Title,
   PlainText,
@@ -15,8 +16,11 @@ import {
   UnorderedList,
 } from '../../components/content';
 import { question06Meta } from './registry';
+import { useLevel } from '../../context/LevelContext';
 
 export function Question06({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+  const { level } = useLevel();
+
   return (
     <QuestionWrapper
       id={question06Meta.id}
@@ -25,7 +29,7 @@ export function Question06({ index = 0, isActive = false }: { index?: number; is
       index={index}
       isActive={isActive}
     >
-      {/* Introduction */}
+      {/* Introduction - Shown at all levels */}
       <PlainText>
         <Bold>slice()</Bold> and <Bold>splice()</Bold> are two commonly used array methods in JavaScript that are often confused. While they sound similar, they serve <Bold>completely different purposes</Bold> and have different behaviors.
       </PlainText>
@@ -34,457 +38,439 @@ export function Question06({ index = 0, isActive = false }: { index?: number; is
         The key difference is that <Bold>slice()</Bold> is <Bold>immutable</Bold> (doesn't change the original array) and returns a new array, while <Bold>splice()</Bold> is <Bold>mutable</Bold> (modifies the original array) and changes the array in place.
       </PlainText>
 
-      <Gap size={2} />
+      {/* ============================================ */}
+      {/* BEGINNER LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="beginner" currentLevel={level}>
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🌱</Box>
+          Beginner: Understanding slice() and splice()
+        </Title>
 
-      {/* Quick Comparison */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📊</Box>
-        Quick Comparison
-      </Title>
+        <PlainText>
+          Think of <InlineCode>slice()</InlineCode> and <InlineCode>splice()</InlineCode> like this:
+        </PlainText>
 
-      <TableComponent
-        headers={['Feature', 'slice()', 'splice()']}
-        rows={[
-          ['Mutates Original Array', '❌ No (Immutable)', '✅ Yes (Mutable)'],
-          ['Returns', 'New array (shallow copy)', 'Array of removed elements'],
-          ['Parameters', 'start, end (optional)', 'start, deleteCount, items...'],
-          ['Can Add Elements', '❌ No', '✅ Yes'],
-          ['Can Remove Elements', '✅ Yes (via extraction)', '✅ Yes'],
-          ['Can Replace Elements', '❌ No', '✅ Yes'],
-          ['Original Array Size', 'Unchanged', 'Changes'],
-          ['Used For', 'Extracting, copying, pagination', 'Adding, removing, replacing'],
-          ['Performance', 'Faster (no mutation)', 'Slower (mutates in place)'],
-        ]}
-      />
+        <CardComponent variant="info" title="🎯 Simple Analogy">
+          <PlainText>
+            • <Bold>slice()</Bold> is like <Bold>copying</Bold> - you take a copy of a portion without touching the original<br />
+            • <Bold>splice()</Bold> is like <Bold>editing</Bold> - you modify the original by cutting, adding, or replacing
+          </PlainText>
+        </CardComponent>
 
-      <Gap size={2} />
+        <PlainText>
+          <Bold>Basic Examples:</Bold>
+        </PlainText>
 
-      {/* 1. slice() Method */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📋</Box>
-        1. slice() - Immutable Extraction
-      </Title>
-
-      <PlainText>
-        The <InlineCode>slice()</InlineCode> method returns a <Bold>shallow copy</Bold> of a portion of an array into a new array object, selected from <InlineCode>start</InlineCode> to <InlineCode>end</InlineCode> (end not included). The original array is <Bold>not modified</Bold>.
-      </PlainText>
-
-      <CodeComponent
-        code={`// slice() - Immutable
+        <CodeComponent
+          code={`// SLICE - Copy without modifying
 const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
 
-// Extract elements from index 1 to 3 (end exclusive)
+// Copy elements from index 1 to 3 (end exclusive)
 const sliced = fruits.slice(1, 3);
-console.log(sliced);        // ['Banana', 'Cherry']
-console.log(fruits);        // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'] (unchanged)
+console.log(sliced);  // ['Banana', 'Cherry']
+console.log(fruits);  // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'] (unchanged)
 
-// Extract from index 2 to end
-const fromTwo = fruits.slice(2);
-console.log(fromTwo);       // ['Cherry', 'Date', 'Elderberry']
-
-// Extract last 2 elements
-const lastTwo = fruits.slice(-2);
-console.log(lastTwo);       // ['Date', 'Elderberry']
-
-// Full copy
-const fullCopy = fruits.slice();
-console.log(fullCopy);      // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry']
-
-// Original array remains the same
-console.log(fruits.length); // 5 (unchanged)`}
-        language="javascript"
-        title="slice-example.js"
-        defaultOpen={true}
-      />
-
-      <Note type="info" icon="💡">
-        <Bold>Key Points:</Bold>
-        <PlainText component="div">
-          • Returns a <Bold>new array</Bold> with extracted elements<br />
-          • <Bold>Does NOT modify</Bold> the original array<br />
-          • Takes <InlineCode>start</InlineCode> (inclusive) and <InlineCode>end</InlineCode> (exclusive) parameters<br />
-          • Can use negative indices to count from the end
-        </PlainText>
-      </Note>
-
-      <Gap size={2} />
-
-      {/* 2. splice() Method */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>✂️</Box>
-        2. splice() - Mutable Modifier
-      </Title>
-
-      <PlainText>
-        The <InlineCode>splice()</InlineCode> method <Bold>modifies the original array</Bold> by removing, replacing, or adding elements. It returns an array containing the removed elements.
-      </PlainText>
-
-      <CodeComponent
-        code={`// splice() - Mutable
-const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
-
-// 1. Remove elements (start, deleteCount)
-const removed = fruits.splice(1, 2);
-console.log(removed);        // ['Banana', 'Cherry']
-console.log(fruits);         // ['Apple', 'Date', 'Elderberry'] (modified)
-
-// 2. Remove and add elements
-const moreFruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
-const removed2 = moreFruits.splice(2, 1, 'Grape', 'Kiwi');
-console.log(removed2);       // ['Cherry']
-console.log(moreFruits);     // ['Apple', 'Banana', 'Grape', 'Kiwi', 'Date', 'Elderberry']
-
-// 3. Insert elements without removing
-const insertFruits = ['Apple', 'Banana', 'Date'];
-insertFruits.splice(2, 0, 'Cherry');
-console.log(insertFruits);   // ['Apple', 'Banana', 'Cherry', 'Date']
-
-// 4. Replace all elements
-const replaceFruits = ['Apple', 'Banana', 'Cherry'];
-replaceFruits.splice(0, 3, 'Grape', 'Kiwi', 'Orange');
-console.log(replaceFruits);  // ['Grape', 'Kiwi', 'Orange']
-
-// 5. Remove from end
-const removeLast = ['Apple', 'Banana', 'Cherry'];
-const last = removeLast.splice(-1, 1);
-console.log(last);           // ['Cherry']
-console.log(removeLast);     // ['Apple', 'Banana']`}
-        language="javascript"
-        title="splice-example.js"
-        defaultOpen={true}
-      />
-
-      <Note type="warning" icon="⚠️">
-        <Bold>Key Points:</Bold>
-        <PlainText component="div">
-          • <Bold>Modifies</Bold> the original array<br />
-          • Returns an array of <Bold>removed elements</Bold><br />
-          • Can <Bold>remove, add, or replace</Bold> elements<br />
-          • Changes the array's length<br />
-          • More flexible but <Bold>mutates</Bold> data
-        </PlainText>
-      </Note>
-
-      <Gap size={2} />
-
-      {/* Side by Side Comparison */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔄</Box>
-        Side by Side Comparison
-      </Title>
-
-      <CodeComponent
-        code={`// Same input, different results
-const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
-
-// 1. SLICE - Immutable
-const slicedResult = fruits.slice(1, 3);
-console.log('slice result:', slicedResult);   // ['Banana', 'Cherry']
-console.log('original after slice:', fruits); // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry']
-
-// Reset array for splice example
+// SPLICE - Modify the original
 const fruits2 = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
 
-// 2. SPLICE - Mutable
-const splicedResult = fruits2.splice(1, 3);
-console.log('splice result:', splicedResult); // ['Banana', 'Cherry', 'Date']
-console.log('original after splice:', fruits2); // ['Apple', 'Elderberry']
+// Remove 2 elements starting from index 1
+const spliced = fruits2.splice(1, 2);
+console.log(spliced);  // ['Banana', 'Cherry']
+console.log(fruits2);  // ['Apple', 'Date', 'Elderberry'] (modified!)`}
+          language="javascript"
+          title="basics.js"
+          defaultOpen={true}
+        />
 
-// When to use each:
-// SLICE: When you want to extract data without modifying
-// SPLICE: When you want to modify the original array`}
-        language="javascript"
-        title="slice-vs-splice.js"
-        defaultOpen={true}
-      />
-
-      <Gap size={2} />
-
-      {/* Visual Comparison */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🎨</Box>
-        Visual Comparison
-      </Title>
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            md: '1fr 1fr',
-          },
-          gap: 3,
-          my: 2,
-        }}
-      >
-        {/* slice Visual */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(37, 99, 235, 0.06)',
-            borderRadius: 2,
-            p: 3,
-            border: '2px solid rgba(37, 99, 235, 0.2)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#2563eb', mb: 2 }}>
-            📋 slice()
-          </Box>
-          <Box sx={{ mb: 2 }}>
-            <PlainText variant="body2" sx={{ fontWeight: 600, color: 'grey.700' }}>
-              Original Array:
-            </PlainText>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-              {['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'].map((item, i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    bgcolor: i >= 1 && i < 3 ? '#60a5fa' : 'rgba(255,255,255,0.8)',
-                    p: 1,
-                    px: 1.5,
-                    borderRadius: 1,
-                    border: i >= 1 && i < 3 ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                    color: i >= 1 && i < 3 ? 'white' : 'grey.700',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {item}
-                </Box>
-              ))}
-            </Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.4)', mt: 1, fontSize: '0.7rem' }}>
-              <span style={{ color: '#2563eb' }}>⬅️ slice(1, 3) extracts Banana & Cherry</span>
-            </Box>
-          </Box>
-          <Box>
-            <PlainText variant="body2" sx={{ fontWeight: 600, color: 'grey.700' }}>
-              Result:
-            </PlainText>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-              {['Banana', 'Cherry'].map((item, i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    bgcolor: '#2563eb',
-                    p: 1,
-                    px: 1.5,
-                    borderRadius: 1,
-                    color: 'white',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {item}
-                </Box>
-              ))}
-            </Box>
-          </Box>
-          <PlainText variant="caption" sx={{ color: 'success.main', mt: 1, display: 'block' }}>
-            ✅ Original array unchanged
+        <Note type="info" icon="💡">
+          <Bold>Remember:</Bold>
+          <PlainText component="div">
+            • <InlineCode>slice()</InlineCode> = <Bold>Safe</Bold> (doesn't change original)<br />
+            • <InlineCode>splice()</InlineCode> = <Bold>Changes</Bold> (modifies original)
           </PlainText>
-        </Box>
+        </Note>
 
-        {/* splice Visual */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(245, 158, 11, 0.06)',
-            borderRadius: 2,
-            p: 3,
-            border: '2px solid rgba(245, 158, 11, 0.2)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#f59e0b', mb: 2 }}>
-            ✂️ splice()
-          </Box>
-          <Box sx={{ mb: 2 }}>
-            <PlainText variant="body2" sx={{ fontWeight: 600, color: 'grey.700' }}>
-              Original Array:
-            </PlainText>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-              {['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'].map((item, i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    bgcolor: i >= 1 && i < 3 ? '#fbbf24' : 'rgba(255,255,255,0.8)',
-                    p: 1,
-                    px: 1.5,
-                    borderRadius: 1,
-                    border: i >= 1 && i < 3 ? '2px solid #f59e0b' : '1px solid #e2e8f0',
-                    color: i >= 1 && i < 3 ? 'black' : 'grey.700',
-                    fontSize: '0.8rem',
-                    position: 'relative',
-                  }}
-                >
-                  {item}
-                  {i >= 1 && i < 3 && (
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: -12,
-                        right: -8,
-                        fontSize: '0.6rem',
-                        color: '#f59e0b',
-                      }}
-                    >
-                      removed
-                    </Box>
-                  )}
-                </Box>
-              ))}
-            </Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.4)', mt: 1, fontSize: '0.7rem' }}>
-              <span style={{ color: '#f59e0b' }}>⬅️ splice(1, 2) removes Banana & Cherry</span>
-            </Box>
-          </Box>
-          <Box>
-            <PlainText variant="body2" sx={{ fontWeight: 600, color: 'grey.700' }}>
-              Result:
-            </PlainText>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-              {['Apple', 'Date', 'Elderberry'].map((item, i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    bgcolor: 'rgba(255,255,255,0.8)',
-                    p: 1,
-                    px: 1.5,
-                    borderRadius: 1,
-                    border: '1px solid #e2e8f0',
-                    color: 'grey.700',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {item}
-                </Box>
-              ))}
-            </Box>
-          </Box>
-          <PlainText variant="caption" sx={{ color: 'warning.main', mt: 1, display: 'block' }}>
-            ⚠️ Original array modified
-          </PlainText>
-        </Box>
-      </Box>
-
-      <Gap size={2} />
-
-      {/* When to Use Which */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🎯</Box>
-        When to Use Which?
-      </Title>
-
-      <CardComponent variant="success" title="✅ When to Use slice()">
-        <UnorderedList
-          items={[
-            <>Creating a copy of an array</>,
-            <>Extracting data without modifying the original</>,
-            <>Implementing pagination (showing subsets)</>,
-            <>Functional programming (immutability)</>,
-            <>Converting array-like objects to arrays</>,
-            <>When you need a new array for chaining methods</>,
+        <TableComponent
+          headers={['Method', 'Changes Original?', 'Use For']}
+          rows={[
+            ['slice()', '❌ No', 'Copying, extracting'],
+            ['splice()', '✅ Yes', 'Removing, adding, replacing'],
           ]}
         />
-      </CardComponent>
 
-      <CardComponent variant="warning" title="⚠️ When to Use splice()">
-        <UnorderedList
-          items={[
-            <>Removing elements from an array</>,
-            <>Adding elements at a specific position</>,
-            <>Replacing elements in place</>,
-            <>When you need to modify the original array</>,
-            <>When performance is critical (modifies in place)</>,
-            <>Working with data that should be mutated</>,
+        <CardComponent variant="success" title="✅ When to Use (Beginner)">
+          <UnorderedList
+            items={[
+              <>Use <Bold>slice()</Bold> when you need a copy without changing the original</>,
+              <>Use <Bold>splice()</Bold> when you want to modify the original array</>,
+              <>Use <Bold>slice()</Bold> for pagination and displaying subsets</>,
+              <>Use <Bold>splice()</Bold> for removing items from a list</>,
+            ]}
+          />
+        </CardComponent>
+
+        <Note type="success" icon="✅">
+          <Bold>Quick Rule:</Bold> If you want to keep the original array, use <InlineCode>slice()</InlineCode>. If you want to change it, use <InlineCode>splice()</InlineCode>.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* ADVANCED LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="advanced" currentLevel={level}>
+        <Gap size={2} />
+
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚡</Box>
+          Advanced: Deep Dive & Use Cases
+        </Title>
+
+        <PlainText>
+          Understanding the detailed differences and when to use each method:
+        </PlainText>
+
+        <TableComponent
+          headers={['Feature', 'slice()', 'splice()']}
+          rows={[
+            ['Mutates Original Array', '❌ No (Immutable)', '✅ Yes (Mutable)'],
+            ['Returns', 'New array (shallow copy)', 'Array of removed elements'],
+            ['Parameters', 'start, end (optional)', 'start, deleteCount, items...'],
+            ['Can Add Elements', '❌ No', '✅ Yes'],
+            ['Can Remove Elements', '✅ Yes (via extraction)', '✅ Yes'],
+            ['Can Replace Elements', '❌ No', '✅ Yes'],
+            ['Original Array Size', 'Unchanged', 'Changes'],
+            ['Performance', 'Faster (no mutation)', 'Slower (mutates in place)'],
           ]}
         />
-      </CardComponent>
 
-      <Gap size={2} />
+        <Title level={4}>slice() - Immutable Extraction</Title>
 
-      {/* Practical Examples */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>💻</Box>
-        Practical Examples
-      </Title>
+        <CodeComponent
+          code={`// slice() in detail
+const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
 
-      <PlainText>
-        <Bold>Example 1: Removing items from a todo list</Bold>
-      </PlainText>
+// 1. Basic extraction
+const sliced1 = fruits.slice(1, 3);  // ['Banana', 'Cherry']
 
-      <CodeComponent
-        code={`// Using splice to remove from a list
-const todos = [
-  { id: 1, task: 'Learn JavaScript', done: false },
-  { id: 2, task: 'Learn React', done: false },
-  { id: 3, task: 'Build a project', done: true },
-  { id: 4, task: 'Deploy to production', done: false }
-];
+// 2. Negative indices (count from end)
+const sliced2 = fruits.slice(-2);     // ['Date', 'Elderberry']
+const sliced3 = fruits.slice(0, -2);  // ['Apple', 'Banana', 'Cherry']
 
-// Remove completed tasks (mutates)
-function removeCompleted(todos) {
-  for (let i = todos.length - 1; i >= 0; i--) {
-    if (todos[i].done) {
-      todos.splice(i, 1);
-    }
+// 3. Full copy
+const fullCopy = fruits.slice();      // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry']
+
+// 4. Array-like to array conversion
+function toArray() {
+  return Array.prototype.slice.call(arguments);
+}
+console.log(toArray(1, 2, 3));  // [1, 2, 3]
+
+// 5. Chaining with other methods
+const result = fruits
+  .slice(1, 4)  // ['Banana', 'Cherry', 'Date']
+  .filter(f => f.length > 5)  // ['Banana', 'Elderberry'] (in original)
+  .map(f => f.toUpperCase());  // ['BANANA', 'ELDERBERRY']`}
+          language="javascript"
+          title="slice-advanced.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>splice() - Mutable Modifier</Title>
+
+        <CodeComponent
+          code={`// splice() in detail
+const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
+
+// 1. Remove elements
+const removed = fruits.splice(1, 2);  // ['Banana', 'Cherry']
+console.log(fruits);  // ['Apple', 'Date', 'Elderberry']
+
+// 2. Add elements (deleteCount = 0)
+const fruits2 = ['Apple', 'Banana', 'Date'];
+fruits2.splice(2, 0, 'Cherry');  // Insert at index 2
+console.log(fruits2);  // ['Apple', 'Banana', 'Cherry', 'Date']
+
+// 3. Replace elements
+const fruits3 = ['Apple', 'Banana', 'Cherry'];
+fruits3.splice(1, 1, 'Grape', 'Kiwi');  // Replace 'Banana' with two items
+console.log(fruits3);  // ['Apple', 'Grape', 'Kiwi', 'Cherry']
+
+// 4. Remove from end
+const fruits4 = ['Apple', 'Banana', 'Cherry'];
+const last = fruits4.splice(-1, 1);
+console.log(last);  // ['Cherry']
+console.log(fruits4);  // ['Apple', 'Banana']
+
+// 5. Clear array
+const fruits5 = ['Apple', 'Banana', 'Cherry'];
+fruits5.splice(0);
+console.log(fruits5);  // []`}
+          language="javascript"
+          title="splice-advanced.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>When to Use Which (Advanced)</Title>
+
+        <CardComponent variant="success" title="✅ Use slice() When:">
+          <UnorderedList
+            items={[
+              <>Creating a copy of an array</>,
+              <>Extracting data without modifying the original</>,
+              <>Implementing pagination (showing subsets)</>,
+              <>Functional programming (immutability)</>,
+              <>Converting array-like objects to arrays</>,
+              <>When you need a new array for chaining methods</>,
+            ]}
+          />
+        </CardComponent>
+
+        <CardComponent variant="warning" title="⚠️ Use splice() When:">
+          <UnorderedList
+            items={[
+              <>Removing elements from an array</>,
+              <>Adding elements at a specific position</>,
+              <>Replacing elements in place</>,
+              <>When you need to modify the original array</>,
+              <>When performance is critical (modifies in place)</>,
+              <>Working with data that should be mutated</>,
+            ]}
+          />
+        </CardComponent>
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Important:</Bold> Always remember that <InlineCode>splice()</InlineCode> modifies the original array. This can lead to bugs if you're not careful, especially in React or other frameworks where immutability is important.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* EXPERT LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="expert" currentLevel={level}>
+        <Gap size={2} />
+
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#ef4444', mr: 1 }}>🚀</Box>
+          Expert: Advanced Patterns & Performance
+        </Title>
+
+        <PlainText>
+          Deep dive into advanced patterns, performance considerations, and expert-level techniques.
+        </PlainText>
+
+        <Title level={4}>1. Performance Benchmarks</Title>
+
+        <CodeComponent
+          code={`// Performance comparison: slice vs splice
+const arraySize = 100000;
+const testArray = Array.from({ length: arraySize }, (_, i) => i);
+
+// SLICE - Creating a copy
+console.time('slice');
+const sliced = testArray.slice(1000, 2000);
+console.timeEnd('slice');
+
+// SPLICE - Removing elements
+const testArray2 = Array.from({ length: arraySize }, (_, i) => i);
+console.time('splice');
+const spliced = testArray2.splice(1000, 1000);
+console.timeEnd('splice');
+
+// Results: slice is generally faster for extraction
+// splice is faster when you need to modify in place
+
+// Best practice: Use slice for copying, splice for mutation`}
+          language="javascript"
+          title="performance.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>2. Advanced Pagination Pattern</Title>
+
+        <CodeComponent
+          code={`// Advanced pagination with slice
+class Paginator {
+  constructor(data, pageSize = 10) {
+    this.data = data;
+    this.pageSize = pageSize;
+    this.currentPage = 1;
   }
-  return todos;
+  
+  getPage(pageNumber) {
+    const start = (pageNumber - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return {
+      data: this.data.slice(start, end),
+      currentPage: pageNumber,
+      totalPages: Math.ceil(this.data.length / this.pageSize),
+      hasNext: pageNumber < this.totalPages,
+      hasPrev: pageNumber > 1
+    };
+  }
+  
+  next() {
+    if (this.hasNext) {
+      return this.getPage(this.currentPage + 1);
+    }
+    return null;
+  }
+  
+  prev() {
+    if (this.hasPrev) {
+      return this.getPage(this.currentPage - 1);
+    }
+    return null;
+  }
+  
+  get totalPages() {
+    return Math.ceil(this.data.length / this.pageSize);
+  }
+  
+  get hasNext() {
+    return this.currentPage < this.totalPages;
+  }
+  
+  get hasPrev() {
+    return this.currentPage > 1;
+  }
 }
 
-const completedRemoved = removeCompleted([...todos]);
-console.log(completedRemoved);
-// [{ id: 1, task: 'Learn JavaScript', done: false }, ...]
+// Usage
+const data = Array.from({ length: 100 }, (_, i) => ({ id: i, name: \`Item \${i}\` }));
+const paginator = new Paginator(data, 10);
+console.log(paginator.getPage(1).data.length); // 10 items`}
+          language="javascript"
+          title="pagination.js"
+          defaultOpen={false}
+        />
 
-// Using slice for pagination (immutable)
-function paginateTodos(todos, page, pageSize) {
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize;
-  return {
-    page,
-    totalPages: Math.ceil(todos.length / pageSize),
-    data: todos.slice(start, end)
-  };
-}
+        <Title level={4}>3. Reactive State Management (React Pattern)</Title>
 
-const page1 = paginateTodos(todos, 1, 2);
-console.log(page1.data); // First 2 items`}
-        language="javascript"
-        title="todo-example.js"
-        defaultOpen={false}
-      />
+        <CodeComponent
+          code={`// React pattern - Immutable updates with slice
+const [items, setItems] = useState(['Apple', 'Banana', 'Cherry']);
 
+// 1. Add item (use spread)
+const addItem = (newItem) => {
+  setItems([...items, newItem]);
+};
+
+// 2. Remove item (use filter or slice)
+const removeItem = (index) => {
+  setItems(items.filter((_, i) => i !== index));
+  // or
+  setItems([...items.slice(0, index), ...items.slice(index + 1)]);
+};
+
+// 3. Update item (use map)
+const updateItem = (index, newValue) => {
+  setItems(items.map((item, i) => i === index ? newValue : item));
+};
+
+// 4. Insert at position (use slice)
+const insertItem = (index, newItem) => {
+  setItems([
+    ...items.slice(0, index),
+    newItem,
+    ...items.slice(index)
+  ]);
+};
+
+// 5. Move item (use slice)
+const moveItem = (fromIndex, toIndex) => {
+  const item = items[fromIndex];
+  const newItems = [...items];
+  newItems.splice(fromIndex, 1);
+  newItems.splice(toIndex, 0, item);
+  setItems(newItems);
+};`}
+          language="javascript"
+          title="react-pattern.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>4. Advanced Data Transformation</Title>
+
+        <CodeComponent
+          code={`// Pipeline with slice for immutability
+const pipeline = (...fns) => (data) => fns.reduce((acc, fn) => fn(acc), data);
+
+// Data transformation pipeline
+const processData = pipeline(
+  (data) => data.slice(0, 100), // Limit to 100 items
+  (data) => data.filter(item => item.active),
+  (data) => data.map(item => ({ ...item, processed: true })),
+  (data) => data.sort((a, b) => a.timestamp - b.timestamp),
+  (data) => data.slice(0, 10) // Take top 10
+);
+
+// Usage
+const results = processData(largeDataset);`}
+          language="javascript"
+          title="pipeline.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>5. Memory Management</Title>
+
+        <CodeComponent
+          code={`// Memory considerations
+const largeArray = Array.from({ length: 1000000 }, (_, i) => i);
+
+// 1. slice creates a new array (uses memory)
+const subset = largeArray.slice(0, 1000); // New array in memory
+
+// 2. splice modifies in place (more memory efficient)
+const largeArray2 = Array.from({ length: 1000000 }, (_, i) => i);
+largeArray2.splice(0, 1000); // Modifies original, less memory
+
+// 3. When to use each
+// Use slice for: Maintaining original data
+// Use splice for: Memory efficiency, modifying in place
+
+// 4. Garbage collection
+let data = largeArray.slice(); // Creates new reference
+data = null; // Allows garbage collection
+
+// 5. Best practice for large datasets
+function processLargeArray(array) {
+  // Use splice for in-place modifications
+  array.splice(0, 1000);
+  return array;
+}`}
+          language="javascript"
+          title="memory.js"
+          defaultOpen={false}
+        />
+
+        <CardComponent variant="info" title="⚡ Expert Performance Tips">
+          <UnorderedList
+            items={[
+              <>Use <Bold>slice()</Bold> for copying when you need to preserve the original</>,
+              <>Use <Bold>splice()</Bold> for in-place modifications for better memory efficiency</>,
+              <>Avoid <Bold>splice()</Bold> in React state updates (use filter, map, or slice)</>,
+              <>Use <Bold>slice()</Bold> for pagination to avoid mutating the original data</>,
+              <>Consider memory usage when working with large arrays</>,
+              <>Use <Bold>slice(0)</Bold> for shallow copying (or spread operator)</>,
+            ]}
+          />
+        </CardComponent>
+
+        <HLText type="info">
+          💡 <Bold>Expert Insight:</Bold> The choice between <InlineCode>slice()</InlineCode> and <InlineCode>splice()</InlineCode> comes down to <Bold>immutability</Bold> vs <Bold>performance</Bold>. In modern JavaScript, prefer <InlineCode>slice()</InlineCode> for functional programming and React state management. Use <InlineCode>splice()</InlineCode> when performance is critical and you want to avoid creating new arrays.
+        </HLText>
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Expert Warning:</Bold> Be careful with <InlineCode>splice()</InlineCode> in loops - it changes the array length and index positions. Always iterate from the end when removing items in a loop.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* SUMMARY - Shown at all levels */}
+      {/* ============================================ */}
       <Gap size={2} />
 
-      {/* Best Practices */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#fbbf24', mr: 1 }}>⭐</Box>
-        Best Practices
-      </Title>
-
-      <CardComponent variant="success" title="✅ Do's">
-        <UnorderedList
-          items={[
-            <>Use <InlineCode>slice()</InlineCode> when you need to keep the original array intact</>,
-            <>Use <InlineCode>splice()</InlineCode> when you explicitly want to modify the array</>,
-            <>Always store the result of <InlineCode>splice()</InlineCode> to get removed elements</>,
-            <>Use <InlineCode>slice()</InlineCode> for functional programming and immutability</>,
-            <>Use spread operator <InlineCode>[...arr]</InlineCode> as an alternative to <InlineCode>slice()</InlineCode> for copying</>,
-          ]}
-        />
-      </CardComponent>
-
-      <CardComponent variant="warning" title="⚠️ Don'ts">
-        <UnorderedList
-          items={[
-            <>Don't use <InlineCode>splice()</InlineCode> when you need to keep the original array</>,
-            <>Don't use <InlineCode>slice()</InlineCode> when you need to modify the array</>,
-            <>Don't confuse the parameter order (slice uses end, splice uses deleteCount)</>,
-            <>Don't use <InlineCode>splice()</InlineCode> in loops without considering index shifts</>,
-            <>Don't mutate data in React state (use <InlineCode>slice()</InlineCode> or other immutable methods)</>,
-          ]}
-        />
-      </CardComponent>
-
-      <Gap size={2} />
-
-      {/* Summary */}
       <Title level={3}>
         <Box component="span" sx={{ color: '#10b981', mr: 1 }}>📌</Box>
         Summary
@@ -504,86 +490,10 @@ console.log(page1.data); // First 2 items`}
         />
       </CardComponent>
 
-      <Gap size={2} />
-
       <HLText type="info">
         💡 <Bold>Pro Tip:</Bold> Remember the mnemonic: <Bold>"S"</Bold>lice = <Bold>"S"</Bold>afe (doesn't modify), <Bold>"P"</Bold>lice = <Bold>"P"</Bold>ainful (modifies the original)! 
         This will help you remember which one mutates the array.
       </HLText>
-
-      <Gap size={2} />
-
-      {/* Quick Reference */}
-      <Title level={4}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>📋</Box>
-        Quick Reference Card
-      </Title>
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: '1fr 1fr',
-          },
-          gap: 2,
-          my: 2,
-        }}
-      >
-        {/* slice Card */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(37, 99, 235, 0.06)',
-            borderRadius: 2,
-            p: 2.5,
-            border: '2px solid rgba(37, 99, 235, 0.15)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#2563eb', mb: 1 }}>
-            📋 slice()
-          </Box>
-          <CodeComponent
-            code={`arr.slice(start, end)
-// Returns: new array
-// Original: unchanged`}
-            language="javascript"
-            title=""
-            showTitle={false}
-            showCopyButton={true}
-            defaultOpen={true}
-          />
-          <PlainText variant="caption" sx={{ mt: 1, display: 'block', color: 'success.main' }}>
-            ✅ Immutable - Safe to use
-          </PlainText>
-        </Box>
-
-        {/* splice Card */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(245, 158, 11, 0.06)',
-            borderRadius: 2,
-            p: 2.5,
-            border: '2px solid rgba(245, 158, 11, 0.15)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#f59e0b', mb: 1 }}>
-            ✂️ splice()
-          </Box>
-          <CodeComponent
-            code={`arr.splice(start, deleteCount, items)
-// Returns: removed elements
-// Original: modified`}
-            language="javascript"
-            title=""
-            showTitle={false}
-            showCopyButton={true}
-            defaultOpen={true}
-          />
-          <PlainText variant="caption" sx={{ mt: 1, display: 'block', color: 'warning.main' }}>
-            ⚠️ Mutable - Modifies original
-          </PlainText>
-        </Box>
-      </Box>
 
       <Note type="success" icon="🎉">
         <Bold>Remember:</Bold> The key difference is <Bold>immutability</Bold>. Use <Bold>slice()</Bold> when you want to keep the original array, and <Bold>splice()</Bold> when you want to modify it!

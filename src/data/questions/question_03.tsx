@@ -1,6 +1,7 @@
 // data/questions/Question03.tsx
 import { Box } from "@mui/material";
 import { QuestionWrapper } from "../../components/QuestionWrapper";
+import { LevelContent } from "../../components/LevelContent";
 import {
   Title,
   PlainText,
@@ -15,6 +16,7 @@ import {
   UnorderedList,
 } from "../../components/content";
 import { question03Meta } from "./registry";
+import { useLevel } from "../../context/LevelContext";
 
 export function Question03({
   index = 0,
@@ -23,6 +25,8 @@ export function Question03({
   index?: number;
   isActive?: boolean;
 }) {
+  const { level } = useLevel();
+
   return (
     <QuestionWrapper
       id={question03Meta.id}
@@ -31,7 +35,7 @@ export function Question03({
       index={index}
       isActive={isActive}
     >
-      {/* Introduction */}
+      {/* Introduction - Shown at all levels */}
       <PlainText>
         <Bold>call</Bold>, <Bold>apply</Bold>, and <Bold>bind</Bold> are methods
         that allow you to explicitly set the <InlineCode>this</InlineCode> value
@@ -45,275 +49,519 @@ export function Question03({
         context.
       </PlainText>
 
-      <Gap size={2} />
+      {/* ============================================ */}
+      {/* BEGINNER LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="beginner" currentLevel={level}>
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#10b981", mr: 1 }}>🌱</Box>
+          Beginner: Understanding call, apply, and bind
+        </Title>
 
-      {/* 1. call() */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#2563eb", mr: 1 }}>
-          📞
-        </Box>
-        1. Function.prototype.call()
-      </Title>
-      <PlainText>
-        The <InlineCode>call()</InlineCode> method calls a function with a given{" "}
-        <InlineCode>this</InlineCode> value and arguments provided individually
-        (one by one).
-      </PlainText>
+        <PlainText>
+          Think of these methods like <Bold>borrowing a tool</Bold> from someone else:
+        </PlainText>
 
-      <CodeComponent
-        code={`// Syntax
-functionName.call(thisArg, arg1, arg2, ...);
+        <CardComponent variant="info" title="🎯 Simple Analogy">
+          <PlainText>
+            • <Bold>call()</Bold> - You borrow a tool and use it immediately, handing over items one by one
+            <br />
+            • <Bold>apply()</Bold> - You borrow a tool and use it immediately, handing over a bag of items
+            <br />
+            • <Bold>bind()</Bold> - You get a custom version of the tool to use later
+          </PlainText>
+        </CardComponent>
 
-// Example
+        {/* 1. call() - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#2563eb", mr: 1 }}>📞</Box>
+          1. call() - Use It Now, Items One by One
+        </Title>
+        <PlainText>
+          <InlineCode>call()</InlineCode> calls a function immediately with a specific <InlineCode>this</InlineCode> value and arguments passed <Bold>one by one</Bold>.
+        </PlainText>
+
+        <CodeComponent
+          code={`// Simple example
+const person = { name: 'Alice' };
+
+function greet(greeting) {
+  console.log(greeting + ', ' + this.name);
+}
+
+greet.call(person, 'Hello'); // Hello, Alice
+
+// Why is this useful?
+// You can use methods from one object on another!
+const user1 = { name: 'John' };
+const user2 = { name: 'Jane' };
+
+function sayHi() {
+  console.log('Hi, ' + this.name);
+}
+
+sayHi.call(user1); // Hi, John
+sayHi.call(user2); // Hi, Jane`}
+          language="javascript"
+          title="call-beginner.js"
+          defaultOpen={true}
+        />
+
+        <Note type="info" icon="💡">
+          <Bold>Remember:</Bold> <InlineCode>call()</InlineCode> is like saying "Use this function right now with these specific items (arguments)."
+        </Note>
+
+        <Gap size={1} />
+
+        {/* 2. apply() - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#8b5cf6", mr: 1 }}>📋</Box>
+          2. apply() - Use It Now, Items in a Bag
+        </Title>
+        <PlainText>
+          <InlineCode>apply()</InlineCode> is similar to <InlineCode>call()</InlineCode>, but arguments are passed as an <Bold>array</Bold> (like a bag of items).
+        </PlainText>
+
+        <CodeComponent
+          code={`// apply() example
+const person = { name: 'Alice' };
+
 function greet(greeting, punctuation) {
   console.log(greeting + ', ' + this.name + punctuation);
 }
 
-const person = { name: 'Alice' };
+// Arguments as an array
+greet.apply(person, ['Hello', '!']); // Hello, Alice!
 
-greet.call(person, 'Hello', '!'); // Output: Hello, Alice!`}
-        language="javascript"
-        title="call-example.js"
-        defaultOpen={true}
-      />
-
-      <PlainText>
-        <Bold>Use cases:</Bold>
-      </PlainText>
-      <PlainText component="div">
-        • Borrowing methods from other objects
-        <br />
-        • Converting array-like objects to arrays
-        <br />• Function inheritance
-      </PlainText>
-
-      <Note type="info" icon="💡">
-        <Bold>Key Point:</Bold> Arguments are passed individually
-        (comma-separated) to <InlineCode>call()</InlineCode>.
-      </Note>
-
-      <Gap size={2} />
-
-      {/* 2. apply() */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#8b5cf6", mr: 1 }}>
-          📋
-        </Box>
-        2. Function.prototype.apply()
-      </Title>
-      <PlainText>
-        The <InlineCode>apply()</InlineCode> method calls a function with a
-        given <InlineCode>this</InlineCode> value and arguments provided as an
-        array (or array-like object).
-      </PlainText>
-
-      <CodeComponent
-        code={`// Syntax
-functionName.apply(thisArg, [arg1, arg2, ...]);
-
-// Example
-function greet(greeting, punctuation) {
-  console.log(greeting + ', ' + this.name + punctuation);
-}
-
-const person = { name: 'Alice' };
-
-greet.apply(person, ['Hello', '!']); // Output: Hello, Alice!`}
-        language="javascript"
-        title="apply-example.js"
-        defaultOpen={true}
-      />
-
-      <PlainText>
-        <Bold>Use cases:</Bold>
-      </PlainText>
-      <PlainText component="div">
-        • When you have an array of arguments
-        <br />
-        • Using Math.max/min with arrays
-        <br />• Array concatenation and manipulation
-      </PlainText>
-
-      <Note type="info" icon="💡">
-        <Bold>Key Point:</Bold> Arguments are passed as an array (or array-like
-        object) to <InlineCode>apply()</InlineCode>.
-      </Note>
-
-      <Gap size={2} />
-
-      {/* 3. bind() */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#f59e0b", mr: 1 }}>
-          🔗
-        </Box>
-        3. Function.prototype.bind()
-      </Title>
-      <PlainText>
-        The <InlineCode>bind()</InlineCode> method creates a new function that,
-        when called, has its <InlineCode>this</InlineCode> value set to the
-        provided value, with a given sequence of arguments preceding any
-        provided when the new function is called.
-      </PlainText>
-
-      <CodeComponent
-        code={`// Syntax
-const boundFunction = functionName.bind(thisArg, arg1, arg2, ...);
-
-// Example
-function greet(greeting, punctuation) {
-  console.log(greeting + ', ' + this.name + punctuation);
-}
-
-const person = { name: 'Alice' };
-const greetAlice = greet.bind(person, 'Hello');
-
-greetAlice('!'); // Output: Hello, Alice!`}
-        language="javascript"
-        title="bind-example.js"
-        defaultOpen={true}
-      />
-
-      <PlainText>
-        <Bold>Use cases:</Bold>
-      </PlainText>
-      <PlainText component="div">
-        • Partial function application (currying)
-        <br />
-        • Event handlers that need a specific context
-        <br />• Setting up context in callbacks
-      </PlainText>
-
-      <Note type="warning" icon="⚠️">
-        <Bold>Important:</Bold> Unlike <InlineCode>call()</InlineCode> and{" "}
-        <InlineCode>apply()</InlineCode> which execute immediately,{" "}
-        <InlineCode>bind()</InlineCode> returns a new function that can be
-        called later.
-      </Note>
-
-      <Gap size={2} />
-
-      {/* Comparison Table */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#ec4899", mr: 1 }}>
-          📊
-        </Box>
-        Quick Comparison
-      </Title>
-
-      <TableComponent
-        headers={["Method", "Execution", "Arguments", "Returns"]}
-        rows={[
-          ["call()", "Immediately", "Individual arguments", "Function result"],
-          ["apply()", "Immediately", "Array of arguments", "Function result"],
-          [
-            "bind()",
-            "Later (when called)",
-            "Individual arguments",
-            "New function",
-          ],
-        ]}
-      />
-
-      <Gap size={2} />
-
-      {/* Practical Examples */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#06b6d4", mr: 1 }}>
-          🎯
-        </Box>
-        Practical Examples
-      </Title>
-
-      <PlainText>
-        <Bold>Example 1: Borrowing methods</Bold>
-      </PlainText>
-      <CodeComponent
-        code={`// Using call to borrow array methods
-function printArgs() {
-  // Convert arguments to array using call
-  const args = Array.prototype.slice.call(arguments);
-  console.log(args);
-}
-
-printArgs(1, 2, 3); // [1, 2, 3]
-
-// Using apply with Math.max
+// Real-world use: Finding the max number in an array
 const numbers = [1, 5, 3, 9, 2];
 const max = Math.max.apply(null, numbers);
-console.log(max); // 9`}
-        language="javascript"
-        title="practical-examples.js"
-        defaultOpen={true}
-      />
+console.log(max); // 9
 
-      <Gap size={1} />
+// Without apply, you'd need to do:
+// Math.max(1, 5, 3, 9, 2) - not practical for large arrays`}
+          language="javascript"
+          title="apply-beginner.js"
+          defaultOpen={true}
+        />
 
-      <PlainText>
-        <Bold>Example 2: Event handling with bind</Bold>
-      </PlainText>
-      <CodeComponent
-        code={`// bind in event handlers
-const counter = {
-  count: 0,
-  increment: function() {
+        <Note type="info" icon="💡">
+          <Bold>Remember:</Bold> <InlineCode>apply()</InlineCode> is like saying "Use this function right now with these items (in a bag/array)."
+        </Note>
+
+        <Gap size={1} />
+
+        {/* 3. bind() - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#f59e0b", mr: 1 }}>🔗</Box>
+          3. bind() - Get a Custom Tool for Later
+        </Title>
+        <PlainText>
+          <InlineCode>bind()</InlineCode> creates a <Bold>new function</Bold> with a fixed <InlineCode>this</InlineCode> value that you can use <Bold>later</Bold>.
+        </PlainText>
+
+        <CodeComponent
+          code={`// bind() example
+const person = { name: 'Alice' };
+
+function greet(greeting) {
+  console.log(greeting + ', ' + this.name);
+}
+
+// Create a new function with 'this' bound to person
+const greetAlice = greet.bind(person);
+
+// Call it later
+greetAlice('Hello'); // Hello, Alice
+
+// You can also pre-fill arguments
+const greetHello = greet.bind(person, 'Hello');
+greetHello(); // Hello, Alice
+
+// Common use: Event handlers in React
+class Button extends React.Component {
+  handleClick() {
+    console.log('Clicked by', this.props.name);
+  }
+  
+  render() {
+    // Bind ensures 'this' refers to the component
+    return <button onClick={this.handleClick.bind(this)}>Click me</button>;
+  }
+}`}
+          language="javascript"
+          title="bind-beginner.js"
+          defaultOpen={true}
+        />
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Important:</Bold> Unlike <InlineCode>call()</InlineCode> and <InlineCode>apply()</InlineCode>, <InlineCode>bind()</InlineCode> <Bold>does not execute</Bold> the function immediately. It returns a new function for later use.
+        </Note>
+
+        <CardComponent variant="success" title="✅ Beginner Summary">
+          <UnorderedList
+            items={[
+              <>Use <Bold>call()</Bold> when you want to use a function right now with individual arguments</>,
+              <>Use <Bold>apply()</Bold> when you want to use a function right now with an array of arguments</>,
+              <>Use <Bold>bind()</Bold> when you want a new function with a fixed <InlineCode>this</InlineCode> to use later</>,
+            ]}
+          />
+        </CardComponent>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* ADVANCED LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="advanced" currentLevel={level}>
+        <Gap size={2} />
+
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#f59e0b", mr: 1 }}>⚡</Box>
+          Advanced: Deep Dive & Practical Patterns
+        </Title>
+
+        {/* Comparison Table */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#ec4899", mr: 1 }}>📊</Box>
+          Detailed Comparison
+        </Title>
+
+        <TableComponent
+          headers={["Feature", "call()", "apply()", "bind()"]}
+          rows={[
+            ["Execution", "Immediate", "Immediate", "Returns new function"],
+            ["Arguments", "Individual", "Array", "Individual"],
+            ["Returns", "Function result", "Function result", "New function"],
+            ["Use case", "Known args", "Array of args", "Reuse later"],
+            ["Performance", "Fast", "Fast", "Creates new function"],
+          ]}
+        />
+
+        <Gap size={1} />
+
+        {/* Advanced Examples */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#06b6d4", mr: 1 }}>🎯</Box>
+          Advanced Practical Examples
+        </Title>
+
+        <PlainText>
+          <Bold>Example 1: Borrowing Array Methods</Bold>
+        </PlainText>
+        <CodeComponent
+          code={`// Using call to convert array-like objects
+function sumArgs() {
+  // arguments is array-like, not a real array
+  const args = Array.prototype.slice.call(arguments);
+  return args.reduce((sum, n) => sum + n, 0);
+}
+
+console.log(sumArgs(1, 2, 3, 4)); // 10
+
+// Using apply with constructors
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+// Create an array of arguments
+const data = ['John', 30];
+const person = new (Person.bind(null, ...data))();
+// Or using apply for constructors
+const person2 = new (Function.prototype.bind.apply(Person, [null, ...data]))();
+
+// Modern approach: Using spread operator instead of apply
+const numbers = [1, 5, 3, 9, 2];
+const max = Math.max(...numbers); // Simpler than apply!`}
+          language="javascript"
+          title="advanced-borrowing.js"
+          defaultOpen={false}
+        />
+
+        <Gap size={1} />
+
+        <PlainText>
+          <Bold>Example 2: Partial Application with bind</Bold>
+        </PlainText>
+        <CodeComponent
+          code={`// Partial application - pre-filling arguments
+function multiply(a, b, c) {
+  return a * b * c;
+}
+
+// Create specialized functions
+const multiplyBy2 = multiply.bind(null, 2);
+console.log(multiplyBy2(3, 4)); // 24 (2 * 3 * 4)
+
+const multiplyBy2And3 = multiply.bind(null, 2, 3);
+console.log(multiplyBy2And3(4)); // 24 (2 * 3 * 4)
+
+// This pattern is called "currying" or "partial application"
+// Very useful in functional programming!`}
+          language="javascript"
+          title="partial-application.js"
+          defaultOpen={false}
+        />
+
+        <Gap size={1} />
+
+        <PlainText>
+          <Bold>Example 3: Event Handlers with bind</Bold>
+        </PlainText>
+        <CodeComponent
+          code={`// Class component with event handlers
+class Counter {
+  constructor() {
+    this.count = 0;
+    this.increment = this.increment.bind(this); // Bind once
+  }
+  
+  increment() {
     this.count++;
-    console.log(this.count);
+    console.log('Count:', this.count);
+  }
+  
+  // Alternative: Arrow function (auto-binds)
+  decrement = () => {
+    this.count--;
+    console.log('Count:', this.count);
+  };
+}
+
+const counter = new Counter();
+const btn = document.getElementById('btn');
+
+// Both work correctly
+btn.addEventListener('click', counter.increment);
+btn.addEventListener('click', counter.decrement);
+
+// React class component pattern
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    // Bind in constructor (better performance)
+    this.handleClick = this.handleClick.bind(this);
+  }
+  
+  handleClick() {
+    this.setState({ clicked: true });
+  }
+  
+  render() {
+    return <button onClick={this.handleClick}>Click</button>;
+  }
+}`}
+          language="javascript"
+          title="event-handlers.js"
+          defaultOpen={false}
+        />
+
+        <CardComponent variant="info" title="📊 When to Use Which (Advanced)">
+          <UnorderedList
+            items={[
+              <>Use <Bold>call()</Bold> when you know exactly how many arguments you have</>,
+              <>Use <Bold>apply()</Bold> when you have an array of arguments or array-like object</>,
+              <>Use <Bold>bind()</Bold> when you need to fix <InlineCode>this</InlineCode> for later use (callbacks)</>,
+              <>Use <Bold>bind()</Bold> for event handlers in classes to preserve context</>,
+              <>In modern code, prefer <Bold>spread operator</Bold> over <InlineCode>apply()</InlineCode> when possible</>,
+            ]}
+          />
+        </CardComponent>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* EXPERT LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="expert" currentLevel={level}>
+        <Gap size={2} />
+
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#ef4444", mr: 1 }}>🚀</Box>
+          Expert: Under the Hood & Advanced Patterns
+        </Title>
+
+        <PlainText>
+          Understanding <Bold>how these methods work internally</Bold> and when to use them in advanced scenarios.
+        </PlainText>
+
+        <Title level={4}>🔬 How call, apply, and bind Work Internally</Title>
+
+        <CodeComponent
+          code={`// Simplified implementation of call
+Function.prototype.myCall = function(context, ...args) {
+  // If context is null/undefined, use global object
+  context = context || globalThis;
+  
+  // Create a unique property to avoid collisions
+  const fnSymbol = Symbol('fn');
+  context[fnSymbol] = this;
+  
+  // Call the function with the provided arguments
+  const result = context[fnSymbol](...args);
+  
+  // Clean up
+  delete context[fnSymbol];
+  
+  return result;
+};
+
+// Simplified implementation of apply
+Function.prototype.myApply = function(context, argsArray) {
+  context = context || globalThis;
+  const fnSymbol = Symbol('fn');
+  context[fnSymbol] = this;
+  
+  const result = context[fnSymbol](...(argsArray || []));
+  
+  delete context[fnSymbol];
+  return result;
+};
+
+// Simplified implementation of bind
+Function.prototype.myBind = function(context, ...boundArgs) {
+  const fn = this;
+  
+  return function(...callArgs) {
+    return fn.apply(context, [...boundArgs, ...callArgs]);
+  };
+};
+
+// Example usage
+function greet(greeting, punctuation) {
+  console.log(greeting + ', ' + this.name + punctuation);
+}
+
+const person = { name: 'Alice' };
+
+greet.myCall(person, 'Hello', '!'); // Hello, Alice!
+greet.myApply(person, ['Hi', '!']); // Hi, Alice!
+const bound = greet.myBind(person, 'Hey');
+bound('!'); // Hey, Alice!`}
+          language="javascript"
+          title="under-the-hood.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>⚡ Performance Considerations</Title>
+
+        <CardComponent variant="info" title="Performance Tips">
+          <UnorderedList
+            items={[
+              <><InlineCode>call()</InlineCode> and <InlineCode>apply()</InlineCode> are similar in performance</>,
+              <><InlineCode>bind()</InlineCode> is <Bold>slower</Bold> because it creates a new function</>,
+              <>In React, use <InlineCode>useCallback</InlineCode> with <InlineCode>bind</InlineCode> to prevent unnecessary re-renders</>,
+              <>For event handlers in classes, bind in constructor (binds once) vs render (binds on every render)</>,
+              <>Using arrow functions for methods is cleaner but may have slight performance impact</>,
+            ]}
+          />
+        </CardComponent>
+
+        <Title level={4}>🎯 Advanced Patterns</Title>
+
+        <CodeComponent
+          code={`// 1. Function composition with bind
+const compose = (...fns) => 
+  fns.reduce((f, g) => (...args) => f(g(...args)));
+
+// 2. Creating specialized functions
+const createLogger = (prefix) => {
+  return console.log.bind(console, \`[\${prefix}]\`);
+};
+
+const logInfo = createLogger('INFO');
+const logError = createLogger('ERROR');
+
+logInfo('Application started'); // [INFO] Application started
+logError('Something went wrong'); // [ERROR] Something went wrong
+
+// 3. Method borrowing with multiple objects
+const methods = {
+  greet(greeting) {
+    return \`\${greeting}, \${this.name}\`;
+  },
+  farewell() {
+    return \`Goodbye, \${this.name}\`;
   }
 };
 
-// Without bind - this would refer to the button
-// document.getElementById('btn').addEventListener('click', counter.increment);
+const user1 = { name: 'John' };
+const user2 = { name: 'Jane' };
 
-// With bind - this refers to counter
-document.getElementById('btn').addEventListener('click', counter.increment.bind(counter));`}
-        language="javascript"
-        title="event-handler-bind.js"
-        defaultOpen={false}
-      />
+// Borrow methods dynamically
+console.log(methods.greet.call(user1, 'Hello')); // Hello, John
+console.log(methods.greet.apply(user2, ['Hi'])); // Hi, Jane
 
+// 4. Bind with Map for memoization
+function memoize(fn) {
+  const cache = new Map();
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+const slowFn = (x, y) => {
+  console.log('Computing...');
+  return x + y;
+};
+
+const memoized = memoize(slowFn);
+console.log(memoized(1, 2)); // Computing... 3
+console.log(memoized(1, 2)); // 3 (from cache)
+
+// 5. Decorator pattern with bind
+function withLogging(fn) {
+  return function(...args) {
+    console.log(\`Calling \${fn.name} with args:\`, args);
+    const result = fn.apply(this, args);
+    console.log(\`Result:\`, result);
+    return result;
+  };
+}
+
+const add = (a, b) => a + b;
+const loggedAdd = withLogging(add);
+loggedAdd(5, 3); // Logs the call and result`}
+          language="javascript"
+          title="advanced-patterns.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>💡 Expert Tips & Best Practices</Title>
+
+        <CardComponent variant="default" title="Pro Insights">
+          <UnorderedList
+            items={[
+              <>In modern JavaScript, prefer <Bold>arrow functions</Bold> over <InlineCode>bind()</InlineCode> for simple cases</>,
+              <>Use <Bold>spread operator</Bold> instead of <InlineCode>apply()</InlineCode> when possible</>,
+              <>For React class components, bind in <Bold>constructor</Bold> or use <Bold>class properties</Bold> with arrow functions</>,
+              <>Use <InlineCode>call()</InlineCode> for borrowing array methods (like <InlineCode>slice()</InlineCode>)</>,
+              <>Understand the <Bold>performance implications</Bold> of each method</>,
+              <>Use <InlineCode>bind()</InlineCode> for <Bold>partial application</Bold> in functional programming</>,
+              <>Consider using <Bold>lodash</Bold> or <Bold>Ramda</Bold> for more advanced functional patterns</>,
+            ]}
+          />
+        </CardComponent>
+
+        <HLText type="info">
+          💡 <Bold>Expert Insight:</Bold> Understanding <InlineCode>call</InlineCode>, <InlineCode>apply</InlineCode>, and <InlineCode>bind</InlineCode> is essential for mastering JavaScript's <Bold>function context</Bold> and enables powerful <Bold>functional programming patterns</Bold>. They're fundamental tools for writing <Bold>flexible, reusable code</Bold>.
+        </HLText>
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Expert Warning:</Bold> While these methods are powerful, overusing <InlineCode>bind()</InlineCode> can lead to <Bold>performance issues</Bold> in hot code paths. Consider using <Bold>arrow functions</Bold> or <Bold>class properties</Bold> for simpler cases.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* SUMMARY - Shown at all levels */}
+      {/* ============================================ */}
       <Gap size={2} />
 
-      {/* Best Practices */}
       <Title level={3}>
-        <Box component="span" sx={{ color: "#fbbf24", mr: 1 }}>
-          ⭐
-        </Box>
-        Best Practices
-      </Title>
-
-      <CardComponent variant="success" title="✅ Do's">
-        <PlainText component="div" sx={{ mb: 0 }}>
-          • Use <InlineCode>call()</InlineCode> when you know the exact number
-          of arguments
-          <br />• Use <InlineCode>apply()</InlineCode> when you have an array of
-          arguments
-          <br />• Use <InlineCode>bind()</InlineCode> when you need to set
-          context for later execution
-          <br />• Always use <InlineCode>bind()</InlineCode> for event handlers
-          in classes
-        </PlainText>
-      </CardComponent>
-
-      <CardComponent variant="warning" title="⚠️ Don'ts">
-        <PlainText component="div" sx={{ mb: 0 }}>
-          • Don't overuse <InlineCode>bind()</InlineCode> as it creates a new
-          function
-          <br />• Avoid using <InlineCode>call()</InlineCode> with a large
-          number of arguments
-          <br />• Don't forget that <InlineCode>bind()</InlineCode> doesn't
-          execute the function
-          <br />• Avoid using <InlineCode>apply()</InlineCode> with huge arrays
-          (performance)
-        </PlainText>
-      </CardComponent>
-
-      <Gap size={2} />
-
-      {/* Summary */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#10b981", mr: 1 }}>
-          📌
-        </Box>
+        <Box component="span" sx={{ color: "#10b981", mr: 1 }}>📌</Box>
         Summary
       </Title>
 
@@ -336,122 +584,16 @@ document.getElementById('btn').addEventListener('click', counter.increment.bind(
             </>,
             <>They enable function borrowing and method reuse</>,
             <>Choose based on your specific use case and argument format</>,
+            <>In modern code, arrow functions and spread operator are often simpler alternatives</>,
           ]}
         />
       </CardComponent>
-
-      <Gap size={2} />
 
       <HLText type="info">
         💡 <Bold>Pro Tip:</Bold> Understanding these three methods is essential
         for writing flexible, reusable JavaScript code. They give you complete
         control over function execution context.
       </HLText>
-
-      <Gap size={2} />
-
-      {/* Bonus: Call vs Apply vs Bind Visualization */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: "#ec4899", mr: 1 }}>
-          🎨
-        </Box>
-        Visual Comparison
-      </Title>
-
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr", // 1 column on mobile
-            md: "1fr 1fr", // 2 columns on tablet
-            lg: "repeat(3, 1fr)", // 3 columns on desktop
-          },
-          gap: 2,
-          my: 2,
-          width: "100%",
-        }}
-      >
-        {[
-          {
-            method: "call()",
-            icon: "📞",
-            color: "#2563eb",
-            bgColor: "rgba(37, 99, 235, 0.08)",
-            description: "Immediate execution with individual arguments",
-            syntax: "fn.call(this, arg1, arg2)",
-          },
-          {
-            method: "apply()",
-            icon: "📋",
-            color: "#8b5cf6",
-            bgColor: "rgba(139, 92, 246, 0.08)",
-            description: "Immediate execution with array arguments",
-            syntax: "fn.apply(this, [arg1, arg2])",
-          },
-          {
-            method: "bind()",
-            icon: "🔗",
-            color: "#f59e0b",
-            bgColor: "rgba(245, 158, 11, 0.08)",
-            description: "Returns a new function for later execution",
-            syntax: "const bound = fn.bind(this, arg1, arg2)",
-          },
-        ].map((item) => (
-          <Box
-            key={item.method}
-            sx={{
-              bgcolor: item.bgColor,
-              borderRadius: 2,
-              p: { xs: 2, sm: 2.5, md: 3 }, // Responsive padding
-              border: `2px solid ${item.color}30`,
-              transition: "all 0.3s ease",
-              minWidth: 0, // Prevents overflow
-              overflow: "hidden",
-              "&:hover": {
-                transform: { xs: "none", sm: "translateY(-4px)" },
-                boxShadow: `0 8px 24px ${item.color}20`,
-                borderColor: item.color,
-              },
-            }}
-          >
-            <Box sx={{ fontSize: { xs: "1.8rem", sm: "2rem" }, mb: 1 }}>
-              {item.icon}
-            </Box>
-            <Box
-              sx={{
-                fontSize: { xs: "0.95rem", sm: "1.1rem", md: "1.2rem" },
-                fontWeight: 700,
-                color: item.color,
-                mb: 1,
-                wordBreak: "break-word",
-              }}
-            >
-              {item.method}
-            </Box>
-            <PlainText
-              variant="body2"
-              sx={{
-                mb: 1.5,
-                color: "grey.600",
-                fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" },
-              }}
-            >
-              {item.description}
-            </PlainText>
-            <Box sx={{ overflow: "hidden" }}>
-              <CodeComponent
-                code={item.syntax}
-                language="javascript"
-                title=""
-                showTitle={false}
-                showCopyButton={false}
-                defaultOpen={true}
-                showLineNumbers={false}
-              />
-            </Box>
-          </Box>
-        ))}
-      </Box>
 
       <Note type="success" icon="🎉">
         <Bold>Remember:</Bold> All three methods serve the same purpose -

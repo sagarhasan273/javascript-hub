@@ -44,6 +44,7 @@ export function LevelToggle() {
       aria-label="content level"
       size="small"
       sx={{
+        gap: 1, // Add gap between buttons
         '& .MuiToggleButton-root': {
           px: 2,
           py: 0.75,

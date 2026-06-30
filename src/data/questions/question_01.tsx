@@ -1,6 +1,7 @@
 // data/questions/Question01.tsx
 import { Box } from '@mui/material';
 import { QuestionWrapper } from '../../components/QuestionWrapper';
+import { LevelContent } from '../../components/LevelContent';
 import {
   Title,
   PlainText,
@@ -13,10 +14,14 @@ import {
   CardComponent,
   UnorderedList,
   TableComponent,
+  HLText,
 } from '../../components/content';
 import { question01Meta } from './registry';
+import { useLevel } from '../../context/LevelContext';
 
 export function Question01({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+  const { level } = useLevel();
+
   return (
     <QuestionWrapper
       id={question01Meta.id}
@@ -25,102 +30,149 @@ export function Question01({ index = 0, isActive = false }: { index?: number; is
       index={index}
       isActive={isActive}
     >
+      {/* Introduction - Shown at all levels */}
       <PlainText>
         There are many ways to create objects in JavaScript as mentioned below:
       </PlainText>
 
-      {/* 1. Object literal syntax */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📝</Box>
-        1. Object literal syntax
-      </Title>
-      <PlainText>
-        The object literal syntax (or object initializer), is a comma-separated set of name-value pairs wrapped in curly braces.
-      </PlainText>
+      {/* ============================================ */}
+      {/* BEGINNER LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="beginner" currentLevel={level}>
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🌱</Box>
+          Beginner: Object Creation Basics
+        </Title>
 
-      <CodeComponent
-        code={`var object = {
+        <PlainText>
+          Let's start with the <Bold>most common</Bold> and <Bold>easiest</Bold> ways to create objects in JavaScript:
+        </PlainText>
+
+        {/* 1. Object literal syntax - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📝</Box>
+          1. Object literal syntax
+        </Title>
+        <PlainText>
+          The object literal syntax (or object initializer), is a comma-separated set of name-value pairs wrapped in curly braces.
+        </PlainText>
+
+        <CodeComponent
+          code={`var object = {
   name: "Sudheer",
   age: 34,
 };`}
-        language="javascript"
-        title="object-literal.js"
-        defaultOpen={true}
-      />
+          language="javascript"
+          title="object-literal.js"
+          defaultOpen={true}
+        />
 
-      <PlainText>
-        Object literal property values can be of any data type, including array, function, and nested object.
-      </PlainText>
+        <PlainText>
+          Object literal property values can be of any data type, including array, function, and nested object.
+        </PlainText>
 
-      <Note type="info">
-        <Bold>📌 Note:</Bold> This is one of the easiest ways to create an object and it's most commonly used for creating simple, ad-hoc objects.
-      </Note>
+        <Note type="info">
+          <Bold>📌 Note:</Bold> This is one of the easiest ways to create an object and it's most commonly used for creating simple, ad-hoc objects.
+        </Note>
 
-      <Gap size={2} />
+        <Gap size={2} />
 
-      {/* 2. Object constructor */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚠️</Box>
-        2. Object constructor
-      </Title>
-      <PlainText>
-        The simplest way to create an empty object is using the <InlineCode>Object</InlineCode> constructor. Currently this approach is not recommended.
-      </PlainText>
+        {/* 2. Object constructor - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚠️</Box>
+          2. Object constructor
+        </Title>
+        <PlainText>
+          The simplest way to create an empty object is using the <InlineCode>Object</InlineCode> constructor. Currently this approach is <Bold>not recommended</Bold>.
+        </PlainText>
 
-      <CodeComponent
-        code={`var object = new Object();`}
-        language="javascript"
-        title="object-constructor.js"
-        defaultOpen={true}
-      />
+        <CodeComponent
+          code={`var object = new Object();`}
+          language="javascript"
+          title="object-constructor.js"
+          defaultOpen={true}
+        />
 
-      <PlainText>
-        The <InlineCode>Object()</InlineCode> is a built-in constructor function so "new" keyword is not required for creating plain objects. The above code snippet can be re-written as:
-      </PlainText>
+        <Note type="warning">
+          ⚠️ This approach is not recommended for creating objects. Use <Bold>object literal syntax</Bold> instead.
+        </Note>
 
-      <CodeComponent
-        code={`var object = Object();`}
-        language="javascript"
-        title="object-constructor-alt.js"
-        defaultOpen={true}
-      />
+        <Gap size={2} />
 
-      <PlainText>
-        However, <InlineCode>Object()</InlineCode> can be used to either create a plain object or convert a given value into its corresponding object wrapper, whereas <InlineCode>new Object()</InlineCode> is specifically used to explicitly create a new object instance.
-      </PlainText>
+        {/* 7. ES6 Class syntax - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f43f5e', mr: 1 }}>✨</Box>
+          7. ES6 Class syntax
+        </Title>
+        <PlainText>
+          ES6 introduces class feature to create objects. This is <Bold>syntactic sugar</Bold> over the prototype-based system and is the <Bold>recommended</Bold> way for OOP.
+        </PlainText>
 
-      <Note type="warning">
-        ⚠️ This approach is not recommended for creating objects. Use object literal syntax instead.
-      </Note>
+        <CodeComponent
+          code={`class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
 
-      <Gap size={2} />
+var object = new Person("Sudheer");`}
+          language="javascript"
+          title="es6-class.js"
+          defaultOpen={true}
+        />
 
-      {/* 3. Object's create method */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔗</Box>
-        3. Object's create method
-      </Title>
-      <PlainText>
-        The <InlineCode>create</InlineCode> method of Object is used to create a new object by passing the specified prototype object and properties as arguments, i.e., this pattern is helpful to create new objects based on existing objects. In other words, this is useful for setting up prototypal inheritance. The second argument is optional and it is used to create properties on a newly created object.
-      </PlainText>
+        <Note type="info">
+          💡 <Bold>Tip:</Bold> ES6 Classes are now the preferred way for object-oriented programming in JavaScript. They provide a cleaner, more intuitive syntax.
+        </Note>
 
-      <PlainText>
-        The following code creates a new empty object whose prototype is null.
-      </PlainText>
+        <CardComponent variant="success" title="✅ Beginner Summary">
+          <UnorderedList
+            items={[
+              <>Use <Bold>object literals</Bold> for simple, one-off objects</>,
+              <>Use <Bold>ES6 Classes</Bold> for object-oriented programming</>,
+              <>Avoid <Bold>Object constructor</Bold> (use literals instead)</>,
+            ]}
+          />
+        </CardComponent>
+      </LevelContent>
 
-      <CodeComponent
-        code={`var object = Object.create(null);`}
-        language="javascript"
-        title="object-create.js"
-        defaultOpen={true}
-      />
+      {/* ============================================ */}
+      {/* ADVANCED LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="advanced" currentLevel={level}>
+        <Divider sx={{ my: 3 }} />
 
-      <PlainText>
-        The following example creates an object along with additional new properties.
-      </PlainText>
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚡</Box>
+          Advanced: Object Creation Patterns
+        </Title>
 
-      <CodeComponent
-        code={`let vehicle = {
+        {/* 3. Object's create method - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔗</Box>
+          3. Object's create method
+        </Title>
+        <PlainText>
+          The <InlineCode>create</InlineCode> method of Object is used to create a new object by passing the specified prototype object and properties as arguments. This pattern is helpful to create new objects based on existing objects, useful for setting up <Bold>prototypal inheritance</Bold>.
+        </PlainText>
+
+        <PlainText>
+          The following code creates a new empty object whose prototype is null:
+        </PlainText>
+
+        <CodeComponent
+          code={`var object = Object.create(null);`}
+          language="javascript"
+          title="object-create.js"
+          defaultOpen={true}
+        />
+
+        <PlainText>
+          The following example creates an object along with additional new properties:
+        </PlainText>
+
+        <CodeComponent
+          code={`let vehicle = {
   wheels: "4",
   fuelType: "Gasoline",
   color: "Green",
@@ -137,59 +189,59 @@ let carProps = {
 
 var car = Object.create(vehicle, carProps);
 console.log(car);`}
-        language="javascript"
-        title="object-create-example.js"
-        defaultOpen={true}
-      />
+          language="javascript"
+          title="object-create-example.js"
+          defaultOpen={true}
+        />
 
-      <Gap size={2} />
+        <Gap size={2} />
 
-      {/* 4. Function constructor */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🏗️</Box>
-        4. Function constructor
-      </Title>
-      <PlainText>
-        In this approach, create any function and apply the new operator to create object instances. This was the main way to do constructor-based OOP before ES6 classes.
-      </PlainText>
+        {/* 4. Function constructor - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🏗️</Box>
+          4. Function constructor
+        </Title>
+        <PlainText>
+          In this approach, create any function and apply the <InlineCode>new</InlineCode> operator to create object instances. This was the main way to do constructor-based OOP before ES6 classes.
+        </PlainText>
 
-      <CodeComponent
-        code={`function Person(name) {
+        <CodeComponent
+          code={`function Person(name) {
   this.name = name;
   this.age = 21;
 }
 var object = new Person("Sudheer");`}
-        language="javascript"
-        title="function-constructor.js"
-        defaultOpen={true}
-      />
+          language="javascript"
+          title="function-constructor.js"
+          defaultOpen={true}
+        />
 
-      <Gap size={2} />
+        <Gap size={2} />
 
-      {/* 5. Function constructor with prototype */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🧬</Box>
-        5. Function constructor with prototype
-      </Title>
-      <PlainText>
-        This is similar to function constructor but it uses prototype for their properties and methods. Using prototype means you're sharing methods/properties across instances, which saves memory and improves performance.
-      </PlainText>
+        {/* 5. Function constructor with prototype - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🧬</Box>
+          5. Function constructor with prototype
+        </Title>
+        <PlainText>
+          This is similar to function constructor but it uses prototype for their properties and methods. Using prototype means you're <Bold>sharing methods/properties across instances</Bold>, which saves memory and improves performance.
+        </PlainText>
 
-      <CodeComponent
-        code={`function Person() {}
+        <CodeComponent
+          code={`function Person() {}
 Person.prototype.name = "Sudheer";
 var object = new Person();`}
-        language="javascript"
-        title="function-prototype.js"
-        defaultOpen={true}
-      />
+          language="javascript"
+          title="function-prototype.js"
+          defaultOpen={true}
+        />
 
-      <PlainText>
-        This is equivalent to creating an instance with Object.create method with a function prototype and then calling that function with an instance and parameters as arguments.
-      </PlainText>
+        <PlainText>
+          This is equivalent to creating an instance with Object.create method with a function prototype and then calling that function with an instance and parameters as arguments:
+        </PlainText>
 
-      <CodeComponent
-        code={`function func(x, y, z) {
+        <CodeComponent
+          code={`function func(x, y, z) {
   this.x = x;
   this.y = y;
   this.z = z;
@@ -210,80 +262,69 @@ var newInstance = Object.create(func.prototype);
 // Call the function
 var result = func.call(newInstance, 1, 2, 3);
 
-// If the result is a non-null object then use it otherwise just use the new instance.
 console.log(result && typeof result === 'object' ? result : newInstance);`}
-        language="javascript"
-        title="function-prototype-alternative.js"
-        defaultOpen={false}
-      />
+          language="javascript"
+          title="function-prototype-alternative.js"
+          defaultOpen={false}
+        />
 
-      <Gap size={2} />
+        <Gap size={2} />
 
-      {/* 6. Object's assign method */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>📋</Box>
-        6. Object's assign method
-      </Title>
-      <PlainText>
-        The <InlineCode>Object.assign</InlineCode> method is used to copy all the properties from one or more source objects and stores them into a target object. This is mainly used for cloning and merging.
-      </PlainText>
+        {/* 6. Object's assign method - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>📋</Box>
+          6. Object's assign method
+        </Title>
+        <PlainText>
+          The <InlineCode>Object.assign</InlineCode> method is used to copy all the properties from one or more source objects and stores them into a target object. This is mainly used for <Bold>cloning</Bold> and <Bold>merging</Bold>.
+        </PlainText>
 
-      <PlainText>
-        The following code creates a new staff object by copying properties of his working company and the car he owns.
-      </PlainText>
-
-      <CodeComponent
-        code={`const orgObject = { company: "XYZ Corp" };
+        <CodeComponent
+          code={`const orgObject = { company: "XYZ Corp" };
 const carObject = { name: "Toyota" };
 const staff = Object.assign({}, orgObject, carObject);`}
-        language="javascript"
-        title="object-assign.js"
-        defaultOpen={true}
-      />
+          language="javascript"
+          title="object-assign.js"
+          defaultOpen={true}
+        />
 
-      <Gap size={2} />
+        <CardComponent variant="info" title="📊 Advanced Comparison">
+          <TableComponent
+            headers={['Method', 'Use Case', 'When to Use']}
+            rows={[
+              ['Object.create()', 'Prototypal inheritance', 'When you need to set prototypes'],
+              ['Function constructor', 'Traditional OOP', 'Pre-ES6 codebases'],
+              ['Function constructor + prototype', 'Memory efficient', 'Shared methods across instances'],
+              ['Object.assign()', 'Cloning/Merging', 'When you need to combine objects'],
+            ]}
+          />
+        </CardComponent>
+      </LevelContent>
 
-      {/* 7. ES6 Class syntax */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f43f5e', mr: 1 }}>✨</Box>
-        7. ES6 Class syntax
-      </Title>
-      <PlainText>
-        ES6 introduces class feature to create objects. This is syntactic sugar over the prototype-based system.
-      </PlainText>
+      {/* ============================================ */}
+      {/* EXPERT LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="expert" currentLevel={level}>
+        <Divider sx={{ my: 3 }} />
 
-      <CodeComponent
-        code={`class Person {
-  constructor(name) {
-    this.name = name;
-  }
-}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#ef4444', mr: 1 }}>🚀</Box>
+          Expert: Advanced Patterns & Best Practices
+        </Title>
 
-var object = new Person("Sudheer");`}
-        language="javascript"
-        title="es6-class.js"
-        defaultOpen={true}
-      />
+        {/* 8. Singleton pattern - Expert */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>🔒</Box>
+          8. Singleton pattern
+        </Title>
+        <PlainText>
+          A Singleton is an object which can only be instantiated <Bold>one time</Bold>. Repeated calls to its constructor return the same instance. This ensures you don't accidentally create multiple instances.
+        </PlainText>
 
-      <Note type="info">
-        💡 <Bold>Tip:</Bold> ES6 Classes are now the preferred way for object-oriented programming in JavaScript. They provide a cleaner, more intuitive syntax.
-      </Note>
+        <Title level={4}>Singleton with Closure (Classic JS Pattern)</Title>
 
-      <Gap size={2} />
-
-      {/* 8. Singleton pattern */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>🔒</Box>
-        8. Singleton pattern
-      </Title>
-      <PlainText>
-        A Singleton is an object which can only be instantiated one time. Repeated calls to its constructor return the same instance. This way one can ensure that they don't accidentally create multiple instances.
-      </PlainText>
-
-      <Title level={4}>Singleton with Closure (Classic JS Pattern)</Title>
-
-      <CodeComponent
-        code={`const Singleton = (function () {
+        <CodeComponent
+          code={`const Singleton = (function () {
   let instance;
 
   function createInstance() {
@@ -305,22 +346,81 @@ const obj1 = Singleton.getInstance();
 const obj2 = Singleton.getInstance();
 
 console.log(obj1 === obj2); // true`}
-        language="javascript"
-        title="singleton-pattern.js"
-        defaultOpen={true}
-      />
+          language="javascript"
+          title="singleton-pattern.js"
+          defaultOpen={true}
+        />
 
-      <PlainText>
-        In modern JavaScript applications, singletons are commonly implemented using ES6 modules for their built-in caching behavior, or closures for encapsulated state management.
-      </PlainText>
+        <PlainText>
+          In modern JavaScript applications, singletons are commonly implemented using <Bold>ES6 modules</Bold> for their built-in caching behavior, or closures for encapsulated state management.
+        </PlainText>
 
-      <Note type="info">
-        💡 <Bold>Pro Tip:</Bold> While singletons can be useful, be cautious about overusing them as they can make your code harder to test and debug.
-      </Note>
+        <Note type="info">
+          💡 <Bold>Pro Tip:</Bold> While singletons can be useful, be cautious about overusing them as they can make your code harder to test and debug.
+        </Note>
 
+        <Gap size={2} />
+
+        <Title level={4}>🔬 Expert Insights: When to Use What</Title>
+
+        <CardComponent variant="info" title="📊 Complete Comparison">
+          <TableComponent
+            headers={['Method', 'Use Case', 'Performance', 'Modern Usage']}
+            rows={[
+              ['Object literal', 'Simple objects', 'Fast', '✅ Recommended'],
+              ['Object constructor', 'Avoid', 'Slow', '❌ Deprecated'],
+              ['Object.create()', 'Prototypal inheritance', 'Good', '✅ Recommended'],
+              ['Function constructor', 'Legacy OOP', 'Good', '⚠️ Legacy'],
+              ['Function constructor + prototype', 'Shared methods', 'Good', '⚠️ Legacy'],
+              ['Object.assign()', 'Cloning/Merging', 'Good', '✅ Recommended'],
+              ['ES6 Classes', 'Modern OOP', 'Good', '✅ Recommended'],
+              ['Singleton', 'Single instance', 'Good', '⚠️ Use sparingly'],
+            ]}
+          />
+        </CardComponent>
+
+        <Title level={4}>💡 Expert Tips & Best Practices</Title>
+
+        <CardComponent variant="default" title="Pro Insights">
+          <UnorderedList
+            items={[
+              <>For <Bold>simple objects</Bold>, always use <Bold>object literals</Bold></>,
+              <>For <Bold>complex OOP</Bold>, use <Bold>ES6 Classes</Bold> (cleaner syntax)</>,
+              <>Use <Bold>Object.create()</Bold> for <Bold>prototypal inheritance</Bold> without classes</>,
+              <>Use <Bold>Object.assign()</Bold> for <Bold>shallow cloning</Bold> and merging</>,
+              <>Avoid <Bold>constructor functions</Bold> in modern code (use classes instead)</>,
+              <>Use <Bold>Singleton pattern</Bold> only when truly necessary</>,
+              <>Consider <Bold>performance implications</Bold> for large-scale applications</>,
+            ]}
+          />
+        </CardComponent>
+
+        <CardComponent variant="success" title="✅ Modern Best Practices">
+          <UnorderedList
+            items={[
+              <>Use <Bold>object literals</Bold> for DTOs and simple data structures</>,
+              <>Use <Bold>ES6 Classes</Bold> for domain models and business logic</>,
+              <>Use <Bold>Object.create()</Bold> for flexible prototypal inheritance</>,
+              <>Use <Bold>Object.assign()</Bold> for immutable updates (in React, Redux)</>,
+              <>Use <Bold>factory functions</Bold> for encapsulation and privacy</>,
+            ]}
+          />
+        </CardComponent>
+
+        <HLText type="info">
+          💡 <Bold>Expert Insight:</Bold> Choose your object creation method based on your <Bold>use case</Bold>. For modern applications, prefer <Bold>object literals</Bold> and <Bold>ES6 Classes</Bold>. Use <Bold>Object.create()</Bold> when you need fine-grained control over prototypes. Avoid the <Bold>Object constructor</Bold> entirely.
+        </HLText>
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Expert Warning:</Bold> The <Bold>Object constructor</Bold> (<InlineCode>new Object()</InlineCode>) is considered <Bold>bad practice</Bold> in modern JavaScript. Always use <Bold>object literals</Bold> instead. It's faster, cleaner, and more readable.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* SUMMARY - Shown at all levels */}
+      {/* ============================================ */}
       <Divider />
 
-      {/* Summary */}
       <Title level={3}>
         <Box component="span" sx={{ color: '#fbbf24', mr: 1 }}>📌</Box>
         Summary
@@ -367,6 +467,14 @@ console.log(obj1 === obj2); // true`}
           ['Singleton', 'Single instance', '⚠️ Use sparingly'],
         ]}
       />
+
+      <HLText type="info">
+        💡 <Bold>Pro Tip:</Bold> When in doubt, start with <Bold>object literals</Bold>. They're simple, fast, and work perfectly for 90% of use cases. Only reach for classes or other patterns when you need more structure or reuse.
+      </HLText>
+
+      <Note type="success" icon="🎉">
+        <Bold>Remember:</Bold> The best way to create an object depends on your <Bold>specific use case</Bold>. Choose wisely based on your needs for simplicity, reuse, and maintainability!
+      </Note>
     </QuestionWrapper>
   );
 }

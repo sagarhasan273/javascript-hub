@@ -422,7 +422,7 @@ export function Sidebar({
         {/* Level Toggle - Now in Header */}
         <Box
           sx={{
-            mt: 2,
+            my: 1,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -431,8 +431,8 @@ export function Sidebar({
           <Typography variant="caption" sx={{ color: "grey.400" }}>
             Learning Level
           </Typography>
-          <LevelToggle />
         </Box>
+        <LevelToggle />
       </Box>
 
       {/* Search Bar */}

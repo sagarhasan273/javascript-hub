@@ -41,7 +41,7 @@ function App() {
   const handleSelectQuestion = (id: number) => {
     setCurrentQuestionId(id);
     setTimeout(() => {
-      const element = document.getElementById(`question-${id}`);
+      const element = document.getElementById("main-content");
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -93,6 +93,7 @@ function App() {
         {/* Main Content */}
         <Box
           component="main"
+          id="main-content"
           sx={{
             flex: 1,
             overflowY: "auto",
@@ -133,7 +134,7 @@ function App() {
 
             {/* Render Questions */}
             <Stack spacing={4}>
-              {questionRegistry.map(
+              {questionRegistry.filter(({id}) => currentQuestionId === id).map(
                 ({ id, component: QuestionComponent }, index) => (
                   <QuestionComponent
                     key={id}

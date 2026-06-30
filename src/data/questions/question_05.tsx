@@ -1,6 +1,7 @@
-// data/questions/Question06.tsx
+// data/questions/Question05.tsx
 import { Box } from '@mui/material';
 import { QuestionWrapper } from '../../components/QuestionWrapper';
+import { LevelContent } from '../../components/LevelContent';
 import {
   Title,
   PlainText,
@@ -15,8 +16,11 @@ import {
   UnorderedList,
 } from '../../components/content';
 import { question05Meta } from './registry';
+import { useLevel } from '../../context/LevelContext';
 
 export function Question05({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+  const { level } = useLevel();
+
   return (
     <QuestionWrapper
       id={question05Meta.id}
@@ -25,7 +29,7 @@ export function Question05({ index = 0, isActive = false }: { index?: number; is
       index={index}
       isActive={isActive}
     >
-      {/* Introduction */}
+      {/* Introduction - Shown at all levels */}
       <PlainText>
         The <InlineCode>slice()</InlineCode> method is a powerful array method in JavaScript that returns a <Bold>shallow copy</Bold> of a portion of an array into a new array object selected from <InlineCode>start</InlineCode> to <InlineCode>end</InlineCode> (<InlineCode>end</InlineCode> not included). The original array will not be modified.
       </PlainText>
@@ -34,364 +38,410 @@ export function Question05({ index = 0, isActive = false }: { index?: number; is
         The <InlineCode>slice()</InlineCode> method is used to extract elements from an array without mutating the original array, making it an <Bold>immutable</Bold> operation.
       </PlainText>
 
-      <Gap size={2} />
+      {/* ============================================ */}
+      {/* BEGINNER LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="beginner" currentLevel={level}>
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🌱</Box>
+          Beginner: Understanding slice()
+        </Title>
 
-      {/* Syntax */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📝</Box>
-        Syntax
-      </Title>
+        <PlainText>
+          Think of <InlineCode>slice()</InlineCode> like making a <Bold>photocopy</Bold> of a portion of a document - you get a copy without changing the original.
+        </PlainText>
 
-      <CodeComponent
-        code={`// Syntax
-arr.slice([start[, end]])
+        <CardComponent variant="info" title="🎯 Simple Analogy">
+          <PlainText>
+            • Imagine you have a book with 10 pages<br />
+            • You want to copy pages 3-5<br />
+            • You use a photocopier to make a copy<br />
+            • The original book stays unchanged<br />
+            • <InlineCode>slice()</InlineCode> does the same thing with arrays!
+          </PlainText>
+        </CardComponent>
 
-// Parameters:
-// start (optional): Zero-based index at which to begin extraction
-// end (optional): Zero-based index at which to end extraction (exclusive)
+        <PlainText>
+          <Bold>Basic Examples:</Bold>
+        </PlainText>
 
-// Returns: A new array containing the extracted elements`}
-        language="javascript"
-        title="slice-syntax.js"
-        defaultOpen={true}
-      />
+        <CodeComponent
+          code={`// slice() - Copying without modifying
+const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
 
-      <Note type="info" icon="💡">
-        <Bold>Important:</Bold> <InlineCode>slice()</InlineCode> does not modify the original array - it returns a new array.
-      </Note>
+// Copy elements from index 1 to 3 (end exclusive)
+const sliced = fruits.slice(1, 3);
+console.log(sliced);  // ['Banana', 'Cherry']
+console.log(fruits);  // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'] (unchanged)
 
-      <Gap size={2} />
+// Copy from index 2 to end
+const fromTwo = fruits.slice(2);
+console.log(fromTwo);  // ['Cherry', 'Date', 'Elderberry']
 
-      {/* Basic Usage */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔢</Box>
-        Basic Usage Examples
-      </Title>
+// Copy last 2 elements (using negative index)
+const lastTwo = fruits.slice(-2);
+console.log(lastTwo);  // ['Date', 'Elderberry']
 
-      <CodeComponent
-        code={`// Basic slice examples
-const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig'];
+// Copy the entire array
+const fullCopy = fruits.slice();
+console.log(fullCopy); // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry']`}
+          language="javascript"
+          title="basics.js"
+          defaultOpen={true}
+        />
 
-// 1. Slice with both start and end
-const firstThree = fruits.slice(0, 3);
-console.log(firstThree); // ['Apple', 'Banana', 'Cherry']
+        <Note type="info" icon="💡">
+          <Bold>Remember:</Bold>
+          <PlainText component="div">
+            • <InlineCode>slice()</InlineCode> = <Bold>Safe</Bold> (doesn't change the original)<br />
+            • Uses <Bold>start</Bold> (inclusive) and <Bold>end</Bold> (exclusive) indices<br />
+            • Negative indices count from the <Bold>end</Bold><br />
+            • Returns a <Bold>new array</Bold>
+          </PlainText>
+        </Note>
 
-// 2. Slice with only start
-const fromSecond = fruits.slice(2);
-console.log(fromSecond); // ['Cherry', 'Date', 'Elderberry', 'Fig']
+        <CardComponent variant="success" title="✅ When to Use slice() (Beginner)">
+          <UnorderedList
+            items={[
+              <>Copying an array without modifying the original</>,
+              <>Getting a portion of an array</>,
+              <>Creating a new array for display (like pagination)</>,
+              <>Making a safe copy before modifying</>,
+            ]}
+          />
+        </CardComponent>
 
-// 3. Slice with negative start
-const lastThree = fruits.slice(-3);
-console.log(lastThree); // ['Date', 'Elderberry', 'Fig']
+        <Note type="success" icon="✅">
+          <Bold>Quick Rule:</Bold> If you want to keep the original array unchanged, use <InlineCode>slice()</InlineCode>.
+        </Note>
+      </LevelContent>
 
-// 4. Slice with negative end
-const exceptLastTwo = fruits.slice(0, -2);
-console.log(exceptLastTwo); // ['Apple', 'Banana', 'Cherry', 'Date']
+      {/* ============================================ */}
+      {/* ADVANCED LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="advanced" currentLevel={level}>
+        <Gap size={2} />
 
-// 5. Slice with both negative values
-const middle = fruits.slice(-4, -1);
-console.log(middle); // ['Cherry', 'Date', 'Elderberry']
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚡</Box>
+          Advanced: Deep Dive & Use Cases
+        </Title>
 
-// 6. Original array remains unchanged
-console.log(fruits); // ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig']`}
-        language="javascript"
-        title="slice-basic.js"
-        defaultOpen={true}
-      />
+        <PlainText>
+          Understanding the detailed behavior and advanced use cases of <InlineCode>slice()</InlineCode>:
+        </PlainText>
 
-      <Gap size={2} />
+        <CodeComponent
+          code={`// Advanced slice() patterns
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-      {/* Advanced Examples */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>🚀</Box>
-        Advanced Usage & Patterns
-      </Title>
-
-      <CodeComponent
-        code={`// 1. Cloning an entire array
-const original = [1, 2, 3, 4, 5];
-const clone = original.slice();
-console.log(clone); // [1, 2, 3, 4, 5]
-console.log(original === clone); // false (different reference)
+// 1. Cloning an array (shallow copy)
+const clone = numbers.slice();
+console.log(clone); // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+console.log(numbers === clone); // false (different references)
 
 // 2. Converting array-like objects to arrays
-function convertArgs() {
+function convertToArray() {
   // arguments is array-like, not a real array
-  const argsArray = Array.prototype.slice.call(arguments);
-  // Or using modern syntax: const argsArray = Array.from(arguments);
-  return argsArray;
+  const args = Array.prototype.slice.call(arguments);
+  return args;
 }
-console.log(convertArgs(1, 2, 3)); // [1, 2, 3]
+console.log(convertToArray(1, 2, 3)); // [1, 2, 3]
 
 // 3. Removing elements without mutating
-const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
-// Remove middle elements (index 2 to 5)
-const removed = numbers.slice(2, 6);
-console.log(removed); // [3, 4, 5, 6]
+const withoutMiddle = numbers.slice(0, 3).concat(numbers.slice(6));
+console.log(withoutMiddle); // [1, 2, 3, 7, 8, 9, 10]
 
-// 4. Chaining with other array methods
-const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const result = data
-  .slice(3, 8) // Get elements from index 3 to 7
-  .filter(n => n % 2 === 0) // Keep only even numbers
-  .map(n => n * 2); // Double each number
-console.log(result); // [8, 12] (from [4, 6] doubled)
+// 4. Chaining with other methods
+const result = numbers
+  .slice(3, 8)        // [4, 5, 6, 7, 8]
+  .filter(n => n % 2 === 0) // [4, 6, 8]
+  .map(n => n * 2);   // [8, 12, 16]
+console.log(result); // [8, 12, 16]
 
-// 5. Creating a shallow copy of an array of objects
+// 5. Shallow copy warning
 const people = [
   { name: 'John', age: 30 },
-  { name: 'Jane', age: 25 },
-  { name: 'Bob', age: 35 }
+  { name: 'Jane', age: 25 }
 ];
 const copy = people.slice();
-copy[0].age = 40; // Modifies the original too (shallow copy!)
-console.log(people[0].age); // 40`}
-        language="javascript"
-        title="slice-advanced.js"
-        defaultOpen={false}
-      />
+copy[0].age = 40; // Modifies the original too!
+console.log(people[0].age); // 40 (shallow copy!)`}
+          language="javascript"
+          title="advanced.js"
+          defaultOpen={false}
+        />
 
-      <Note type="warning" icon="⚠️">
-        <Bold>Important:</Bold> <InlineCode>slice()</InlineCode> creates a <Bold>shallow copy</Bold>. If the array contains objects, the objects themselves are not cloned - only references are copied.
-      </Note>
+        <Note type="warning" icon="⚠️">
+          <Bold>Important:</Bold> <InlineCode>slice()</InlineCode> creates a <Bold>shallow copy</Bold>. Nested objects are copied by reference, not by value.
+        </Note>
 
-      <Gap size={2} />
+        <Title level={4}>slice() vs splice()</Title>
 
-      {/* Visual Examples */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🎨</Box>
-        Visual Examples
-      </Title>
-
-      <PlainText>
-        <Bold>Example 1: Visual representation of slice</Bold>
-      </PlainText>
-
-      <Box
-        sx={{
-          bgcolor: '#0a0f1e',
-          borderRadius: 2,
-          p: 3,
-          overflowX: 'auto',
-          border: '1px solid rgba(255,255,255,0.05)',
-          my: 2,
-          fontFamily: 'monospace',
-          fontSize: '0.9rem',
-        }}
-      >
-        <Box sx={{ color: 'rgba(255,255,255,0.5)', mb: 1 }}>
-          Original array: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig']
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Box sx={{ 
-            bgcolor: 'rgba(96, 165, 250, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #2563eb',
-            textAlign: 'center',
-            minWidth: 60,
-          }}>
-            <Box sx={{ color: '#60a5fa' }}>Apple</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>0</Box>
-          </Box>
-          <Box sx={{ 
-            bgcolor: 'rgba(96, 165, 250, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #2563eb',
-            textAlign: 'center',
-            minWidth: 60,
-          }}>
-            <Box sx={{ color: '#60a5fa' }}>Banana</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>1</Box>
-          </Box>
-          <Box sx={{ 
-            bgcolor: 'rgba(251, 191, 36, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #fbbf24',
-            textAlign: 'center',
-            minWidth: 60,
-          }}>
-            <Box sx={{ color: '#fcd34d' }}>Cherry</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>2</Box>
-          </Box>
-          <Box sx={{ 
-            bgcolor: 'rgba(251, 191, 36, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #fbbf24',
-            textAlign: 'center',
-            minWidth: 60,
-          }}>
-            <Box sx={{ color: '#fcd34d' }}>Date</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>3</Box>
-          </Box>
-          <Box sx={{ 
-            bgcolor: 'rgba(96, 165, 250, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #2563eb',
-            textAlign: 'center',
-            minWidth: 60,
-          }}>
-            <Box sx={{ color: '#60a5fa' }}>Elderberry</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>4</Box>
-          </Box>
-          <Box sx={{ 
-            bgcolor: 'rgba(96, 165, 250, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #2563eb',
-            textAlign: 'center',
-            minWidth: 60,
-          }}>
-            <Box sx={{ color: '#60a5fa' }}>Fig</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>5</Box>
-          </Box>
-        </Box>
-        <Box sx={{ color: 'rgba(255,255,255,0.4)', mt: 2, textAlign: 'center' }}>
-          <span style={{ color: '#fbbf24' }}>⬅️ slice(2, 4) extracts 'Cherry' and 'Date'</span>
-        </Box>
-      </Box>
-
-      <Gap size={2} />
-
-      {/* Slice vs Splice */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>📊</Box>
-        Slice vs Splice Comparison
-      </Title>
-
-      <TableComponent
-        headers={['Feature', 'slice()', 'splice()']}
-        rows={[
-          ['Modifies original array', '❌ No', '✅ Yes'],
-          ['Returns', 'New array (shallow copy)', 'Array of removed elements'],
-          ['Parameters', 'start, end (optional)', 'start, deleteCount, items...'],
-          ['Mutates array', 'No (immutable)', 'Yes (mutable)'],
-          ['Use case', 'Extract without changing', 'Add/remove elements'],
-          ['Performance', 'Faster (no mutation)', 'Slower (mutates in place)'],
-        ]}
-      />
-
-      <Note type="warning" icon="⚠️">
-        <Bold>Remember:</Bold> <InlineCode>slice()</InlineCode> is immutable (doesn't change the original), while <InlineCode>splice()</InlineCode> is mutable (changes the original).
-      </Note>
-
-      <Gap size={2} />
-
-      {/* Common Use Cases */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🎯</Box>
-        Common Use Cases
-      </Title>
-
-      <CardComponent variant="success" title="📋 When to Use slice()">
-        <UnorderedList
-          items={[
-            <>Creating a copy of an array</>,
-            <>Extracting a portion of an array for processing</>,
-            <>Converting array-like objects to arrays</>,
-            <>Implementing pagination (showing subsets)</>,
-            <>Creating a new array without modifying the original</>,
-            <>Removing elements in a functional programming style</>,
-            <>Chaining with other array methods like <InlineCode>map()</InlineCode> and <InlineCode>filter()</InlineCode></>,
+        <TableComponent
+          headers={['Feature', 'slice()', 'splice()']}
+          rows={[
+            ['Modifies original', '❌ No', '✅ Yes'],
+            ['Returns', 'New array (shallow copy)', 'Array of removed elements'],
+            ['Parameters', 'start, end (optional)', 'start, deleteCount, items...'],
+            ['Mutates array', 'No (immutable)', 'Yes (mutable)'],
+            ['Use case', 'Extract without changing', 'Add/remove elements'],
           ]}
         />
-      </CardComponent>
 
-      <Gap size={2} />
+        <Note type="warning" icon="⚠️">
+          <Bold>Remember:</Bold> <InlineCode>slice()</InlineCode> is <Bold>immutable</Bold> (doesn't change the original), while <InlineCode>splice()</InlineCode> is <Bold>mutable</Bold> (changes the original).
+        </Note>
 
-      {/* Practical Examples */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>💻</Box>
-        Practical Examples
-      </Title>
+        <Title level={4}>Pagination Implementation</Title>
 
-      <PlainText>
-        <Bold>Example: Pagination implementation</Bold>
-      </PlainText>
+        <CodeComponent
+          code={`// Advanced pagination with slice
+class Paginator {
+  constructor(data, pageSize = 10) {
+    this.data = data;
+    this.pageSize = pageSize;
+  }
+  
+  getPage(pageNumber) {
+    const start = (pageNumber - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return {
+      data: this.data.slice(start, end),
+      currentPage: pageNumber,
+      totalPages: Math.ceil(this.data.length / this.pageSize),
+      hasNext: pageNumber < this.totalPages,
+      hasPrev: pageNumber > 1
+    };
+  }
+  
+  get totalPages() {
+    return Math.ceil(this.data.length / this.pageSize);
+  }
+}
 
-      <CodeComponent
-        code={`// Pagination with slice
-const items = [
-  'Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5',
-  'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10',
-  'Item 11', 'Item 12', 'Item 13', 'Item 14', 'Item 15'
-];
+// Usage
+const items = Array.from({ length: 100 }, (_, i) => ({ id: i, name: \`Item \${i}\` }));
+const paginator = new Paginator(items, 10);
+console.log(paginator.getPage(1).data.length); // 10 items`}
+          language="javascript"
+          title="pagination.js"
+          defaultOpen={false}
+        />
 
-function paginate(array, pageNumber, pageSize) {
-  const start = (pageNumber - 1) * pageSize;
-  const end = start + pageSize;
+        <CardComponent variant="info" title="📋 When to Use slice() (Advanced)">
+          <UnorderedList
+            items={[
+              <>Creating a copy of an array</>,
+              <>Extracting a portion of an array for processing</>,
+              <>Converting array-like objects to arrays</>,
+              <>Implementing pagination (showing subsets)</>,
+              <>Creating a new array without modifying the original</>,
+              <>Removing elements in a functional programming style</>,
+              <>Chaining with other array methods</>,
+            ]}
+          />
+        </CardComponent>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* EXPERT LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="expert" currentLevel={level}>
+        <Gap size={2} />
+
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#ef4444', mr: 1 }}>🚀</Box>
+          Expert: Advanced Patterns & Performance
+        </Title>
+
+        <PlainText>
+          Deep dive into advanced patterns, performance considerations, and expert-level techniques.
+        </PlainText>
+
+        <Title level={4}>1. Performance Benchmarks</Title>
+
+        <CodeComponent
+          code={`// Performance comparison
+const arraySize = 100000;
+const testArray = Array.from({ length: arraySize }, (_, i) => i);
+
+// slice() performance
+console.time('slice');
+const sliced = testArray.slice(1000, 2000);
+console.timeEnd('slice');
+
+// Manual copy performance
+console.time('manual');
+const manual = [];
+for (let i = 1000; i < 2000; i++) {
+  manual.push(testArray[i]);
+}
+console.timeEnd('manual');
+
+// slice() is optimized and generally faster than manual loops`}
+          language="javascript"
+          title="performance.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>2. React State Management Pattern</Title>
+
+        <CodeComponent
+          code={`// React immutable updates with slice
+const [items, setItems] = useState(['Apple', 'Banana', 'Cherry']);
+
+// 1. Remove item (immutable)
+const removeItem = (index) => {
+  setItems([
+    ...items.slice(0, index),
+    ...items.slice(index + 1)
+  ]);
+};
+
+// 2. Insert item (immutable)
+const insertItem = (index, newItem) => {
+  setItems([
+    ...items.slice(0, index),
+    newItem,
+    ...items.slice(index)
+  ]);
+};
+
+// 3. Replace item (immutable)
+const replaceItem = (index, newItem) => {
+  setItems([
+    ...items.slice(0, index),
+    newItem,
+    ...items.slice(index + 1)
+  ]);
+};
+
+// 4. Move item (immutable)
+const moveItem = (fromIndex, toIndex) => {
+  const item = items[fromIndex];
+  const newItems = [
+    ...items.slice(0, fromIndex),
+    ...items.slice(fromIndex + 1)
+  ];
+  setItems([
+    ...newItems.slice(0, toIndex),
+    item,
+    ...newItems.slice(toIndex)
+  ]);
+};`}
+          language="javascript"
+          title="react-pattern.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>3. Data Transformation Pipeline</Title>
+
+        <CodeComponent
+          code={`// Functional pipeline with slice
+const pipeline = (...fns) => (data) => fns.reduce((acc, fn) => fn(acc), data);
+
+// Data transformation pipeline
+const processData = pipeline(
+  (data) => data.slice(0, 100),           // Limit to 100 items
+  (data) => data.filter(item => item.active),
+  (data) => data.map(item => ({ ...item, processed: true })),
+  (data) => data.sort((a, b) => a.id - b.id),
+  (data) => data.slice(0, 10)             // Take top 10
+);
+
+// Usage
+const results = processData(largeDataset);
+
+// Advanced: Lazy evaluation with slice
+function lazySlice(array, start, end) {
   return {
-    data: array.slice(start, end),
-    currentPage: pageNumber,
-    totalPages: Math.ceil(array.length / pageSize),
-    totalItems: array.length
+    *[Symbol.iterator]() {
+      for (let i = start; i < end && i < array.length; i++) {
+        yield array[i];
+      }
+    },
+    toArray() {
+      return Array.from(this);
+    }
   };
 }
 
-const page1 = paginate(items, 1, 5);
-console.log(page1);
-// {
-//   data: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'],
-//   currentPage: 1,
-//   totalPages: 3,
-//   totalItems: 15
-// }
+const lazy = lazySlice([1, 2, 3, 4, 5], 1, 4);
+console.log([...lazy]); // [2, 3, 4]`}
+          language="javascript"
+          title="pipeline.js"
+          defaultOpen={false}
+        />
 
-// Get last 3 items
-const lastThreeItems = items.slice(-3);
-console.log(lastThreeItems); // ['Item 13', 'Item 14', 'Item 15']
+        <Title level={4}>4. Memory Management</Title>
 
-// Get first 5 items
-const firstFive = items.slice(0, 5);
-console.log(firstFive); // ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']
+        <CodeComponent
+          code={`// Memory considerations
+const largeArray = Array.from({ length: 1000000 }, (_, i) => i);
 
-// Get middle items (skip first 3, take 5)
-const middleItems = items.slice(3, 8);
-console.log(middleItems); // ['Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8']`}
-        language="javascript"
-        title="pagination-example.js"
-        defaultOpen={false}
-      />
+// 1. slice creates a new array (uses memory)
+const subset = largeArray.slice(0, 1000); // New array in memory
 
+// 2. Memory efficient alternative (when possible)
+function processInChunks(array, chunkSize, callback) {
+  for (let i = 0; i < array.length; i += chunkSize) {
+    const chunk = array.slice(i, i + chunkSize);
+    callback(chunk);
+  }
+}
+
+// 3. When to use slice for memory
+// Use slice for: Small to medium arrays
+// Avoid slice for: Very large arrays (consider iterators)
+
+// 4. Garbage collection
+let data = largeArray.slice(); // Creates new reference
+data = null; // Allows garbage collection
+
+// 5. Best practice for large datasets
+function processLargeArray(array) {
+  // Use slice in chunks to manage memory
+  const chunkSize = 10000;
+  const results = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    const chunk = array.slice(i, i + chunkSize);
+    results.push(processChunk(chunk));
+  }
+  return results.flat();
+}`}
+          language="javascript"
+          title="memory.js"
+          defaultOpen={false}
+        />
+
+        <CardComponent variant="info" title="⚡ Expert Performance Tips">
+          <UnorderedList
+            items={[
+              <>Use <Bold>slice()</Bold> for immutability in React and Redux</>,
+              <>For large arrays, consider using <Bold>iterators</Bold> instead of <InlineCode>slice()</InlineCode></>,
+              <>Use <Bold>slice()</Bold> in data pipelines for functional programming</>,
+              <>Be aware of <Bold>shallow copy</Bold> behavior with nested objects</>,
+              <>Use <Bold>slice(0)</Bold> as an alternative to spread operator for copying</>,
+              <>Consider memory usage when copying large arrays</>,
+            ]}
+          />
+        </CardComponent>
+
+        <HLText type="info">
+          💡 <Bold>Expert Insight:</Bold> <InlineCode>slice()</InlineCode> is essential for writing <Bold>immutable</Bold> and <Bold>functional</Bold> JavaScript. It's particularly valuable in React, Redux, and other state management libraries where immutability is key for predictable state updates.
+        </HLText>
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Expert Warning:</Bold> While <InlineCode>slice()</InlineCode> is very useful, be mindful of performance with very large arrays (100,000+ elements). Consider using <Bold>iterators</Bold> or <Bold>generators</Bold> for memory-intensive operations.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* SUMMARY - Shown at all levels */}
+      {/* ============================================ */}
       <Gap size={2} />
 
-      {/* Best Practices */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#fbbf24', mr: 1 }}>⭐</Box>
-        Best Practices
-      </Title>
-
-      <CardComponent variant="success" title="✅ Do's">
-        <UnorderedList
-          items={[
-            <>Use <InlineCode>slice()</InlineCode> for immutability when you don't want to modify the original array</>,
-            <>Use <InlineCode>slice()</InlineCode> for creating copies of arrays</>,
-            <>Use negative indices when you need to count from the end</>,
-            <>Chain <InlineCode>slice()</InlineCode> with <InlineCode>map()</InlineCode>, <InlineCode>filter()</InlineCode>, and <InlineCode>reduce()</InlineCode> for clean functional code</>,
-            <>Use <InlineCode>slice()</InlineCode> for implementing pagination</>,
-            <>Always check that start index is less than end index</>,
-          ]}
-        />
-      </CardComponent>
-
-      <CardComponent variant="warning" title="⚠️ Don'ts">
-        <UnorderedList
-          items={[
-            <>Don't use <InlineCode>slice()</InlineCode> when you need to modify the original array (use <InlineCode>splice()</InlineCode>)</>,
-            <>Don't assume <InlineCode>slice()</InlineCode> creates a deep copy for nested objects</>,
-            <>Don't use <InlineCode>slice()</InlineCode> with large arrays when memory is a concern</>,
-            <>Don't use <InlineCode>slice()</InlineCode> on non-array objects without converting them first</>,
-          ]}
-        />
-      </CardComponent>
-
-      <Gap size={2} />
-
-      {/* Summary */}
       <Title level={3}>
         <Box component="span" sx={{ color: '#10b981', mr: 1 }}>📌</Box>
         Summary
@@ -412,92 +462,9 @@ console.log(middleItems); // ['Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8']`
         />
       </CardComponent>
 
-      <Gap size={2} />
-
       <HLText type="info">
         💡 <Bold>Pro Tip:</Bold> Master <InlineCode>slice()</InlineCode> for clean, functional-style JavaScript. It's one of the most useful array methods for working with data without side effects.
       </HLText>
-
-      <Gap size={2} />
-
-      {/* Quick Reference */}
-      <Title level={4}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>📋</Box>
-        Quick Reference
-      </Title>
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: '1fr 1fr',
-          },
-          gap: 2,
-          my: 2,
-        }}
-      >
-        {[
-          {
-            title: 'Copy entire array',
-            code: 'arr.slice()',
-            color: '#2563eb',
-          },
-          {
-            title: 'Copy from index',
-            code: 'arr.slice(2)',
-            color: '#8b5cf6',
-          },
-          {
-            title: 'Copy range',
-            code: 'arr.slice(2, 5)',
-            color: '#f59e0b',
-          },
-          {
-            title: 'Get last N items',
-            code: 'arr.slice(-3)',
-            color: '#06b6d4',
-          },
-          {
-            title: 'Remove first N items',
-            code: 'arr.slice(N)',
-            color: '#10b981',
-          },
-          {
-            title: 'Get middle items',
-            code: 'arr.slice(2, -2)',
-            color: '#ec4899',
-          },
-        ].map((item) => (
-          <Box
-            key={item.title}
-            sx={{
-              bgcolor: `${item.color}08`,
-              borderRadius: 2,
-              p: 2,
-              border: `2px solid ${item.color}20`,
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: `0 8px 24px ${item.color}15`,
-                borderColor: item.color,
-              },
-            }}
-          >
-            <Box sx={{ fontWeight: 600, color: item.color, mb: 1, fontSize: '0.85rem' }}>
-              {item.title}
-            </Box>
-            <CodeComponent
-              code={item.code}
-              language="javascript"
-              title=""
-              showTitle={false}
-              showCopyButton={true}
-              defaultOpen={true}
-            />
-          </Box>
-        ))}
-      </Box>
 
       <Note type="success" icon="🎉">
         <Bold>Remember:</Bold> <InlineCode>slice()</InlineCode> is your go-to method for extracting array elements without changing the original array. It's essential for writing clean, immutable code!

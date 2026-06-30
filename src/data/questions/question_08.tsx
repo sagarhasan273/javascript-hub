@@ -1,6 +1,7 @@
 // data/questions/Question08.tsx
-import { Box } from '@mui/material';
-import { QuestionWrapper } from '../../components/QuestionWrapper';
+import { Box } from "@mui/material";
+import { QuestionWrapper } from "../../components/QuestionWrapper";
+import { LevelContent } from "../../components/LevelContent";
 import {
   Title,
   PlainText,
@@ -13,10 +14,19 @@ import {
   TableComponent,
   InlineCode,
   UnorderedList,
-} from '../../components/content';
-import { question08Meta } from './registry';
+} from "../../components/content";
+import { question08Meta } from "./registry";
+import { useLevel } from "../../context/LevelContext";
 
-export function Question08({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+export function Question08({
+  index = 0,
+  isActive = false,
+}: {
+  index?: number;
+  isActive?: boolean;
+}) {
+  const { level } = useLevel();
+
   return (
     <QuestionWrapper
       id={question08Meta.id}
@@ -25,344 +35,235 @@ export function Question08({ index = 0, isActive = false }: { index?: number; is
       index={index}
       isActive={isActive}
     >
-      {/* Introduction */}
+      {/* Introduction - Shown at all levels */}
       <PlainText>
-        The <Bold>==</Bold> (equality) and <Bold>===</Bold> (strict equality) operators are used to compare values in JavaScript. The key difference is that <InlineCode>==</InlineCode> performs <Bold>type coercion</Bold> (converts values to the same type before comparison), while <InlineCode>===</InlineCode> does <Bold>not</Bold> perform type coercion (values must be of the same type to be considered equal).
+        The <Bold>==</Bold> (equality) and <Bold>===</Bold> (strict equality)
+        operators are used to compare values in JavaScript. The key difference
+        is that <InlineCode>==</InlineCode> performs <Bold>type coercion</Bold>{" "}
+        (converts values to the same type before comparison), while{" "}
+        <InlineCode>===</InlineCode> does <Bold>not</Bold> perform type coercion
+        (values must be of the same type to be considered equal).
       </PlainText>
 
       <PlainText>
-        Understanding this difference is crucial for writing <Bold>bug-free</Bold> and <Bold>predictable</Bold> JavaScript code.
+        Understanding this difference is crucial for writing{" "}
+        <Bold>bug-free</Bold> and <Bold>predictable</Bold> JavaScript code.
       </PlainText>
 
-      <Gap size={2} />
+      {/* ============================================ */}
+      {/* BEGINNER LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="beginner" currentLevel={level}>
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#10b981", mr: 1 }}>
+            🌱
+          </Box>
+          Beginner: Understanding the Basics
+        </Title>
 
-      {/* Quick Comparison */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📊</Box>
-        Quick Comparison
-      </Title>
+        <PlainText>
+          Think of <InlineCode>==</InlineCode> and <InlineCode>===</InlineCode>{" "}
+          like this:
+        </PlainText>
 
-      <TableComponent
-        headers={['Feature', '== (Loose Equality)', '=== (Strict Equality)']}
-        rows={[
-          ['Type Coercion', '✅ Yes (converts types)', '❌ No (no type conversion)'],
-          ['Compares', 'Values after type conversion', 'Values and types'],
-          ['Performance', 'Slower (needs type conversion)', 'Faster (no type conversion)'],
-          ['Predictability', 'Less predictable', 'More predictable'],
-          ['Best Practice', 'Avoid when possible', 'Always prefer'],
-          ['Use Case', 'When you know types will be compatible', 'Default choice'],
-          ['ES6+', 'Used less often', 'Recommended standard'],
-        ]}
-      />
+        <CardComponent variant="info" title="🎯 Simple Analogy">
+          <PlainText>
+            • <Bold>==</Bold> is like: "Are these roughly the same?" - It
+            converts types before checking
+            <br />• <Bold>===</Bold> is like: "Are these exactly the same?" - It
+            checks type AND value
+          </PlainText>
+        </CardComponent>
 
-      <Gap size={2} />
+        <PlainText>
+          <Bold>Examples you'll encounter frequently:</Bold>
+        </PlainText>
 
-      {/* 1. Loose Equality (==) */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>🔀</Box>
-        1. Loose Equality (==) - With Type Coercion
-      </Title>
+        <CodeComponent
+          code={`// === - Strict Equality (Always use this!)
+console.log(5 === 5);        // true (both are numbers)
+console.log('hello' === 'hello'); // true (both are strings)
+console.log(true === true);  // true (both are booleans)
 
-      <PlainText>
-        The <InlineCode>==</InlineCode> operator compares two values for equality <Bold>after</Bold> converting both values to a common type. This can lead to <Bold>unexpected results</Bold> if you're not careful.
-      </PlainText>
+// Different types = false
+console.log(5 === '5');      // false (number vs string)
+console.log(1 === true);     // false (number vs boolean)
+console.log(0 === false);    // false (number vs boolean)
 
-      <CodeComponent
-        code={`// == - Loose Equality Examples
-// 1. String vs Number
-console.log(5 == '5');        // true (string '5' converts to number 5)
-console.log(true == 1);       // true (true converts to 1)
-console.log(false == 0);      // true (false converts to 0)
-console.log('' == 0);         // true (empty string converts to 0)
-console.log('' == false);     // true (both convert to 0)
-
-// 2. Null vs Undefined
+// == - Loose Equality (Be careful with this!)
+console.log(5 == '5');       // true (converts string to number)
+console.log(1 == true);      // true (converts boolean to number)
+console.log(0 == false);     // true (converts boolean to number)
 console.log(null == undefined); // true (special case)
 
-// 3. Objects
-console.log([] == false);     // true ([] converts to '', then 0)
-console.log([1] == 1);        // true ([1] converts to '1', then 1)
-console.log([1,2] == '1,2');  // true (array joins to string)
+// When to use ==
+// Only use == when checking for null or undefined
+const value = null;
+if (value == null) {
+  console.log('Value is null or undefined');
+}`}
+          language="javascript"
+          title="basics.js"
+          defaultOpen={true}
+        />
 
-// 4. Truthy/Falsy pitfalls
-console.log('' == 0);         // true (both false)
-console.log(' ' == 0);        // true (space trims to '')
-console.log('0' == false);    // true ('0' converts to 0, false to 0)
+        <Note type="info" icon="💡">
+          <Bold>Beginner Tip:</Bold> Always use <InlineCode>===</InlineCode>{" "}
+          unless you have a specific reason to use <InlineCode>==</InlineCode>.
+          This will save you from many bugs!
+        </Note>
 
-// 5. NaN never equals NaN
-console.log(NaN == NaN);      // false (NaN is not equal to itself)
+        <CardComponent variant="success" title="✅ Quick Rules for Beginners">
+          <UnorderedList
+            items={[
+              <>
+                Use <Bold>===</Bold> for all comparisons by default
+              </>,
+              <>
+                Use <Bold>==</Bold> only when checking for{" "}
+                <InlineCode>null</InlineCode> or{" "}
+                <InlineCode>undefined</InlineCode>
+              </>,
+              <>
+                Remember: <InlineCode>===</InlineCode> compares type AND value
+              </>,
+              <>
+                Remember: <InlineCode>==</InlineCode> tries to convert types
+                first
+              </>,
+            ]}
+          />
+        </CardComponent>
 
-// 6. Objects with same content but different references
-const obj1 = { a: 1 };
-const obj2 = { a: 1 };
-console.log(obj1 == obj2);    // false (different references)`}
-        language="javascript"
-        title="loose-equality.js"
-        defaultOpen={true}
-      />
+        <Note type="success" icon="🎯">
+          <Bold>Practice:</Bold> Try to predict the output:
+          <CodeComponent
+            code={`console.log(10 === '10');  // ?
+console.log(10 == '10');   // ?
+console.log(false === 0);  // ?
+console.log(false == 0);   // ?`}
+            language="javascript"
+            title="practice.js"
+            defaultOpen={true}
+            showTitle={false}
+          />
+        </Note>
+      </LevelContent>
 
-      <Note type="warning" icon="⚠️">
-        <Bold>Beware:</Bold> The <InlineCode>==</InlineCode> operator can produce <Bold>unexpected results</Bold> due to its complex type coercion rules. It's recommended to use <InlineCode>===</InlineCode> instead.
-      </Note>
+      {/* ============================================ */}
+      {/* ADVANCED LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="advanced" currentLevel={level}>
+        <Gap size={2} />
 
-      <Gap size={2} />
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#f59e0b", mr: 1 }}>
+            ⚡
+          </Box>
+          Advanced: Type Coercion & Common Pitfalls
+        </Title>
 
-      {/* 2. Strict Equality (===) */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>🎯</Box>
-        2. Strict Equality (===) - No Type Coercion
-      </Title>
-
-      <PlainText>
-        The <InlineCode>===</InlineCode> operator compares two values for equality <Bold>without</Bold> performing type coercion. It returns <InlineCode>true</InlineCode> only if both the <Bold>value</Bold> and the <Bold>type</Bold> are the same.
-      </PlainText>
-
-      <CodeComponent
-        code={`// === - Strict Equality Examples
-// 1. Same type, same value -> true
-console.log(5 === 5);         // true
-console.log('hello' === 'hello'); // true
-console.log(true === true);   // true
-console.log(null === null);   // true
-console.log(undefined === undefined); // true
-
-// 2. Different types -> false
-console.log(5 === '5');       // false (number vs string)
-console.log(true === 1);      // false (boolean vs number)
-console.log(false === 0);     // false (boolean vs number)
-console.log(null === undefined); // false (different types)
-
-// 3. Same value, different objects -> false
-const obj1 = { a: 1 };
-const obj2 = { a: 1 };
-console.log(obj1 === obj2);   // false (different references)
-console.log(obj1 === obj1);   // true (same reference)
-
-// 4. NaN is never equal to NaN
-console.log(NaN === NaN);     // false
-
-// 5. Arrays
-console.log([] === []);       // false (different references)
-console.log([1] === [1]);     // false (different references)
-
-// 6. 0 and -0
-console.log(0 === -0);        // true (both are zero)
-
-// 7. Functions
-const func1 = () => {};
-const func2 = () => {};
-console.log(func1 === func2); // false (different references)
-console.log(func1 === func1); // true (same reference)`}
-        language="javascript"
-        title="strict-equality.js"
-        defaultOpen={true}
-      />
-
-      <Note type="info" icon="💡">
-        <Bold>Best Practice:</Bold> Always use <InlineCode>===</InlineCode> by default. It's <Bold>faster</Bold>, <Bold>more predictable</Bold>, and helps avoid bugs caused by type coercion.
-      </Note>
-
-      <Gap size={2} />
-
-      {/* Type Coercion Rules */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔄</Box>
-        Type Coercion Rules for ==
-      </Title>
-
-      <PlainText>
-        When using <InlineCode>==</InlineCode>, JavaScript follows these rules for type coercion:
-      </PlainText>
-
-      <CardComponent variant="info" title="📋 Coercion Rules">
-        <PlainText component="div">
-          • <Bold>Number vs String:</Bold> String is converted to Number<br />
-          • <Bold>Boolean vs Any:</Bold> Boolean is converted to Number (true=1, false=0)<br />
-          • <Bold>Object vs Primitive:</Bold> Object is converted to primitive using <InlineCode>valueOf()</InlineCode> or <InlineCode>toString()</InlineCode><br />
-          • <Bold>Null vs Undefined:</Bold> Equal (special case)<br />
-          • <Bold>NaN vs Any:</Bold> Always false (even with itself)<br />
-          • <Bold>Objects:</Bold> Compared by reference (not content)
+        <PlainText>
+          Understanding <Bold>type coercion</Bold> is key to mastering{" "}
+          <InlineCode>==</InlineCode>. Here's how JavaScript converts types:
         </PlainText>
-      </CardComponent>
 
-      <Gap size={2} />
+        <CardComponent variant="info" title="📋 Type Coercion Rules">
+          <PlainText component="div">
+            • <Bold>Number vs String:</Bold> String → Number
+            <br />• <Bold>Boolean vs Any:</Bold> Boolean → Number (true=1,
+            false=0)
+            <br />• <Bold>Object vs Primitive:</Bold> Object → Primitive
+            (valueOf() or toString())
+            <br />• <Bold>Null vs Undefined:</Bold> Equal (special case)
+            <br />• <Bold>NaN vs Any:</Bold> Always false
+            <br />• <Bold>Objects:</Bold> Compared by reference (not content)
+          </PlainText>
+        </CardComponent>
 
-      {/* Common Pitfalls */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#ef4444', mr: 1 }}>⚠️</Box>
-        Common Pitfalls with ==
-      </Title>
+        <TableComponent
+          headers={["Feature", "== (Loose)", "=== (Strict)"]}
+          rows={[
+            ["Type Coercion", "✅ Yes", "❌ No"],
+            ["Compares", "Values after conversion", "Values and types"],
+            ["Performance", "Slower", "Faster"],
+            ["Predictability", "Less predictable", "More predictable"],
+            ["Best Practice", "Avoid when possible", "Always prefer"],
+          ]}
+        />
 
-      <CodeComponent
-        code={`// Common pitfalls with ==
-// 1. Empty strings and numbers
+        <PlainText>
+          <Bold>Common Pitfalls with ==</Bold>
+        </PlainText>
+
+        <CodeComponent
+          code={`// Pitfall 1: Empty strings and numbers
 console.log('' == 0);         // true (surprising!)
 console.log('   ' == 0);      // true (whitespace converts to 0)
+console.log('' == false);     // true
 
-// 2. Arrays and strings
+// Pitfall 2: Arrays and strings
 console.log([] == '');        // true (empty array converts to '')
 console.log(['hello'] == 'hello'); // true (array joins to string)
 console.log([1,2] == '1,2');  // true
 
-// 3. Truthy/Falsy confusion
+// Pitfall 3: Truthy/Falsy confusion
 console.log('0' == false);    // true (both convert to 0)
-console.log('' == false);     // true (both convert to 0)
 console.log(' ' == false);    // true (space trims to '')
+console.log('false' == false); // false (string is truthy)
 
-// 4. Object equality
+// Pitfall 4: Object equality
 console.log({} == {});        // false (different references)
 console.log({} == '[object Object]'); // false (different refs)
 
-// 5. Null and undefined
-console.log(null == 0);       // false (null is only equal to undefined)
-console.log(undefined == 0);  // false (undefined is only equal to null)
+// Pitfall 5: Null and undefined
+console.log(null == 0);       // false (null only equals undefined)
+console.log(undefined == 0);  // false
 
-// 6. Number vs Boolean
-console.log(1 == true);       // true (both are 1)
-console.log(0 == false);      // true (both are 0)
+// Pitfall 6: Number vs Boolean
 console.log(2 == true);       // false (2 is not 1)`}
-        language="javascript"
-        title="pitfalls.js"
-        defaultOpen={false}
-      />
-
-      <Gap size={2} />
-
-      {/* Visual Comparison */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🎨</Box>
-        Visual Comparison
-      </Title>
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            md: '1fr 1fr',
-          },
-          gap: 3,
-          my: 2,
-        }}
-      >
-        {/* == Visual */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(245, 158, 11, 0.06)',
-            borderRadius: 2,
-            p: 3,
-            border: '2px solid rgba(245, 158, 11, 0.2)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#f59e0b', mb: 2 }}>
-            🔀 == (Loose Equality)
-          </Box>
-          <Box sx={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-              <Box sx={{ color: '#f59e0b' }}>5</Box>
-              <Box sx={{ color: 'rgba(255,255,255,0.3)' }}>==</Box>
-              <Box sx={{ color: '#f59e0b' }}>'5'</Box>
-            </Box>
-            <Box sx={{ color: 'grey.600', fontSize: '0.75rem' }}>↓ Type Coercion</Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Box sx={{ color: '#10b981' }}>5</Box>
-              <Box sx={{ color: 'rgba(255,255,255,0.3)' }}>==</Box>
-              <Box sx={{ color: '#10b981' }}>5</Box>
-            </Box>
-            <Box sx={{ color: '#10b981', fontWeight: 600 }}>✅ true</Box>
-          </Box>
-          <PlainText variant="caption" sx={{ mt: 2, display: 'block', color: 'grey.600' }}>
-            Converts types before comparing
-          </PlainText>
-        </Box>
-
-        {/* === Visual */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(37, 99, 235, 0.06)',
-            borderRadius: 2,
-            p: 3,
-            border: '2px solid rgba(37, 99, 235, 0.2)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#2563eb', mb: 2 }}>
-            🎯 === (Strict Equality)
-          </Box>
-          <Box sx={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-              <Box sx={{ color: '#2563eb' }}>5</Box>
-              <Box sx={{ color: 'rgba(255,255,255,0.3)' }}>===</Box>
-              <Box sx={{ color: '#ef4444' }}>'5'</Box>
-            </Box>
-            <Box sx={{ color: 'grey.600', fontSize: '0.75rem' }}>↓ Type Check</Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Box sx={{ color: '#2563eb' }}>number</Box>
-              <Box sx={{ color: 'rgba(255,255,255,0.3)' }}>vs</Box>
-              <Box sx={{ color: '#ef4444' }}>string</Box>
-            </Box>
-            <Box sx={{ color: '#ef4444', fontWeight: 600 }}>❌ false</Box>
-          </Box>
-          <PlainText variant="caption" sx={{ mt: 2, display: 'block', color: 'grey.600' }}>
-            Compares both type and value
-          </PlainText>
-        </Box>
-      </Box>
-
-      <Gap size={2} />
-
-      {/* When to Use Which */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🎯</Box>
-        When to Use Which?
-      </Title>
-
-      <CardComponent variant="success" title="✅ When to Use === (Strict Equality)">
-        <UnorderedList
-          items={[
-            <>As the <Bold>default</Bold> choice for all comparisons</>,
-            <>When comparing values where type matters</>,
-            <>When you want <Bold>predictable</Bold> results</>,
-            <>In <Bold>if statements</Bold> and conditionals</>,
-            <>When comparing with <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode></>,
-            <>In <Bold>production code</Bold> (avoid surprises)</>,
-            <>When checking for <Bold>true/false</Bold> values</>,
-          ]}
+          language="javascript"
+          title="pitfalls.js"
+          defaultOpen={true}
         />
-      </CardComponent>
 
-      <CardComponent variant="warning" title="⚠️ When to Use == (Loose Equality)">
-        <UnorderedList
-          items={[
-            <>Checking if a value is <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode> (<InlineCode>value == null</InlineCode>)</>,
-            <>When you <Bold>intentionally</Bold> want type coercion</>,
-            <>Working with <Bold>legacy code</Bold> (be careful)</>,
-            <>Quick checks where types are <Bold>already known</Bold></>,
-            <>When comparing <Bold>DOM properties</Bold> (sometimes return strings)</>,
-          ]}
-        />
-      </CardComponent>
+        <CardComponent variant="warning" title="⚠️ When to Use == (Advanced)">
+          <UnorderedList
+            items={[
+              <>
+                Checking if a value is <InlineCode>null</InlineCode> or{" "}
+                <InlineCode>undefined</InlineCode>:{" "}
+                <InlineCode>value == null</InlineCode>
+              </>,
+              <>
+                When you <Bold>intentionally</Bold> want type coercion
+              </>,
+              <>
+                Working with <Bold>legacy code</Bold> (but be careful)
+              </>,
+              <>
+                Quick checks where types are <Bold>already known</Bold>
+              </>,
+              <>
+                Comparing <Bold>DOM properties</Bold> (sometimes return strings)
+              </>,
+            ]}
+          />
+        </CardComponent>
 
-      <Gap size={2} />
+        <PlainText>
+          <Bold>Real-world Example: Form Validation</Bold>
+        </PlainText>
 
-      {/* Practical Examples */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>💻</Box>
-        Practical Examples
-      </Title>
-
-      <PlainText>
-        <Bold>Example 1: Form Validation</Bold>
-      </PlainText>
-
-      <CodeComponent
-        code={`// Form validation - Using == for null/undefined check
+        <CodeComponent
+          code={`// Using == for null/undefined check
 function validateInput(input) {
   // Check if input is null or undefined
   if (input == null) {
     return 'Input is required';
   }
   
-  // Strict comparison for values
+  // Use === for everything else
   if (input === '') {
     return 'Input cannot be empty';
   }
@@ -374,246 +275,296 @@ function validateInput(input) {
   return 'Valid input';
 }
 
-console.log(validateInput(null));     // 'Input is required'
+console.log(validateInput(null));      // 'Input is required'
 console.log(validateInput(undefined)); // 'Input is required'
-console.log(validateInput(''));       // 'Input cannot be empty'
-console.log(validateInput(0));        // 'Input cannot be zero'
-console.log(validateInput('hello'));  // 'Valid input'`}
-        language="javascript"
-        title="validation-example.js"
-        defaultOpen={false}
-      />
-
-      <Gap size={1} />
-
-      <PlainText>
-        <Bold>Example 2: API Response Handling</Bold>
-      </PlainText>
-
-      <CodeComponent
-        code={`// API response with mixed types
-function handleResponse(data) {
-  // Use == for null/undefined check
-  if (data == null) {
-    console.log('No data received');
-    return;
-  }
-
-  // Use === for specific type checks
-  if (Array.isArray(data)) {
-    console.log('Processing array with \${data.length} items');
-    return data.length;
-  }
-
-  if (typeof data === 'object' && data !== null) {
-    console.log('Processing object');
-    return Object.keys(data).length;
-  }
-
-  if (typeof data === 'string' && data === '') {
-    console.log('Empty string received');
-    return 0;
-  }
-
-  return data;
-}
-
-console.log(handleResponse(null));    // 'No data received'
-console.log(handleResponse(undefined)); // 'No data received'
-console.log(handleResponse([]));      // 'Processing array with 0 items'
-console.log(handleResponse({}));      // 'Processing object'
-console.log(handleResponse(''));      // 'Empty string received'`}
-        language="javascript"
-        title="api-example.js"
-        defaultOpen={false}
-      />
-
-      <Gap size={2} />
-
-      {/* Best Practices */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#fbbf24', mr: 1 }}>⭐</Box>
-        Best Practices
-      </Title>
-
-      <CardComponent variant="success" title="✅ Do's">
-        <UnorderedList
-          items={[
-            <>Always use <InlineCode>===</InlineCode> as the <Bold>default</Bold> comparison operator</>,
-            <>Use <InlineCode>==</InlineCode> only when you <Bold>intentionally</Bold> need type coercion</>,
-            <>Use <InlineCode>== null</InlineCode> as a shorthand to check for both <InlineCode>null</InlineCode> and <InlineCode>undefined</InlineCode></>,
-            <>Use <InlineCode>Object.is()</InlineCode> for special cases (NaN, -0, +0)</>,
-            <>Be explicit about type checks with <InlineCode>typeof</InlineCode> or <InlineCode>instanceof</InlineCode></>,
-            <>Use ESLint rules to enforce <InlineCode>===</InlineCode> usage</>,
-          ]}
+console.log(validateInput(''));        // 'Input cannot be empty'
+console.log(validateInput(0));         // 'Input cannot be zero'
+console.log(validateInput('hello'));   // 'Valid input'`}
+          language="javascript"
+          title="validation.js"
+          defaultOpen={false}
         />
-      </CardComponent>
 
-      <CardComponent variant="warning" title="⚠️ Don'ts">
-        <UnorderedList
-          items={[
-            <>Don't rely on <InlineCode>==</InlineCode> for equality checks in production</>,
-            <>Don't use <InlineCode>==</InlineCode> when you're unsure about types</>,
-            <>Don't compare <InlineCode>NaN</InlineCode> with any operator (use <InlineCode>isNaN()</InlineCode>)</>,
-            <>Don't assume <InlineCode>==</InlineCode> works the same across all JavaScript engines</>,
-            <>Don't use <InlineCode>==</InlineCode> for comparing objects (use deep equality check)</>,
-          ]}
-        />
-      </CardComponent>
+        <Note type="info" icon="💡">
+          <Bold>Advanced Tip:</Bold> <InlineCode>value == null</InlineCode> is a
+          common pattern to check for both <InlineCode>null</InlineCode> and{" "}
+          <InlineCode>undefined</InlineCode>. It's the only recommended use of{" "}
+          <InlineCode>==</InlineCode> in modern code.
+        </Note>
+      </LevelContent>
 
-      <Gap size={2} />
+      {/* ============================================ */}
+      {/* EXPERT LEVEL */}
+      {/* ============================================ */}
+      <LevelContent level="expert" currentLevel={level}>
+        <Gap size={2} />
 
-      {/* Special Cases */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>🔍</Box>
-        Special Cases
-      </Title>
+        <Title level={3}>
+          <Box component="span" sx={{ color: "#ef4444", mr: 1 }}>
+            🚀
+          </Box>
+          Expert: Deep Dive & Advanced Patterns
+        </Title>
 
-      <CodeComponent
-        code={`// Special cases to be aware of
-// 1. NaN comparisons
-console.log(NaN === NaN);     // false
-console.log(NaN == NaN);      // false
-console.log(isNaN(NaN));      // true (use isNaN or Number.isNaN)
+        <PlainText>
+          Understanding the <Bold>Abstract Equality Comparison Algorithm</Bold>{" "}
+          and <Bold>SameValueZero</Bold> algorithm used in modern JavaScript.
+        </PlainText>
 
-// 2. Object.is() - Modern solution
-console.log(Object.is(NaN, NaN)); // true
-console.log(Object.is(-0, +0));   // false
-console.log(Object.is(0, 0));     // true
+        <Title level={4}>
+          🔍 The Abstract Equality Comparison Algorithm (==)
+        </Title>
 
-// 3. null and undefined
-console.log(null === undefined);  // false
-console.log(null == undefined);   // true
-console.log(Object.is(null, undefined)); // false
+        <CodeComponent
+          code={`// How == actually works (simplified):
+// 1. If types are same → use ===
+// 2. If null vs undefined → true
+// 3. If number vs string → convert string to number
+// 4. If boolean → convert boolean to number
+// 5. If object vs primitive → convert object to primitive
 
-// 4. 0 and -0
-console.log(0 === -0);        // true
-console.log(Object.is(0, -0)); // false (distinguishes negative zero)
+// Examples:
+console.log(null == undefined); // true (special case)
+console.log(5 == '5'); // string → number
+console.log(true == 1); // boolean → number
+console.log([] == ''); // object → primitive ([] → '')
+console.log([1] == 1); // object → primitive ('1' → 1)
 
-// 5. Checking for null or undefined in one check
-const value = null;
-if (value == null) {
-  console.log('Value is null or undefined');
-}
-
-// Better practice for clarity
-if (value === null || value === undefined) {
-  console.log('Value is null or undefined');
+// The complete algorithm:
+function abstractEquality(x, y) {
+  if (x === y) return true;
+  if (x === null && y === undefined) return true;
+  if (x === undefined && y === null) return true;
+  if (typeof x === 'number' && typeof y === 'string') 
+    return x === Number(y);
+  if (typeof x === 'string' && typeof y === 'number') 
+    return Number(x) === y;
+  if (typeof x === 'boolean') 
+    return abstractEquality(Number(x), y);
+  if (typeof y === 'boolean') 
+    return abstractEquality(x, Number(y));
+  if (typeof x === 'object' && x !== null) 
+    return abstractEquality(x.toString(), y);
+  if (typeof y === 'object' && y !== null) 
+    return abstractEquality(x, y.toString());
+  return false;
 }`}
-        language="javascript"
-        title="special-cases.js"
-        defaultOpen={false}
-      />
+          language="javascript"
+          title="abstract-equality.js"
+          defaultOpen={false}
+        />
 
+        <Title level={4}>🎯 Object.is() - The Modern Solution</Title>
+
+        <CodeComponent
+          code={`// Object.is() - SameValue comparison
+// Unlike ===, Object.is() handles special cases differently
+
+// NaN comparisons
+console.log(NaN === NaN);           // false
+console.log(Object.is(NaN, NaN));   // true ✅
+
+// 0 and -0
+console.log(0 === -0);              // true
+console.log(Object.is(0, -0));      // false ✅ (distinguishes)
+
+// Regular values
+console.log(Object.is(5, 5));       // true
+console.log(Object.is(5, '5'));     // false
+
+// When to use Object.is()
+// 1. When you need to check for NaN
+// 2. When you need to distinguish between 0 and -0
+// 3. In React's useState for reference equality checks
+
+// Example: Custom equality checker
+function safeEquality(a, b) {
+  // First check if they're exactly equal
+  if (Object.is(a, b)) return true;
+  
+  // Handle arrays
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    return a.every((item, index) => safeEquality(item, b[index]));
+  }
+  
+  // Handle objects
+  if (typeof a === 'object' && a !== null && 
+      typeof b === 'object' && b !== null) {
+    const keysA = Object.keys(a);
+    const keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) return false;
+    return keysA.every(key => safeEquality(a[key], b[key]));
+  }
+  
+  return false;
+}
+
+// Usage
+const obj1 = { a: 1, b: { c: 2 } };
+const obj2 = { a: 1, b: { c: 2 } };
+console.log(safeEquality(obj1, obj2)); // true (deep equality)`}
+          language="javascript"
+          title="object-is.js"
+          defaultOpen={false}
+        />
+
+        <Title level={4}>⚡ Performance & Best Practices</Title>
+
+        <CardComponent variant="info" title="Performance Considerations">
+          <UnorderedList
+            items={[
+              <>
+                <InlineCode>===</InlineCode> is <Bold>faster</Bold> than{" "}
+                <InlineCode>==</InlineCode> (no type conversion overhead)
+              </>,
+              <>
+                Use <InlineCode>Object.is()</InlineCode> for <Bold>NaN</Bold>{" "}
+                and <Bold>-0</Bold> checks
+              </>,
+              <>Avoid deep equality checks in hot code paths</>,
+              <>
+                Use <Bold>memoization</Bold> for expensive equality checks
+              </>,
+              <>
+                In React, use <InlineCode>useMemo</InlineCode> and{" "}
+                <InlineCode>useCallback</InlineCode> for reference stability
+              </>,
+            ]}
+          />
+        </CardComponent>
+
+        <CardComponent variant="default" title="💡 Expert Tips">
+          <UnorderedList
+            items={[
+              "Use ESLint rule <InlineCode>eqeqeq</InlineCode> to enforce === usage",
+              "For deep equality, use libraries like <InlineCode>lodash.isEqual</InlineCode> or <InlineCode>fast-deep-equal</InlineCode>",
+              "In TypeScript, always use === to avoid type coercion issues",
+              "Use <InlineCode>Object.is()</InlineCode> for React state updates when checking for changes",
+              "Remember: <InlineCode>==</InlineCode> can be useful for checking <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode> in one line",
+            ]}
+          />
+        </CardComponent>
+
+        <Title level={4}>🔬 Advanced Comparison Patterns</Title>
+
+        <CodeComponent
+          code={`// 1. Nullish coalescing with ==
+const value = getData();
+// Check for null OR undefined
+if (value == null) {
+  console.log('No data');
+}
+
+// 2. Type-safe equality with TypeScript
+function strictEquals<T>(a: T, b: T): boolean {
+  return a === b;
+}
+
+// 3. Custom equality with validation
+function validateAndCompare(a: unknown, b: unknown): boolean {
+  // First validate types
+  if (typeof a !== typeof b) return false;
+  
+  // Then compare using Object.is
+  return Object.is(a, b);
+}
+
+// 4. React useMemo with custom equality
+const expensiveValue = useMemo(() => {
+  return computeExpensiveValue(deps);
+}, deps);
+
+// 5. Functional equality with curry
+const equals = (a: unknown) => (b: unknown) => a === b;
+const isFive = equals(5);
+console.log(isFive(5));   // true
+console.log(isFive('5')); // false`}
+          language="javascript"
+          title="advanced-patterns.js"
+          defaultOpen={false}
+        />
+
+        <HLText type="info">
+          💡 <Bold>Expert Insight:</Bold> The choice between{" "}
+          <InlineCode>==</InlineCode> and <InlineCode>===</InlineCode> is about{" "}
+          <Bold>intent</Bold>. Use <InlineCode>===</InlineCode> to show you care
+          about both type and value. Use <InlineCode>==</InlineCode> only when
+          you <Bold>intentionally</Bold> want type coercion, like checking for{" "}
+          <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode>.
+        </HLText>
+
+        <Note type="warning" icon="⚠️">
+          <Bold>Expert Warning:</Bold> Never rely on <InlineCode>==</InlineCode>{" "}
+          for complex type coercion. It makes code <Bold>harder to read</Bold>,{" "}
+          <Bold>harder to debug</Bold>, and <Bold>more error-prone</Bold>. The
+          small convenience isn't worth the potential bugs.
+        </Note>
+      </LevelContent>
+
+      {/* ============================================ */}
+      {/* SUMMARY - Shown at all levels */}
+      {/* ============================================ */}
       <Gap size={2} />
 
-      {/* Summary */}
       <Title level={3}>
-        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>📌</Box>
+        <Box component="span" sx={{ color: "#10b981", mr: 1 }}>
+          📌
+        </Box>
         Summary
       </Title>
 
       <CardComponent variant="info" title="🎯 Key Takeaways">
         <UnorderedList
           items={[
-            <><InlineCode>==</InlineCode> performs <Bold>type coercion</Bold> before comparison</>,
-            <><InlineCode>===</InlineCode> compares <Bold>both type and value</Bold> without coercion</>,
-            <>Always prefer <InlineCode>===</InlineCode> for <Bold>predictable</Bold> and <Bold>bug-free</Bold> code</>,
-            <>Use <InlineCode>== null</InlineCode> as a shorthand for <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode> check</>,
-            <><InlineCode>NaN</InlineCode> is never equal to itself (use <InlineCode>isNaN()</InlineCode> or <InlineCode>Number.isNaN()</InlineCode>)</>,
-            <>Objects are compared by <Bold>reference</Bold>, not content (use deep equality for content)</>,
-            <>Use <InlineCode>Object.is()</InlineCode> for <InlineCode>NaN</InlineCode> and <InlineCode>-0</InlineCode> comparisons</>,
-            <>Enable ESLint rules to enforce consistent usage</>,
+            <>
+              <InlineCode>==</InlineCode> performs <Bold>type coercion</Bold>{" "}
+              before comparison
+            </>,
+            <>
+              <InlineCode>===</InlineCode> compares{" "}
+              <Bold>both type and value</Bold> without coercion
+            </>,
+            <>
+              Always prefer <InlineCode>===</InlineCode> for{" "}
+              <Bold>predictable</Bold> and <Bold>bug-free</Bold> code
+            </>,
+            <>
+              Use <InlineCode>== null</InlineCode> as a shorthand for{" "}
+              <InlineCode>null</InlineCode> or{" "}
+              <InlineCode>undefined</InlineCode> check
+            </>,
+            <>
+              <InlineCode>NaN</InlineCode> is never equal to itself (use{" "}
+              <InlineCode>isNaN()</InlineCode> or{" "}
+              <InlineCode>Number.isNaN()</InlineCode>)
+            </>,
+            <>
+              Objects are compared by <Bold>reference</Bold>, not content (use
+              deep equality for content)
+            </>,
+            <>
+              Use <InlineCode>Object.is()</InlineCode> for{" "}
+              <InlineCode>NaN</InlineCode> and <InlineCode>-0</InlineCode>{" "}
+              comparisons
+            </>,
           ]}
         />
       </CardComponent>
 
-      <Gap size={2} />
-
       <HLText type="info">
-        💡 <Bold>Pro Tip:</Bold> Always default to <InlineCode>===</InlineCode> and only use <InlineCode>==</InlineCode> when you <Bold>intentionally</Bold> want type coercion, like checking for <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode>. This will save you from countless bugs!
+        💡 <Bold>Pro Tip:</Bold> Always default to <InlineCode>===</InlineCode>{" "}
+        and only use <InlineCode>==</InlineCode> when you{" "}
+        <Bold>intentionally</Bold> want type coercion, like checking for{" "}
+        <InlineCode>null</InlineCode> or <InlineCode>undefined</InlineCode>.
+        This will save you from countless bugs!
       </HLText>
 
-      <Gap size={2} />
-
-      {/* Quick Reference */}
-      <Title level={4}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>📋</Box>
-        Quick Reference Card
-      </Title>
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: '1fr 1fr',
-          },
-          gap: 2,
-          my: 2,
-        }}
-      >
-        {/* == Card */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(245, 158, 11, 0.06)',
-            borderRadius: 2,
-            p: 2.5,
-            border: '2px solid rgba(245, 158, 11, 0.15)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#f59e0b', mb: 1 }}>
-            🔀 == (Loose)
-          </Box>
-          <CodeComponent
-            code={`5 == '5'     // true
-1 == true     // true
-0 == false    // true
-null == undefined // true
-[] == false   // true`}
-            language="javascript"
-            title=""
-            showTitle={false}
-            showCopyButton={true}
-            defaultOpen={true}
-          />
-          <PlainText variant="caption" sx={{ mt: 1, display: 'block', color: 'grey.600' }}>
-            Coerces types before comparing
-          </PlainText>
-        </Box>
-
-        {/* === Card */}
-        <Box
-          sx={{
-            bgcolor: 'rgba(37, 99, 235, 0.06)',
-            borderRadius: 2,
-            p: 2.5,
-            border: '2px solid rgba(37, 99, 235, 0.15)',
-          }}
-        >
-          <Box sx={{ fontSize: '1.2rem', fontWeight: 700, color: '#2563eb', mb: 1 }}>
-            🎯 === (Strict)
-          </Box>
-          <CodeComponent
-            code={`5 === '5'    // false
-1 === true    // false
-0 === false   // false
-null === undefined // false
-[] === false  // false`}
-            language="javascript"
-            title=""
-            showTitle={false}
-            showCopyButton={true}
-            defaultOpen={true}
-          />
-          <PlainText variant="caption" sx={{ mt: 1, display: 'block', color: 'grey.600' }}>
-            Compares type and value
-          </PlainText>
-        </Box>
-      </Box>
-
       <Note type="success" icon="🎉">
-        <Bold>Remember:</Bold> <InlineCode>===</InlineCode> is your <Bold>friend</Bold> - it's safe, predictable, and will save you from many bugs. Use <InlineCode>==</InlineCode> only when you <Bold>know</Bold> what you're doing!
+        <Bold>Remember:</Bold> <InlineCode>===</InlineCode> is your{" "}
+        <Bold>friend</Bold> - it's safe, predictable, and will save you from
+        many bugs. Use <InlineCode>==</InlineCode> only when you{" "}
+        <Bold>know</Bold> what you're doing!
       </Note>
     </QuestionWrapper>
   );
