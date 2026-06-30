@@ -1,7 +1,5 @@
 // data/questions/Question09.tsx
-import { useState } from 'react';
 import { QuestionWrapper } from '../../components/QuestionWrapper';
-import { LevelToggle, ContentLevel } from '../../components/LevelToggle';
 import { LevelContent } from '../../components/LevelContent';
 import {
   Title,
@@ -19,9 +17,10 @@ import {
 } from '../../components/content';
 import { question09Meta } from './registry';
 import { Box } from '@mui/material';
+import { useLevel } from '../../context/LevelContext';
 
 export function Question09({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
-  const [level, setLevel] = useState<ContentLevel>('beginner');
+const { level } = useLevel();
 
   return (
     <QuestionWrapper
@@ -31,8 +30,6 @@ export function Question09({ index = 0, isActive = false }: { index?: number; is
       index={index}
       isActive={isActive}
     >
-      {/* Level Toggle */}
-      <LevelToggle level={level} onLevelChange={setLevel} />
 
       {/* Introduction - Shown at all levels */}
       <PlainText>

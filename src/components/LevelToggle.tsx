@@ -1,70 +1,116 @@
 // components/LevelToggle.tsx
-import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { School, TrendingUp, Rocket } from 'lucide-react';
+import { ContentLevel, useLevel } from '../context/LevelContext';
 
-export type ContentLevel = 'beginner' | 'advanced' | 'expert';
+const levelConfig = {
+  beginner: {
+    icon: School,
+    label: 'Beginner',
+    color: '#10b981',
+    bgColor: 'rgba(16, 185, 129, 0.1)',
+  },
+  advanced: {
+    icon: TrendingUp,
+    label: 'Advanced',
+    color: '#f59e0b',
+    bgColor: 'rgba(245, 158, 11, 0.1)',
+  },
+  expert: {
+    icon: Rocket,
+    label: 'Expert',
+    color: '#ef4444',
+    bgColor: 'rgba(239, 68, 68, 0.1)',
+  },
+};
 
-interface LevelToggleProps {
-  level: ContentLevel;
-  onLevelChange: (level: ContentLevel) => void;
-}
+export function LevelToggle() {
+  const { level, setLevel } = useLevel();
 
-export function LevelToggle({ level, onLevelChange }: LevelToggleProps) {
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newLevel: ContentLevel | null,
   ) => {
     if (newLevel !== null) {
-      onLevelChange(newLevel);
+      setLevel(newLevel);
     }
   };
 
   return (
-    <Box sx={{ mb: 3 }}>
-      <ToggleButtonGroup
-        value={level}
-        exclusive
-        onChange={handleChange}
-        aria-label="content level"
-        sx={{
-          '& .MuiToggleButton-root': {
-            px: 3,
-            py: 1,
-            borderRadius: '20px !important',
-            border: '1px solid',
-            borderColor: 'grey.200',
-            textTransform: 'none',
-            fontWeight: 600,
-            fontSize: '0.85rem',
-            gap: 1,
-            transition: 'all 0.3s ease',
+    <ToggleButtonGroup
+      value={level}
+      exclusive
+      onChange={handleChange}
+      aria-label="content level"
+      size="small"
+      sx={{
+        '& .MuiToggleButton-root': {
+          px: 2,
+          py: 0.75,
+          borderRadius: '20px !important',
+          border: '1px solid',
+          borderColor: 'rgba(255,255,255,0.1)',
+          textTransform: 'none',
+          fontWeight: 600,
+          fontSize: '0.75rem',
+          gap: 0.75,
+          transition: 'all 0.3s ease',
+          color: 'rgba(255,255,255,0.6)',
+          backgroundColor: 'transparent',
+          '&:hover': {
+            backgroundColor: 'rgba(255,255,255,0.05)',
+            color: 'white',
+          },
+          '&.Mui-selected': {
+            color: 'white',
+            borderColor: 'transparent',
             '&:hover': {
-              backgroundColor: 'rgba(37, 99, 235, 0.04)',
-            },
-            '&.Mui-selected': {
-              backgroundColor: 'primary.main',
-              color: 'white',
-              borderColor: 'primary.main',
-              '&:hover': {
-                backgroundColor: '#1d4ed8',
-              },
+              backgroundColor: 'rgba(255,255,255,0.15)',
             },
           },
-        }}
-      >
-        <ToggleButton value="beginner">
-          <School size={16} />
-          Beginner
-        </ToggleButton>
-        <ToggleButton value="advanced">
-          <TrendingUp size={16} />
-          Advanced
-        </ToggleButton>
-        <ToggleButton value="expert">
-          <Rocket size={16} />
-          Expert
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </Box>
+          // Individual level styles when selected
+          '&[value="beginner"].Mui-selected': {
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            boxShadow: '0 0 20px rgba(16, 185, 129, 0.15)',
+            '&:hover': {
+              backgroundColor: 'rgba(16, 185, 129, 0.3)',
+            },
+          },
+          '&[value="advanced"].Mui-selected': {
+            backgroundColor: 'rgba(245, 158, 11, 0.2)',
+            boxShadow: '0 0 20px rgba(245, 158, 11, 0.15)',
+            '&:hover': {
+              backgroundColor: 'rgba(245, 158, 11, 0.3)',
+            },
+          },
+          '&[value="expert"].Mui-selected': {
+            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+            boxShadow: '0 0 20px rgba(239, 68, 68, 0.15)',
+            '&:hover': {
+              backgroundColor: 'rgba(239, 68, 68, 0.3)',
+            },
+          },
+        },
+      }}
+    >
+      {Object.entries(levelConfig).map(([key, config]) => {
+        const Icon = config.icon;
+        const isSelected = level === key;
+        return (
+          <Tooltip
+            key={key}
+            title={`${config.label} level${isSelected ? ' (current)' : ''}`}
+            placement="bottom"
+          >
+            <ToggleButton value={key}>
+              <Icon size={14} />
+              <Box component="span" sx={{ ml: 0.5 }}>
+                {config.label}
+              </Box>
+            </ToggleButton>
+          </Tooltip>
+        );
+      })}
+    </ToggleButtonGroup>
   );
 }
