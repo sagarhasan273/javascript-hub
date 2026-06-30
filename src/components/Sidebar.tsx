@@ -615,7 +615,7 @@ export function Sidebar({
                       }),
                     }}
                   >
-                    <ListItemIcon sx={{ minWidth: 32, mr: 1.5, display: 'flex', justifyContent: 'center' }}>
+                    <ListItemIcon sx={{ minWidth: 32, mr: 1, display: 'flex', justifyContent: 'center' }}>
                       <Box
                         className="question-number"
                         sx={{
@@ -656,7 +656,7 @@ export function Sidebar({
                             component="span" 
                             sx={{ 
                               opacity: 0.3, 
-                              mr: 0.5,
+                              mr: 1,
                               fontSize: '0.7rem',
                               fontWeight: 500,
                             }}
@@ -670,7 +670,7 @@ export function Sidebar({
                     <ChevronRight
                       size={16}
                       style={{
-                        color: currentQuestion === question.id ? '#60a5fa' : 'rgba(255,255,255,0.2)',
+                        color: currentQuestion === question.id ? '#60a5fa' : 'rgba(255, 255, 255, 0.85)',
                         opacity: currentQuestion === question.id ? 1 : 0.3,
                         transform: currentQuestion === question.id ? 'rotate(90deg)' : 'rotate(0deg)',
                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
