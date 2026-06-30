@@ -5,6 +5,8 @@ import { Question01 } from './question_01';
 import { Question02 } from './question_02';
 import { Question03 } from './question_03';
 import { Question04 } from './question_04';
+import { Question05 } from './question_05';
+import { Question06 } from './question_06';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -37,6 +39,18 @@ export const question04Meta: QuestionMeta = {
   definition: "JSON (JavaScript Object Notation) is a lightweight, text-based data interchange format that is easy for humans to read and write, and easy for machines to parse and generate.",
 };
 
+export const question05Meta = {
+  id: 6,
+  title: "What is the purpose of the array slice method?",
+  definition: "The slice() method returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included). The original array will not be modified.",
+};
+
+export const question06Meta = {
+  id: 7,
+  title: "What is the difference between slice and splice?",
+  definition: "slice() is immutable and returns a new array without modifying the original, while splice() is mutable and modifies the original array by removing, adding, or replacing elements.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -58,6 +72,14 @@ export const questionRegistry = [
     ...question04Meta,
     component: Question04,
   },
+  {
+    ...question05Meta,
+    component: Question05,
+  },
+  {
+    ...question06Meta,
+    component: Question06,
+  }
   // Add more here
 ];
 
