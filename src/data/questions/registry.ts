@@ -7,6 +7,8 @@ import { Question03 } from './question_03';
 import { Question04 } from './question_04';
 import { Question05 } from './question_05';
 import { Question06 } from './question_06';
+import { Question07 } from './question_07';
+import { Question08 } from './question_08';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -51,6 +53,18 @@ export const question06Meta = {
   definition: "slice() is immutable and returns a new array without modifying the original, while splice() is mutable and modifies the original array by removing, adding, or replacing elements.",
 };
 
+export const question07Meta = {
+  id: 8,
+  title: "How do you compare Object and Map?",
+  definition: "Object and Map are both key-value stores but differ in key types, order preservation, size tracking, performance, and use cases. Maps were introduced in ES6 to address Object limitations.",
+};
+
+export const question08Meta = {
+  id: 9,
+  title: "What is the difference between == and === operators?",
+  definition: "== (loose equality) performs type coercion before comparison, while === (strict equality) compares both value and type without coercion.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -79,6 +93,14 @@ export const questionRegistry = [
   {
     ...question06Meta,
     component: Question06,
+  },
+  {
+    ...question07Meta,
+    component: Question07,
+  },
+  {
+    ...question08Meta,
+    component: Question08,
   }
   // Add more here
 ];
