@@ -37,7 +37,6 @@ export function QuestionWrapper({
           boxShadow: isActive 
             ? '0 8px 30px rgba(37,99,235,0.12)' 
             : '0 4px 20px rgba(0,0,0,0.06)',
-          transform: 'translateY(-2px)',
         },
         ...(isActive && {
           boxShadow: '0 8px 30px rgba(37,99,235,0.1)',

@@ -8,6 +8,10 @@ import { questionRegistry, questionMetadata } from './data/questions/registry';
 function App() {
   const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(null);
   const [questionIds, setQuestionIds] = useState<number[]>([]);
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const saved = localStorage.getItem('sidebar-width');
+    return saved ? parseInt(saved, 10) : 320;
+  });
 
   useEffect(() => {
     // Get sorted question IDs from registry
@@ -16,6 +20,19 @@ function App() {
     if (ids.length > 0) {
       setCurrentQuestionId(ids[0]);
     }
+  }, []);
+
+  // Listen for sidebar width changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('sidebar-width');
+      if (saved) {
+        setSidebarWidth(parseInt(saved, 10));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleSelectQuestion = (id: number) => {
@@ -29,7 +46,6 @@ function App() {
   };
 
   const handleAddNew = () => {
-    // Handle adding new question
     console.log('Add new question');
   };
 
@@ -55,17 +71,19 @@ function App() {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   };
 
-  // Get current question info for display
   const currentIndex = currentQuestionId ? questionIds.indexOf(currentQuestionId) : -1;
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'grey.100', display: 'flex' }}>
-      {/* Sidebar */}
+      {/* Sidebar with resize support */}
       <Sidebar
         questions={questionMetadata}
         currentQuestion={currentQuestionId}
         onSelectQuestion={handleSelectQuestion}
         onAddNew={handleAddNew}
+        defaultWidth={sidebarWidth}
+        minWidth={420}
+        maxWidth={540}
       />
 
       {/* Main Content */}
@@ -78,6 +96,7 @@ function App() {
           p: { xs: 3, lg: 4 },
           minHeight: '100vh',
           position: 'relative',
+          transition: 'margin-left 0.2s ease',
         }}
       >
         <Container maxWidth="lg">
@@ -130,7 +149,6 @@ function App() {
               zIndex: 1000,
             }}
           >
-            {/* Progress indicator */}
             <Box
               sx={{
                 bgcolor: 'white',
@@ -148,7 +166,6 @@ function App() {
               </Typography>
             </Box>
 
-            {/* Navigation buttons */}
             <Fab
               size="small"
               onClick={handlePrevious}
@@ -185,7 +202,6 @@ function App() {
               <ArrowDown size={18} />
             </Fab>
 
-            {/* Quick scroll buttons */}
             <Fab
               size="small"
               onClick={handleScrollToTop}

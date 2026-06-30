@@ -6,7 +6,7 @@ import { Question02 } from './question_02';
 
 export const question01Meta: QuestionMeta = {
   id: 1,
-  title: "What are the possible ways to create objects in JavaScript",
+  title: "What are the possible ways to create objects in JavaScript?",
   definition: "There are multiple ways to create objects: object literals, constructors, Object.create(), functions, classes, and singletons.",
 };
 
