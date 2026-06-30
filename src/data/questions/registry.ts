@@ -9,6 +9,7 @@ import { Question05 } from './question_05';
 import { Question06 } from './question_06';
 import { Question07 } from './question_07';
 import { Question08 } from './question_08';
+import { Question09 } from './question_09';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -65,6 +66,12 @@ export const question08Meta = {
   definition: "== (loose equality) performs type coercion before comparison, while === (strict equality) compares both value and type without coercion.",
 };
 
+export const question09Meta = {
+  id: 10,
+  title: "What are lambda expressions or arrow functions?",
+  definition: "Arrow functions (lambda expressions) are a concise way to write function expressions with lexical this binding, introduced in ES6.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -101,6 +108,10 @@ export const questionRegistry = [
   {
     ...question08Meta,
     component: Question08,
+  },
+  {
+    ...question09Meta,
+    component: Question09,
   }
   // Add more here
 ];
