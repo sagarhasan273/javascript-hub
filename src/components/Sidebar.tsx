@@ -1,7 +1,6 @@
 // components/Sidebar.tsx
 import { useState, useMemo, useRef, useEffect } from "react";
 import {
-  Menu,
   X,
   ChevronRight,
   Code,
@@ -45,6 +44,8 @@ interface SidebarProps {
   defaultWidth?: number;
   minWidth?: number;
   maxWidth?: number;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 export function Sidebar({
@@ -54,10 +55,11 @@ export function Sidebar({
   defaultWidth = 420,
   minWidth = 420,
   maxWidth = 540,
+  mobileOpen = false,
+  onMobileClose,
 }: SidebarProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-  const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarWidth, setSidebarWidth] = useState(defaultWidth);
   const [isResizing, setIsResizing] = useState(false);
@@ -137,12 +139,18 @@ export function Sidebar({
     }
   }, [sidebarWidth, isResizing]);
 
+  const handleClose = () => {
+    if (onMobileClose) {
+      onMobileClose();
+    }
+  };
+
   const sidebarContent = (
     <Box
       ref={sidebarRef}
       sx={{
         width: isMobile ? "100%" : sidebarWidth,
-        height: "100dvh",
+        height: isMobile ? "100dvh" : "calc(100dvh - 64px)",
         background:
           "linear-gradient(180deg, #0a0e1a 0%, #1a1a2e 40%, #16213e 70%, #0a0e1a 100%)",
         color: "white",
@@ -190,7 +198,7 @@ export function Sidebar({
       {/* Mobile Close Button */}
       {isMobile && (
         <IconButton
-          onClick={() => setIsOpen(false)}
+          onClick={handleClose}
           sx={{
             position: "absolute",
             top: 25,
@@ -432,13 +440,14 @@ export function Sidebar({
               sx={{
                 "& .MuiBadge-badge": {
                   bgcolor: "#2563eb",
-                fontWeight: 700,
-                fontSize: "0.7rem",
-                height: 22,
-                minWidth: 22,
-              },
-            }}
-          />)}
+                  fontWeight: 700,
+                  fontSize: "0.7rem",
+                  height: 22,
+                  minWidth: 22,
+                },
+              }}
+            />
+          )}
         </Box>
 
         {/* Level Toggle - Now in Header */}
@@ -633,7 +642,9 @@ export function Sidebar({
                   <ListItemButton
                     onClick={() => {
                       onSelectQuestion(question.id);
-                      if (isMobile) setIsOpen(false);
+                      if (isMobile && onMobileClose) {
+                        onMobileClose();
+                      }
                     }}
                     sx={{
                       borderRadius: 2.5,
@@ -818,64 +829,40 @@ export function Sidebar({
     </Box>
   );
 
-  return (
-    <>
-      {isMobile && (
-        <IconButton
-          onClick={() => setIsOpen(!isOpen)}
-          sx={{
-            position: "fixed",
-            top: 16,
-            left: 16,
-            zIndex: 50,
-            background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-            color: "white",
-            borderRadius: 2.5,
-            boxShadow: "0 4px 20px rgba(37,99,235,0.4)",
-            p: 1,
-            m: 1,
-            "&:hover": {
-              background: "linear-gradient(135deg, #1d4ed8, #6d28d9)",
-              transform: "scale(1.05)",
-            },
-            border: "1px solid rgba(255,255,255,0.1)",
-            transition: "all 0.3s ease",
-          }}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </IconButton>
-      )}
+  // For desktop: render directly
+  if (!isMobile) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexShrink: 0,
+          position: "sticky",
+          top: 0,
+          height: "calc(100dvh - 64px)",
+          overflow: "hidden",
+        }}
+      >
+        {sidebarContent}
+      </Box>
+    );
+  }
 
-      {isMobile ? (
-        <Drawer
-          anchor="left"
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: "100%",
-              height: "100dvh",
-              boxSizing: "border-box",
-              bgcolor: "transparent",
-            },
-          }}
-        >
-          {sidebarContent}
-        </Drawer>
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            flexShrink: 0,
-            position: "sticky",
-            top: 0,
-            height: "100vh",
-            overflow: "hidden",
-          }}
-        >
-          {sidebarContent}
-        </Box>
-      )}
-    </>
+  // For mobile: render drawer
+  return (
+    <Drawer
+      anchor="left"
+      open={mobileOpen}
+      onClose={handleClose}
+      sx={{
+        "& .MuiDrawer-paper": {
+          width: "100%",
+          height: "100dvh",
+          boxSizing: "border-box",
+          bgcolor: "transparent",
+        },
+      }}
+    >
+      {sidebarContent}
+    </Drawer>
   );
 }
