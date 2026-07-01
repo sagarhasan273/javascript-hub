@@ -26,7 +26,10 @@ interface NavigationProps {
   questionCount?: number;
 }
 
-export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) {
+export function Navigation({
+  onMenuClick,
+  questionCount = 0,
+}: NavigationProps) {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -119,7 +122,9 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
                   key={item.path}
                   component={Link}
                   to={item.path}
-                  variant={location.pathname === item.path ? "contained" : "text"}
+                  variant={
+                    location.pathname === item.path ? "contained" : "text"
+                  }
                   startIcon={item.icon}
                   sx={{
                     borderRadius: 2,
@@ -159,6 +164,7 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
                   fontSize: "0.7rem",
                   height: 20,
                   minWidth: 20,
+                  mr: 1.5
                 },
               }}
             />
@@ -192,7 +198,10 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
               borderColor: "grey.100",
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "grey.800" }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 700, color: "grey.800" }}
+            >
               Menu
             </Typography>
             <IconButton
@@ -221,9 +230,13 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
                       borderRadius: 2,
                       py: 1.5,
                       px: 2,
-                      bgcolor: isActive ? "rgba(37, 99, 235, 0.08)" : "transparent",
+                      bgcolor: isActive
+                        ? "rgba(37, 99, 235, 0.08)"
+                        : "transparent",
                       "&:hover": {
-                        bgcolor: isActive ? "rgba(37, 99, 235, 0.12)" : "rgba(37, 99, 235, 0.04)",
+                        bgcolor: isActive
+                          ? "rgba(37, 99, 235, 0.12)"
+                          : "rgba(37, 99, 235, 0.04)",
                       },
                       ...(isActive && {
                         "& .MuiListItemText-primary": {
@@ -236,7 +249,12 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
                       }),
                     }}
                   >
-                    <ListItemIcon sx={{ minWidth: 40, color: isActive ? "#2563eb" : "grey.500" }}>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 40,
+                        color: isActive ? "#2563eb" : "grey.500",
+                      }}
+                    >
                       {item.icon}
                     </ListItemIcon>
                     <ListItemText
