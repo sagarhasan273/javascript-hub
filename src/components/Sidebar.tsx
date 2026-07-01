@@ -142,7 +142,7 @@ export function Sidebar({
       ref={sidebarRef}
       sx={{
         width: isMobile ? "100%" : sidebarWidth,
-        height: "100vh",
+        height: "100dvh",
         background:
           "linear-gradient(180deg, #0a0e1a 0%, #1a1a2e 40%, #16213e 70%, #0a0e1a 100%)",
         color: "white",
