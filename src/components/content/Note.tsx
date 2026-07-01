@@ -25,7 +25,7 @@ export function Note({ children, type = 'info', icon }: NoteProps) {
         borderLeft: '4px solid',
         borderColor: selectedColor.border,
         borderRadius: 1,
-        p: 2.5,
+        p: { xs: 1, md: 2 },
         mb: 2,
         display: 'flex',
         alignItems: 'flex-start',

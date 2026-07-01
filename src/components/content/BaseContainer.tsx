@@ -13,7 +13,7 @@ export function BaseContainer({ children, className }: BaseContainerProps) {
       className={className}
       elevation={0}
       sx={{
-        p: 4,
+        p: { xs: 2, md: 4 },
         borderRadius: 3,
         border: '1px solid',
         borderColor: 'grey.200',

@@ -25,7 +25,7 @@ export function CardComponent({
     <Paper
       elevation={0}
       sx={{
-        p: 3,
+        p: { xs: 1, md: 3 },
         borderRadius: 2,
         bgcolor: colors[variant].bg,
         border: '1px solid',

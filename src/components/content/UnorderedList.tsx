@@ -8,7 +8,7 @@ interface UnorderedListProps {
 
 export function UnorderedList({ items }: UnorderedListProps) {
   return (
-    <Box component="ul" sx={{ pl: 3, mb: 2 }}>
+    <Box component="ul" sx={{ pl: { xs: 1, md: 3 }, mb: 2 }}>
       {items.map((item, index) => (
         <Typography
           component="li"

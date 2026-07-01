@@ -8,7 +8,7 @@ interface OrderedListProps {
 
 export function OrderedList({ items }: OrderedListProps) {
   return (
-    <Box component="ol" sx={{ pl: 3, mb: 2 }}>
+    <Box component="ol" sx={{ pl: { xs: 1, md: 3 }, mb: 2 }}>
       {items.map((item, index) => (
         <Typography
           component="li"
