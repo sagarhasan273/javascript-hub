@@ -854,6 +854,7 @@ export function Sidebar({
           sx={{
             "& .MuiDrawer-paper": {
               width: "100%",
+              height: "100dvh",
               boxSizing: "border-box",
               bgcolor: "transparent",
             },

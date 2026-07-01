@@ -98,14 +98,13 @@ function App() {
             flex: 1,
             overflowY: "auto",
             bgcolor: "background.paper",
-            p: { xs: 0.5, lg: 4 },
-            pt: { xs: 2, lg: 4 },
+            pt: { xs: 2, lg: 3 },
             minHeight: "100vh",
             position: "relative",
             transition: "margin-left 0.2s ease",
           }}
         >
-          <Container maxWidth="lg">
+          <Container maxWidth="lg" sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
             {/* Progress Indicator */}
             {currentQuestionId && (
               <Box
