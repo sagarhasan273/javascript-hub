@@ -14,7 +14,8 @@ import {
   UnorderedList,
 } from '../../components/content';
 import { question00Meta } from './registry';
-import { useLevel } from '../../context/LevelContext';
+import { useLevel } from '../../hooks';
+
 
 export function Question00({ isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();

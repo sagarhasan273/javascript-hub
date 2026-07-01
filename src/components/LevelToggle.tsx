@@ -1,7 +1,8 @@
 // components/LevelToggle.tsx
 import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { School, TrendingUp, Rocket } from 'lucide-react';
-import { ContentLevel, useLevel } from '../context/LevelContext';
+import { ContentLevel } from '../context/LevelContext';
+import { useLevel } from '../hooks';
 
 const levelConfig = {
   beginner: {

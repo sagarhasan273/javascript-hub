@@ -17,7 +17,7 @@ import {
 } from "../../components/content";
 import { question09Meta } from "./registry";
 import { Box } from "@mui/material";
-import { useLevel } from "../../context/LevelContext";
+import { useLevel } from '../../hooks';
 
 export function Question09({
   isActive = false,

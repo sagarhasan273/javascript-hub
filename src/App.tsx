@@ -4,7 +4,7 @@ import { Box, Container, Stack, Fab, Typography } from "@mui/material";
 import { ChevronUp, ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Sidebar } from "./components/Sidebar";
 import { questionRegistry, questionMetadata } from "./data/questions/registry";
-import { LevelProvider } from "./context/LevelContext";
+import { LevelProvider } from "./context/LevelProvider";
 
 function App() {
   const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(
@@ -99,7 +99,7 @@ function App() {
             overflowY: "auto",
             bgcolor: "background.paper",
             pt: { xs: 2, lg: 3 },
-            minHeight: "100vh",
+            minHeight: "100dvh",
             position: "relative",
             transition: "margin-left 0.2s ease",
           }}

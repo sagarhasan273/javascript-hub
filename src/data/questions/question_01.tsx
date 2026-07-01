@@ -17,7 +17,7 @@ import {
   HLText,
 } from '../../components/content';
 import { question01Meta } from './registry';
-import { useLevel } from '../../context/LevelContext';
+import { useLevel } from '../../hooks';
 
 export function Question01({  isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();

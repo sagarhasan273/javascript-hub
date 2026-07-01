@@ -16,7 +16,7 @@ import {
   UnorderedList,
 } from "../../components/content";
 import { question03Meta } from "./registry";
-import { useLevel } from "../../context/LevelContext";
+import { useLevel } from '../../hooks';
 
 export function Question03({
   isActive = false,
