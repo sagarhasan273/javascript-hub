@@ -141,7 +141,7 @@ export function Sidebar({
     <Box
       ref={sidebarRef}
       sx={{
-        width: isMobile ? 420 : sidebarWidth,
+        width: isMobile ? "100%" : sidebarWidth,
         height: "100vh",
         background:
           "linear-gradient(180deg, #0a0e1a 0%, #1a1a2e 40%, #16213e 70%, #0a0e1a 100%)",
@@ -187,7 +187,27 @@ export function Sidebar({
         }}
       />
 
-      {/* Resize Handle */}
+      {/* Mobile Close Button */}
+      {isMobile && (
+        <IconButton
+          onClick={() => setIsOpen(false)}
+          sx={{
+            position: "absolute",
+            top: 25,
+            right: 20,
+            zIndex: 100,
+            color: "rgba(255,255,255,0.6)",
+            "&:hover": {
+              color: "white",
+              bgcolor: "rgba(255,255,255,0.1)",
+            },
+          }}
+        >
+          <X size={24} />
+        </IconButton>
+      )}
+
+      {/* Resize Handle - Desktop only */}
       {!isMobile && (
         <Tooltip
           title="Drag to resize sidebar"
@@ -361,7 +381,8 @@ export function Sidebar({
       {/* Header */}
       <Box
         sx={{
-          p: 3,
+          p: isMobile ? 2 : 3,
+          pt: isMobile ? 4 : 3,
           borderBottom: "1px solid rgba(255,255,255,0.06)",
           flexShrink: 0,
           background:
@@ -404,19 +425,20 @@ export function Sidebar({
             </Box>
             Q&A Builder
           </Typography>
-          <Badge
-            badgeContent={questions.length}
-            color="primary"
-            sx={{
-              "& .MuiBadge-badge": {
-                bgcolor: "#2563eb",
+          {!isMobile && (
+            <Badge
+              badgeContent={questions.length}
+              color="primary"
+              sx={{
+                "& .MuiBadge-badge": {
+                  bgcolor: "#2563eb",
                 fontWeight: 700,
                 fontSize: "0.7rem",
                 height: 22,
                 minWidth: 22,
               },
             }}
-          />
+          />)}
         </Box>
 
         {/* Level Toggle - Now in Header */}
@@ -438,8 +460,8 @@ export function Sidebar({
       {/* Search Bar */}
       <Box
         sx={{
-          px: 2.5,
-          py: 2.5,
+          px: isMobile ? 2 : 2.5,
+          py: isMobile ? 2 : 2.5,
           borderBottom: "1px solid rgba(255,255,255,0.06)",
           flexShrink: 0,
           position: "relative",
@@ -561,7 +583,7 @@ export function Sidebar({
         sx={{
           flex: 1,
           overflowY: "auto",
-          p: 2,
+          p: isMobile ? 1.5 : 2,
           "&::-webkit-scrollbar": {
             width: "4px",
           },
@@ -616,7 +638,7 @@ export function Sidebar({
                     sx={{
                       borderRadius: 2.5,
                       py: 1.5,
-                      px: 2.5,
+                      px: 2,
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       position: "relative",
                       "&:hover": {
@@ -810,6 +832,8 @@ export function Sidebar({
             color: "white",
             borderRadius: 2.5,
             boxShadow: "0 4px 20px rgba(37,99,235,0.4)",
+            p: 1,
+            m: 1,
             "&:hover": {
               background: "linear-gradient(135deg, #1d4ed8, #6d28d9)",
               transform: "scale(1.05)",
@@ -829,7 +853,7 @@ export function Sidebar({
           onClose={() => setIsOpen(false)}
           sx={{
             "& .MuiDrawer-paper": {
-              width: 420,
+              width: "100%",
               boxSizing: "border-box",
               bgcolor: "transparent",
             },

@@ -110,7 +110,8 @@ export function QuestionWrapper({
       {/* Header Section */}
       <Box
         sx={{
-          p: 4,
+          p: { xs: 1.5, md: 3 },
+          pt: { xs: 2, md: 3 },
           pb: 3,
           borderBottom: "1px solid",
           borderColor: "grey.100",
@@ -252,7 +253,7 @@ export function QuestionWrapper({
           <Box
             sx={{
               mt: 2,
-              p: 2.5,
+              p: { xs: 1, md: 2.5 },
               borderRadius: 2,
               background: isActive
                 ? "linear-gradient(135deg, rgba(96, 165, 250, 0.06), rgba(167, 139, 250, 0.06))"
@@ -319,8 +320,8 @@ export function QuestionWrapper({
       {/* Content Section */}
       <Box
         sx={{
-          p: 4,
-          pt: 3,
+          p: {  xs: 2, md: 3, lg: 4 },
+          pt: { xs: 2, md: 3, lg: 4 },
           display: isCollapsed ? "none" : "block",
           animation: isCollapsed ? "none" : "fadeIn 0.3s ease",
           "@keyframes fadeIn": {

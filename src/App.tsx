@@ -98,7 +98,8 @@ function App() {
             flex: 1,
             overflowY: "auto",
             bgcolor: "background.paper",
-            p: { xs: 3, lg: 4 },
+            p: { xs: 0.5, lg: 4 },
+            pt: { xs: 2, lg: 4 },
             minHeight: "100vh",
             position: "relative",
             transition: "margin-left 0.2s ease",
@@ -110,7 +111,7 @@ function App() {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent: {xs: 'flex-end', sm:"space-between"},
                   alignItems: "center",
                   mb: 3,
                   pb: 2,
@@ -121,7 +122,7 @@ function App() {
                 <Typography variant="body2" color="grey.600">
                   Question {currentIndex + 1} of {questionIds.length}
                 </Typography>
-                <Box sx={{ display: "flex", gap: 1 }}>
+                <Box sx={{ display: {xs: 'none', sm:"flex"}, gap: 1 }}>
                   <Typography variant="body2" color="grey.600">
                     {Math.round(
                       ((currentIndex + 1) / questionIds.length) * 100,
