@@ -37,6 +37,7 @@ interface QuestionMeta {
   definition: string;
 }
 
+// components/Sidebar.tsx - Add onMenuClick to props
 interface SidebarProps {
   questions: QuestionMeta[];
   currentQuestion: number | null;
@@ -46,6 +47,7 @@ interface SidebarProps {
   maxWidth?: number;
   mobileOpen?: boolean;
   onMobileClose?: () => void;
+  onMenuClick?: () => void; // Add this prop
 }
 
 export function Sidebar({
@@ -150,7 +152,7 @@ export function Sidebar({
       ref={sidebarRef}
       sx={{
         width: isMobile ? "100%" : sidebarWidth,
-        height: isMobile ? "100dvh" : "calc(100dvh - 64px)",
+        height: isMobile ? "100dvh" : "100vh",
         background:
           "linear-gradient(180deg, #0a0e1a 0%, #1a1a2e 40%, #16213e 70%, #0a0e1a 100%)",
         color: "white",
