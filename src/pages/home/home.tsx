@@ -1,5 +1,5 @@
 // pages/home/home.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Fab,
@@ -45,6 +45,7 @@ export function Home({
     return saved ? parseInt(saved, 10) : 420;
   });
   const [fabMenuOpen, setFabMenuOpen] = useState(false);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ids = questionRegistry.map((q) => q.id).sort((a, b) => a - b);
@@ -68,12 +69,27 @@ export function Home({
   const handleSelectQuestion = (id: number) => {
     setCurrentQuestionId(id);
     setFabMenuOpen(false);
-    setTimeout(() => {
-      const element = document.getElementById("main-content");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 100);
+    
+    // Use requestAnimationFrame for smoother scrolling
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const element = document.getElementById(`question-${id}`);
+        if (element && mainContentRef.current) {
+          const container = mainContentRef.current;
+          const elementRect = element.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          
+          // Calculate scroll position with offset for the navigation bar
+          const offset = 80; // Adjust based on your nav height
+          const scrollTop = elementRect.top - containerRect.top + container.scrollTop - offset;
+          
+          container.scrollTo({
+            top: scrollTop,
+            behavior: "smooth",
+          });
+        }
+      }, 50);
+    });
   };
 
   const handleNext = () => {
@@ -91,15 +107,22 @@ export function Home({
   };
 
   const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
     setFabMenuOpen(false);
   };
 
   const handleScrollToBottom = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth",
-    });
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({
+        top: mainContentRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
     setFabMenuOpen(false);
   };
 
@@ -174,6 +197,7 @@ export function Home({
       <Box
         component="main"
         id="main-content"
+        ref={mainContentRef}
         sx={{
           flex: 1,
           overflowY: "auto",
@@ -196,8 +220,7 @@ export function Home({
             maxWidth: "100%",
             px: { xs: 1.5, sm: 2, md: 3 },
             py: { xs: 0, sm: 1 },
-            pb: bottomPadding, // Dynamic padding for FAB menu
-            mb: 15
+            pb: bottomPadding,
           }}
         >
           {filteredQuestions
@@ -223,9 +246,9 @@ export function Home({
               alignItems: "flex-end",
               gap: 1,
               zIndex: 1000,
-              pointerEvents: "none", // Allow clicking through to scroll
+              pointerEvents: "none",
               "& > *": {
-                pointerEvents: "auto", // Re-enable clicks on children
+                pointerEvents: "auto",
               },
             }}
           >
