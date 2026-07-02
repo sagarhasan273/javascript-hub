@@ -3,11 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+ 
   "scripts": {
     "dev": "vite",
+    "dev:host": "vite --host",
+    "dev:network": "vite --host --port 3000",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "preview:host": "vite preview --host",
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
