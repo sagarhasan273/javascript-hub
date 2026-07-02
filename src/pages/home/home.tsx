@@ -140,6 +140,12 @@ export function Home({
     },
   ];
 
+  // Calculate bottom padding for content
+  const fabMenuHeight = isMobile 
+    ? (fabMenuOpen ? (fabItems.length * 56 + 70) : 70)
+    : 250;
+  const bottomPadding = isMobile ? `${fabMenuHeight + 20}px` : '100px';
+
   return (
     <Box
       sx={{
@@ -190,7 +196,7 @@ export function Home({
             maxWidth: "100%",
             px: { xs: 1.5, sm: 2, md: 3 },
             py: { xs: 0, sm: 1 },
-            mb: 10
+            pb: bottomPadding, // Dynamic padding for FAB menu
           }}
         >
           {filteredQuestions
@@ -216,6 +222,10 @@ export function Home({
               alignItems: "flex-end",
               gap: 1,
               zIndex: 1000,
+              pointerEvents: "none", // Allow clicking through to scroll
+              "& > *": {
+                pointerEvents: "auto", // Re-enable clicks on children
+              },
             }}
           >
             {/* Menu items - Animated */}
@@ -293,7 +303,8 @@ export function Home({
                 ))}
 
                 {/* Progress indicator */}
-                 {!fabMenuOpen && <Box
+                {!fabMenuOpen && (
+                  <Box
                     sx={{
                       bgcolor: "white",
                       borderRadius: 2,
@@ -303,7 +314,6 @@ export function Home({
                       textAlign: "center",
                       border: "1px solid",
                       borderColor: "grey.200",
-                      display: isMobile ? "block" : "none",
                     }}
                   >
                     <Typography
@@ -313,8 +323,8 @@ export function Home({
                     >
                       {currentIndex + 1}/{questionIds.length}
                     </Typography>
-                  </Box>}
-               
+                  </Box>
+                )}
 
                 {/* Main FAB Button */}
                 <Fab
@@ -330,6 +340,7 @@ export function Home({
                     },
                     transition: "all 0.3s ease",
                     boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+                    pointerEvents: "auto",
                   }}
                 >
                   {fabMenuOpen ? <Close /> : <MenuIcon size={24} />}
