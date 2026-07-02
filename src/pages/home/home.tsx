@@ -197,6 +197,7 @@ export function Home({
             px: { xs: 1.5, sm: 2, md: 3 },
             py: { xs: 0, sm: 1 },
             pb: bottomPadding, // Dynamic padding for FAB menu
+            mb: 15
           }}
         >
           {filteredQuestions
