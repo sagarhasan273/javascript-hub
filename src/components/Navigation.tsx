@@ -44,7 +44,7 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
   return (
     <>
       <AppBar
-        position="relative"
+        position="relative" // Changed from "fixed" to "relative"
         sx={{
           bgcolor: "white",
           color: "grey.800",
@@ -52,6 +52,7 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
           borderBottom: "1px solid",
           borderColor: "grey.200",
           zIndex: 1200,
+          flexShrink: 0,
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 3 } }}>
@@ -257,17 +258,15 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
                       {item.icon}
                     </ListItemIcon>
                     <ListItemText
-                      primary={
-                        <Typography
-                          component="span"
-                          sx={{
+                      primary={item.label}
+                      slotProps={{
+                        primary: {
+                          sx: {
                             fontWeight: isActive ? 600 : 400,
                             color: isActive ? "#2563eb" : "grey.700",
-                          }}
-                        >
-                          {item.label}
-                        </Typography>
-                      }
+                          },
+                        },
+                      }}
                     />
                     {isActive && (
                       <Box
@@ -286,7 +285,6 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
             
             <Divider sx={{ my: 2 }} />
             
-            {/* Close Drawer Button */}
             <ListItem disablePadding>
               <ListItemButton
                 onClick={toggleDrawer(false)}
