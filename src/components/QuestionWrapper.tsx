@@ -49,6 +49,8 @@ export function QuestionWrapper({
       elevation={0}
       sx={{
         p: 0,
+        width: "100%",
+        maxWidth: "100%",
         borderRadius: 4,
         border: "1px solid",
         borderColor: isActive ? "primary.main" : "grey.200",
@@ -110,7 +112,7 @@ export function QuestionWrapper({
       {/* Header Section */}
       <Box
         sx={{
-          p: { xs: 1.5, md: 3 },
+          p: { xs: 1, md: 3 },
           pt: { xs: 2, md: 3 },
           pb: 3,
           borderBottom: "1px solid",
@@ -135,10 +137,11 @@ export function QuestionWrapper({
             }}
             sx={{
               display: "flex",
-              alignItems: "center",
+              alignItems: { xs: "flex-start", sm: "center" },
               gap: 2,
               flex: 1,
               cursor: "pointer",
+              flexDirection: { xs: "column", sm: "row" },
             }}
           >
             {/* Question Number with Gradient */}
@@ -148,6 +151,7 @@ export function QuestionWrapper({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+
                 minWidth: 44,
                 height: 44,
               }}
@@ -320,7 +324,7 @@ export function QuestionWrapper({
       {/* Content Section */}
       <Box
         sx={{
-          p: {  xs: 2, md: 3, lg: 4 },
+          p: { xs: 2, md: 3, lg: 4 },
           pt: { xs: 2, md: 3, lg: 4 },
           display: isCollapsed ? "none" : "block",
           animation: isCollapsed ? "none" : "fadeIn 0.3s ease",
@@ -350,9 +354,3 @@ export function QuestionWrapper({
     </Paper>
   );
 }
-
-// Add animation keyframes globally or in your CSS
-// @keyframes sparkle {
-//   0%, 100% { opacity: 1; transform: scale(1); }
-//   50% { opacity: 0.5; transform: scale(0.8); }
-// }
