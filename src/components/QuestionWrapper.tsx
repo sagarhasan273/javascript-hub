@@ -7,6 +7,8 @@ import {
   alpha,
   IconButton,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   BookOpen,
@@ -33,6 +35,8 @@ export function QuestionWrapper({
   children,
   isActive = false,
 }: QuestionWrapperProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -112,7 +116,7 @@ export function QuestionWrapper({
       {/* Header Section */}
       <Box
         sx={{
-          p: { xs: 1, md: 3 },
+          p: { xs: 1.5, md: 3 },
           pt: { xs: 2, md: 3 },
           pb: 3,
           borderBottom: "1px solid",
@@ -123,65 +127,113 @@ export function QuestionWrapper({
           position: "relative",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: 2,
-          }}
-        >
-          <Box
-            onClick={() => {
-              setIsCollapsed(!isCollapsed);
-            }}
-            sx={{
-              display: "flex",
-              alignItems: { xs: "flex-start", sm: "center" },
-              gap: 2,
-              flex: 1,
-              cursor: "pointer",
-              flexDirection: { xs: "column", sm: "row" },
-            }}
-          >
-            {/* Question Number with Gradient */}
+        {isMobile ? (
+          // Mobile Layout - Stacked with Title in Second Row
+          <>
+            {/* First Row: Number + Action Buttons */}
             <Box
               sx={{
-                position: "relative",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-
-                minWidth: 44,
-                height: 44,
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
+              {/* Question Number */}
               <Box
-                sx={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: 2,
-                  background: isActive
-                    ? "linear-gradient(135deg, #2563eb, #7c3aed)"
-                    : "linear-gradient(135deg, #e2e8f0, #cbd5e1)",
-                  opacity: 0.1,
-                  transition: "all 0.3s ease",
+                onClick={() => {
+                  setIsCollapsed(!isCollapsed);
                 }}
-              />
-              <Typography
                 sx={{
-                  fontWeight: 800,
-                  fontSize: "0.9rem",
-                  color: isActive ? "#2563eb" : "grey.600",
                   position: "relative",
-                  zIndex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minWidth: 44,
+                  height: 44,
+                  flexShrink: 0,
+                  cursor: "pointer",
                 }}
               >
-                #{String(id).padStart(2, "0")}
-              </Typography>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: 2,
+                    background: isActive
+                      ? "linear-gradient(135deg, #2563eb, #7c3aed)"
+                      : "linear-gradient(135deg, #e2e8f0, #cbd5e1)",
+                    opacity: 0.1,
+                    transition: "all 0.3s ease",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontWeight: 800,
+                    fontSize: "0.9rem",
+                    color: isActive ? "#2563eb" : "grey.600",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  #{String(id).padStart(2, "0")}
+                </Typography>
+              </Box>
+
+              {/* Action Buttons */}
+              <Box sx={{ display: "flex", gap: 0.5, flexShrink: 0 }}>
+                <Tooltip title={isCopied ? "Copied!" : "Copy question"}>
+                  <IconButton
+                    onClick={handleCopy}
+                    size="small"
+                    sx={{
+                      borderRadius: 2,
+                      color: "grey.500",
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        bgcolor: alpha("#2563eb", 0.08),
+                        color: "#2563eb",
+                      },
+                    }}
+                  >
+                    {isCopied ? <Check size={18} /> : <Copy size={18} />}
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title={isCollapsed ? "Expand" : "Collapse"}>
+                  <IconButton
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    size="small"
+                    sx={{
+                      borderRadius: 2,
+                      color: "grey.500",
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        bgcolor: alpha("#2563eb", 0.08),
+                        color: "#2563eb",
+                      },
+                    }}
+                  >
+                    {isCollapsed ? (
+                      <ChevronDown size={18} />
+                    ) : (
+                      <ChevronUp size={18} />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </Box>
 
-            <Box sx={{ flex: 1 }}>
+            {/* Second Row: Title */}
+            <Box
+              onClick={() => {
+                setIsCollapsed(!isCollapsed);
+              }}
+              sx={{
+                mt: 1.5,
+                cursor: "pointer",
+              }}
+            >
               <Typography
                 variant="h5"
                 sx={{
@@ -192,6 +244,7 @@ export function QuestionWrapper({
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
+                  flexWrap: "wrap",
                 }}
               >
                 {title}
@@ -206,51 +259,137 @@ export function QuestionWrapper({
                 )}
               </Typography>
             </Box>
-          </Box>
-
-          {/* Action Buttons */}
-          <Box sx={{ display: "flex", gap: 0.5, flexShrink: 0 }}>
-            <Tooltip title={isCopied ? "Copied!" : "Copy question"}>
-              <IconButton
-                onClick={handleCopy}
-                size="small"
+          </>
+        ) : (
+          // Desktop Layout - Single Row
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 2,
+            }}
+          >
+            <Box
+              onClick={() => {
+                setIsCollapsed(!isCollapsed);
+              }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                flex: 1,
+                cursor: "pointer",
+              }}
+            >
+              {/* Question Number */}
+              <Box
                 sx={{
-                  borderRadius: 2,
-                  color: "grey.500",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    bgcolor: alpha("#2563eb", 0.08),
-                    color: "#2563eb",
-                  },
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minWidth: 44,
+                  height: 44,
+                  flexShrink: 0,
                 }}
               >
-                {isCopied ? <Check size={18} /> : <Copy size={18} />}
-              </IconButton>
-            </Tooltip>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: 2,
+                    background: isActive
+                      ? "linear-gradient(135deg, #2563eb, #7c3aed)"
+                      : "linear-gradient(135deg, #e2e8f0, #cbd5e1)",
+                    opacity: 0.1,
+                    transition: "all 0.3s ease",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontWeight: 800,
+                    fontSize: "0.9rem",
+                    color: isActive ? "#2563eb" : "grey.600",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  #{String(id).padStart(2, "0")}
+                </Typography>
+              </Box>
 
-            <Tooltip title={isCollapsed ? "Expand" : "Collapse"}>
-              <IconButton
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                size="small"
-                sx={{
-                  borderRadius: 2,
-                  color: "grey.500",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    bgcolor: alpha("#2563eb", 0.08),
-                    color: "#2563eb",
-                  },
-                }}
-              >
-                {isCollapsed ? (
-                  <ChevronDown size={18} />
-                ) : (
-                  <ChevronUp size={18} />
-                )}
-              </IconButton>
-            </Tooltip>
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: isActive ? "primary.main" : "grey.800",
+                    letterSpacing: "-0.3px",
+                    lineHeight: 1.3,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  {title}
+                  {isActive && (
+                    <Sparkles
+                      size={16}
+                      style={{
+                        color: "#fbbf24",
+                        animation: "sparkle 2s ease-in-out infinite",
+                      }}
+                    />
+                  )}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Action Buttons */}
+            <Box sx={{ display: "flex", gap: 0.5, flexShrink: 0 }}>
+              <Tooltip title={isCopied ? "Copied!" : "Copy question"}>
+                <IconButton
+                  onClick={handleCopy}
+                  size="small"
+                  sx={{
+                    borderRadius: 2,
+                    color: "grey.500",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      bgcolor: alpha("#2563eb", 0.08),
+                      color: "#2563eb",
+                    },
+                  }}
+                >
+                  {isCopied ? <Check size={18} /> : <Copy size={18} />}
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title={isCollapsed ? "Expand" : "Collapse"}>
+                <IconButton
+                  onClick={() => setIsCollapsed(!isCollapsed)}
+                  size="small"
+                  sx={{
+                    borderRadius: 2,
+                    color: "grey.500",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      bgcolor: alpha("#2563eb", 0.08),
+                      color: "#2563eb",
+                    },
+                  }}
+                >
+                  {isCollapsed ? (
+                    <ChevronDown size={18} />
+                  ) : (
+                    <ChevronUp size={18} />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
-        </Box>
+        )}
 
         {/* Definition with enhanced styling */}
         {definition && (
@@ -324,8 +463,8 @@ export function QuestionWrapper({
       {/* Content Section */}
       <Box
         sx={{
-          p: { xs: 2, md: 3, lg: 4 },
-          pt: { xs: 2, md: 3, lg: 4 },
+          p: { xs: 1, sm: 2, md: 3 },
+          pt: { xs: 1, sm: 2, md: 3 },
           display: isCollapsed ? "none" : "block",
           animation: isCollapsed ? "none" : "fadeIn 0.3s ease",
           "@keyframes fadeIn": {
