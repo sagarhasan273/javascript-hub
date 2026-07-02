@@ -787,6 +787,7 @@ export function Sidebar({
               background: "rgba(255,255,255,0.02)",
               borderRadius: 2,
               p: 1.5,
+              mb: 10
             }}
           >
             {[
@@ -836,11 +837,6 @@ export function Sidebar({
     return (
       <Box
         sx={{
-          display: "flex",
-          flexShrink: 0,
-          position: "sticky",
-          top: 0,
-          height: "calc(100dvh - 64px)",
           overflow: "hidden",
         }}
       >
@@ -858,7 +854,6 @@ export function Sidebar({
       sx={{
         "& .MuiDrawer-paper": {
           width: "100%",
-          height: "100dvh",
           boxSizing: "border-box",
           bgcolor: "transparent",
         },
