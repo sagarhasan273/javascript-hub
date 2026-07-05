@@ -10,6 +10,7 @@ import { Question06 } from './question_06';
 import { Question07 } from './question_07';
 import { Question08 } from './question_08';
 import { Question09 } from './question_09';
+import { Question10 } from './question_11';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -72,6 +73,12 @@ export const question09Meta = {
   definition: "Arrow functions (lambda expressions) are a concise way to write function expressions with lexical this binding, introduced in ES6.",
 };
 
+export const question10Meta = {
+  id: 11,
+  title: "What are lambda expressions or arrow functions?",
+  definition: "Arrow functions (lambda expressions) are a concise way to write function expressions with lexical this binding, introduced in ES6.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -112,6 +119,10 @@ export const questionRegistry = [
   {
     ...question09Meta,
     component: Question09,
+  },
+  {
+    ...question10Meta,
+    component: Question10,
   }
   // Add more here
 ];
