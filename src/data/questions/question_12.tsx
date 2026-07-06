@@ -13,17 +13,17 @@ import {
   Gap,
   UnorderedList,
 } from "../../components/content";
-import { question11Meta } from "./registry";
+import { question12Meta } from "./registry";
 import { useLevel } from "../../hooks";
 
-export function Question11({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+export function Question12({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
 
   return (
     <QuestionWrapper
-      id={question11Meta.id}
-      title={question11Meta.title}
-      definition={question11Meta.definition}
+      id={question12Meta.id}
+      title={question12Meta.title}
+      definition={question12Meta.definition}
       index={index}
       isActive={isActive}
     >
