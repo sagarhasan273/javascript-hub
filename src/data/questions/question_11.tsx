@@ -216,12 +216,12 @@ button.addEventListener('click', () => {
         <CardComponent variant="success" title="Perfect Use Cases">
           <UnorderedList
             items={[
-              'Callbacks - array methods (<InlineCode>map</InlineCode>, <InlineCode>filter</InlineCode>, <InlineCode>reduce</InlineCode>)',
-              'Timers - <InlineCode>setTimeout</InlineCode>, <InlineCode>setInterval</InlineCode>',
-              'Promises and async/await callbacks',
-              'React components and class methods (to auto-bind this)',
-              'Functional programming and data pipelines',
-              'When you want to preserve <InlineCode>this</InlineCode> context from parent scope',
+              <>Callbacks - array methods (<InlineCode>map</InlineCode>, <InlineCode>filter</InlineCode>, <InlineCode>reduce</InlineCode>)</>,
+              <>Timers - <InlineCode>setTimeout</InlineCode>, <InlineCode>setInterval</InlineCode></>,
+              <>Promises and async/await callbacks</>,
+              <>React components and class methods (to auto-bind this)</>,
+              <>Functional programming and data pipelines</>,
+              <>When you want to preserve <InlineCode>this</InlineCode> context from parent scope</>,
             ]}
           />
         </CardComponent>
@@ -230,12 +230,12 @@ button.addEventListener('click', () => {
         <CardComponent variant="warning" title="Avoid When">
           <UnorderedList
             items={[
-              'Object methods that need dynamic <InlineCode>this</InlineCode>',
-              'Constructors (<InlineCode>new</InlineCode> keyword)',
-              'Event handlers where you need <InlineCode>this</InlineCode> to refer to the element',
-              'When you need the <InlineCode>arguments</InlineCode> object',
-              'When you need to use <InlineCode>call()</InlineCode>, <InlineCode>apply()</InlineCode>, or <InlineCode>bind()</InlineCode>',
-              'When you need to access <InlineCode>new.target</InlineCode>',
+              <>Object methods that need dynamic <InlineCode>this</InlineCode></>,
+              <>Constructors (<InlineCode>new</InlineCode> keyword)</>,
+              <>Event handlers where you need <InlineCode>this</InlineCode> to refer to the element</>,
+              <>When you need the <InlineCode>arguments</InlineCode> object</>,
+              <>When you need to use <InlineCode>call()</InlineCode>, <InlineCode>apply()</InlineCode>, or <InlineCode>bind()</InlineCode></>,
+              <>When you need to access <InlineCode>new.target</InlineCode></>,
             ]}
           />
         </CardComponent>

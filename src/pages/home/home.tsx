@@ -22,6 +22,7 @@ import {
 } from "../../data/questions/registry";
 import { Sidebar } from "../../components/Sidebar";
 import { Close } from "@mui/icons-material";
+import { useLocation } from "react-router-dom";
 
 interface HomeProps {
   mobileSidebarOpen?: boolean;
@@ -35,6 +36,7 @@ export function Home({
   onMobileSidebarToggle,
 }: HomeProps) {
   const theme = useTheme();
+  const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(
     null,
@@ -46,15 +48,64 @@ export function Home({
   });
   const [fabMenuOpen, setFabMenuOpen] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
+  const hasScrolledToQuestion = useRef(false);
 
+  // Initialize question IDs and check URL for question parameter
   useEffect(() => {
     const ids = questionRegistry.map((q) => q.id).sort((a, b) => a - b);
     setQuestionIds(ids);
+
+    // Check URL for question parameter
+    const params = new URLSearchParams(location.search);
+    const questionId = params.get("question");
+
+    if (questionId) {
+      const id = parseInt(questionId, 10);
+      const exists = ids.some((qId) => qId === id);
+      if (exists) {
+        setCurrentQuestionId(id);
+        hasScrolledToQuestion.current = false;
+        return;
+      }
+    }
+
+    // If no valid question ID in URL, set to first question
     if (ids.length > 0) {
       setCurrentQuestionId(ids[0]);
     }
-  }, []);
+  }, [location.search]);
 
+  // Scroll to the question when currentQuestionId changes
+  useEffect(() => {
+    if (
+      currentQuestionId &&
+      mainContentRef.current &&
+      !hasScrolledToQuestion.current
+    ) {
+      hasScrolledToQuestion.current = true;
+      setTimeout(() => {
+        const element = document.getElementById(
+          `question-${currentQuestionId}`,
+        );
+        if (element && mainContentRef.current) {
+          const container = mainContentRef.current;
+          const elementRect = element.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+
+          const offset = 80;
+          const scrollTop =
+            elementRect.top - containerRect.top + container.scrollTop - offset;
+
+          container.scrollTo({
+            top: Math.max(0, scrollTop),
+            behavior: "smooth",
+          });
+        }
+      }, 300);
+    }
+  }, [currentQuestionId]);
+
+  // Listen for sidebar width changes from other tabs/windows
   useEffect(() => {
     const handleStorageChange = () => {
       const saved = localStorage.getItem("sidebar-width");
@@ -66,10 +117,24 @@ export function Home({
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
+  // Update URL when question changes
+  useEffect(() => {
+    if (currentQuestionId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("question", currentQuestionId.toString());
+      window.history.pushState(
+        { questionId: currentQuestionId },
+        "",
+        url.toString(),
+      );
+    }
+  }, [currentQuestionId]);
+
   const handleSelectQuestion = (id: number) => {
     setCurrentQuestionId(id);
     setFabMenuOpen(false);
-    
+    hasScrolledToQuestion.current = false;
+
     // Use requestAnimationFrame for smoother scrolling
     requestAnimationFrame(() => {
       setTimeout(() => {
@@ -78,13 +143,13 @@ export function Home({
           const container = mainContentRef.current;
           const elementRect = element.getBoundingClientRect();
           const containerRect = container.getBoundingClientRect();
-          
-          // Calculate scroll position with offset for the navigation bar
-          const offset = 80; // Adjust based on your nav height
-          const scrollTop = elementRect.top - containerRect.top + container.scrollTop - offset;
-          
+
+          const offset = 80;
+          const scrollTop =
+            elementRect.top - containerRect.top + container.scrollTop - offset;
+
           container.scrollTo({
-            top: scrollTop,
+            top: Math.max(0, scrollTop),
             behavior: "smooth",
           });
         }
@@ -164,10 +229,12 @@ export function Home({
   ];
 
   // Calculate bottom padding for content
-  const fabMenuHeight = isMobile 
-    ? (fabMenuOpen ? (fabItems.length * 56 + 70) : 70)
+  const fabMenuHeight = isMobile
+    ? fabMenuOpen
+      ? fabItems.length * 56 + 70
+      : 70
     : 250;
-  const bottomPadding = isMobile ? `${fabMenuHeight + 20}px` : '100px';
+  const bottomPadding = isMobile ? `${fabMenuHeight + 20}px` : "100px";
 
   return (
     <Box
