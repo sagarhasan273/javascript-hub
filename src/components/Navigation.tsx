@@ -109,7 +109,7 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
               >
                 Q
               </Box>
-              Q&A Builder
+              JavaScript Q&A Daily
               {!isMobile && questionCount > 0 && (
                 <Badge
                   badgeContent={questionCount}

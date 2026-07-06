@@ -433,7 +433,7 @@ export function Sidebar({
             >
               <Code size={24} style={{ color: "#60a5fa" }} />
             </Box>
-            Q&A Builder
+            JavaScript Q&A Daily
           </Typography>
           {!isMobile && (
             <Badge
