@@ -1,4 +1,4 @@
-// data/questions/Question10.tsx
+// data/questions/Question11.tsx
 import { Box } from "@mui/material";
 import { QuestionWrapper } from "../../components/QuestionWrapper";
 import { LevelContent } from "../../components/LevelContent";
@@ -15,18 +15,18 @@ import {
   InlineCode,
   UnorderedList,
 } from "../../components/content";
-import { question10Meta } from "./registry";
+import { question11Meta } from "./registry";
 import { useLevel } from "../../hooks";
 
 
-export function Question10({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+export function Question11({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
 
   return (
     <QuestionWrapper
-      id={question10Meta.id}
-      title={question10Meta.title}
-      definition={question10Meta.definition}
+      id={question11Meta.id}
+      title={question11Meta.title}
+      definition={question11Meta.definition}
       index={index}
       isActive={isActive}
     >
