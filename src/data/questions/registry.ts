@@ -13,6 +13,13 @@ import { Question10 } from "./question_10";
 import { Question11 } from "./question_11";
 import { Question12 } from "./question_12";
 import { Question13 } from "./question_13";
+import { Question14 } from "./question_14";
+import { Question15 } from "./question_15";
+import { Question16 } from "./question_16";
+import { Question17 } from "./question_17";
+import { Question18 } from "./question_18";
+import { Question19 } from "./question_19";
+import { Question20 } from "./question_20";
 // Import more as you create them
 
 export const question01Meta: QuestionMeta = {
@@ -106,6 +113,49 @@ export const question13Meta = {
     "A first-order function is a function that does not take another function as an argument and does not return a function as its result. It works directly with primitive values and data structures.",
 };
 
+export const question14Meta = {
+  id: 14,
+  title: "What is a higher order function?",
+  definition: "A higher-order function is a function that takes one or more functions as arguments, returns a function, or both. It enables code reuse, abstraction, and functional programming patterns.",
+};
+
+export const question15Meta = {
+  id: 15,
+  title: "What is a unary function?",
+  definition: "A unary function is a function that takes exactly one argument. It is fundamental to functional programming and enables composition, currying, and point-free style programming.",
+};
+
+export const question16Meta = {
+  id: 16,
+  title: "What is the currying function?",
+  definition: "Currying is a functional programming technique where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument.",
+};
+
+export const question17Meta = {
+  id: 17,
+  title: "What is a pure function?",
+  definition: "A pure function always produces the same output for the same input and has no side effects, making it predictable and easy to test.",
+};
+
+export const question18Meta = {
+  id: 18,
+  title: "What are the benefits of pure functions?",
+  definition: "Pure functions offer predictability, testability, cacheability, composability, and easier debugging, making code more maintainable and reliable.",
+};
+
+export const question19Meta = {
+  id: 19,
+  title: "What is the purpose of the let keyword?",
+  definition: "let is used to declare block-scoped variables that can be reassigned, providing a safer alternative to var with better scoping and no hoisting issues.",
+};
+
+export const question20Meta = {
+  id: 20,
+  title: "What is the reason to choose the name let as a keyword?",
+  definition: "The name 'let' was chosen for its mathematical origins, historical use in other programming languages, and its clear meaning as a variable declaration keyword.",
+};
+
+
 export const questionRegistry = [
   {
     ...question01Meta,
@@ -159,6 +209,34 @@ export const questionRegistry = [
     ...question13Meta,
     component: Question13,
   },
+  {
+    ...question14Meta,
+    component: Question14,
+  },
+  {
+    ...question15Meta,
+    component: Question15,
+  },
+  {
+    ...question16Meta,
+    component: Question16,
+  },
+  {
+    ...question17Meta,
+    component: Question17,
+  },
+  {
+    ...question18Meta,
+    component: Question18,
+  },
+  {
+    ...question19Meta,
+    component: Question19,
+  },
+  {
+    ...question20Meta,
+    component: Question20,
+  }
   // Add more here
 ];
 
