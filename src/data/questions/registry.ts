@@ -11,6 +11,7 @@ import { Question07 } from './question_07';
 import { Question08 } from './question_08';
 import { Question09 } from './question_09';
 import { Question10 } from './question_11';
+import { Question11 } from './question_12';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -79,6 +80,12 @@ export const question10Meta = {
   definition: "Arrow functions (lambda expressions) are a concise way to write function expressions with lexical this binding, introduced in ES6.",
 };
 
+export const question11Meta = {
+  id: 12,
+  title: "What is a first class function?",
+  definition: "A first-class function is a function that can be treated like any other value - assigned to variables, passed as arguments, returned from functions, and stored in data structures.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -123,6 +130,10 @@ export const questionRegistry = [
   {
     ...question10Meta,
     component: Question10,
+  },
+  {
+    ...question11Meta,
+    component: Question11,
   }
   // Add more here
 ];
