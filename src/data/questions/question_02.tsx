@@ -6,20 +6,20 @@ import {
   Title,
   PlainText,
   Bold,
-  Divider,
-  CardComponent,
-  HLText,
   CodeComponent,
-  Note,
+  Divider,
   Gap,
-  TableComponent,
+  Note,
   InlineCode,
+  CardComponent,
   UnorderedList,
+  TableComponent,
+  HLText,
 } from '../../components/content';
 import { question02Meta } from './registry';
 import { useLevel } from '../../hooks';
 
-export function Question02({ isActive = false }: { index?: number; isActive?: boolean }) {
+export function Question02({  isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
 
   return (
@@ -31,11 +31,7 @@ export function Question02({ isActive = false }: { index?: number; isActive?: bo
     >
       {/* Introduction - Shown at all levels */}
       <PlainText>
-        The prototype chain is a core concept in JavaScript's inheritance model. It allows objects to inherit properties and methods from other objects.
-      </PlainText>
-
-      <PlainText>
-        When you try to access a property or method on an object, JavaScript first looks for it on that object itself. If it's not found, the engine looks up the object's internal <InlineCode>[[Prototype]]</InlineCode> reference (accessible via <InlineCode>Object.getPrototypeOf(obj)</InlineCode> or the deprecated <InlineCode>__proto__</InlineCode> property) and continues searching up the chain until it finds the property or reaches the end (usually <InlineCode>null</InlineCode>).
+        There are many ways to create objects in JavaScript as mentioned below:
       </PlainText>
 
       {/* ============================================ */}
@@ -44,70 +40,99 @@ export function Question02({ isActive = false }: { index?: number; isActive?: bo
       <LevelContent level="beginner" currentLevel={level}>
         <Title level={3}>
           <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🌱</Box>
-          Beginner: Understanding Prototypes
+          Beginner: Object Creation Basics
         </Title>
 
         <PlainText>
-          Think of the prototype chain like a <Bold>family tree</Bold> for objects. Just like you inherit traits from your parents, objects inherit properties from their prototypes.
+          Let's start with the <Bold>most common</Bold> and <Bold>easiest</Bold> ways to create objects in JavaScript:
         </PlainText>
 
-        <CardComponent variant="info" title="🎯 Simple Analogy">
-          <PlainText>
-            • <Bold>Object</Bold> = A child<br />
-            • <Bold>Prototype</Bold> = Parent<br />
-            • <Bold>Prototype Chain</Bold> = Family tree (grandparents, great-grandparents, etc.)
-          </PlainText>
-        </CardComponent>
-
+        {/* 1. Object literal syntax - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📝</Box>
+          1. Object literal syntax
+        </Title>
         <PlainText>
-          <Bold>Example: Creating a simple prototype chain</Bold>
+          The object literal syntax (or object initializer), is a comma-separated set of name-value pairs wrapped in curly braces.
         </PlainText>
 
         <CodeComponent
-          code={`// Create a parent object
-const animal = {
-  eats: true,
-  walk() {
-    console.log("Animal is walking");
-  }
-};
-
-// Create a child object that inherits from animal
-const rabbit = {
-  jumps: true,
-  __proto__: animal  // rabbit inherits from animal
-};
-
-// rabbit can use properties from animal
-console.log(rabbit.eats);   // true (inherited from animal)
-console.log(rabbit.jumps);  // true (own property)
-
-// rabbit can use methods from animal
-rabbit.walk(); // "Animal is walking"
-
-// How to check the prototype
-console.log(Object.getPrototypeOf(rabbit) === animal); // true`}
+          code={`var object = {
+  name: "Sudheer",
+  age: 34,
+};`}
           language="javascript"
-          title="prototype-basics.js"
+          title="object-literal.js"
           defaultOpen={true}
         />
 
-        <Note type="info" icon="💡">
-          <Bold>Remember:</Bold> When you try to access a property, JavaScript looks for it on the object. If it's not there, it looks at the object's prototype, then that prototype's prototype, and so on until it finds it or reaches <InlineCode>null</InlineCode>.
+        <PlainText>
+          Object literal property values can be of any data type, including array, function, and nested object.
+        </PlainText>
+
+        <Note type="info">
+          <Bold>📌 Note:</Bold> This is one of the easiest ways to create an object and it's most commonly used for creating simple, ad-hoc objects.
         </Note>
 
-        <CardComponent variant="success" title="✅ Key Points for Beginners">
+        <Gap size={2} />
+
+        {/* 2. Object constructor - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚠️</Box>
+          2. Object constructor
+        </Title>
+        <PlainText>
+          The simplest way to create an empty object is using the <InlineCode>Object</InlineCode> constructor. Currently this approach is <Bold>not recommended</Bold>.
+        </PlainText>
+
+        <CodeComponent
+          code={`var object = new Object();`}
+          language="javascript"
+          title="object-constructor.js"
+          defaultOpen={true}
+        />
+
+        <Note type="warning">
+          ⚠️ This approach is not recommended for creating objects. Use <Bold>object literal syntax</Bold> instead.
+        </Note>
+
+        <Gap size={2} />
+
+        {/* 7. ES6 Class syntax - Beginner */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f43f5e', mr: 1 }}>✨</Box>
+          7. ES6 Class syntax
+        </Title>
+        <PlainText>
+          ES6 introduces class feature to create objects. This is <Bold>syntactic sugar</Bold> over the prototype-based system and is the <Bold>recommended</Bold> way for OOP.
+        </PlainText>
+
+        <CodeComponent
+          code={`class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+var object = new Person("Sudheer");`}
+          language="javascript"
+          title="es6-class.js"
+          defaultOpen={true}
+        />
+
+        <Note type="info">
+          💡 <Bold>Tip:</Bold> ES6 Classes are now the preferred way for object-oriented programming in JavaScript. They provide a cleaner, more intuitive syntax.
+        </Note>
+
+        <CardComponent variant="success" title="✅ Beginner Summary">
           <UnorderedList
             items={[
-              <>Every object has a <Bold>prototype</Bold> (except <InlineCode>Object.prototype</InlineCode>)</>,
-              <>The <Bold>prototype chain</Bold> allows objects to share properties and methods</>,
-              <>You can access an object's prototype with <InlineCode>Object.getPrototypeOf(obj)</InlineCode></>,
-              <>The chain ends when the prototype is <InlineCode>null</InlineCode></>,
+              <>Use <Bold>object literals</Bold> for simple, one-off objects</>,
+              <>Use <Bold>ES6 Classes</Bold> for object-oriented programming</>,
+              <>Avoid <Bold>Object constructor</Bold> (use literals instead)</>,
             ]}
           />
         </CardComponent>
-
-        <Gap size={2} />
       </LevelContent>
 
       {/* ============================================ */}
@@ -118,95 +143,161 @@ console.log(Object.getPrototypeOf(rabbit) === animal); // true`}
 
         <Title level={3}>
           <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚡</Box>
-          Advanced: Constructor Functions & Prototypes
+          Advanced: Object Creation Patterns
         </Title>
 
+        {/* 3. Object's create method - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔗</Box>
+          3. Object's create method
+        </Title>
         <PlainText>
-          For objects created via constructor functions, the prototype chain works differently. Let's explore:
+          The <InlineCode>create</InlineCode> method of Object is used to create a new object by passing the specified prototype object and properties as arguments. This pattern is helpful to create new objects based on existing objects, useful for setting up <Bold>prototypal inheritance</Bold>.
+        </PlainText>
+
+        <PlainText>
+          The following code creates a new empty object whose prototype is null:
         </PlainText>
 
         <CodeComponent
-          code={`// Constructor function
-function Person(name, age) {
-  this.name = name;
-  this.age = age;
-}
-
-// Adding methods to the prototype
-Person.prototype.greet = function() {
-  return \`Hello, I'm \${this.name}\`;
-};
-
-// Creating instances
-const alice = new Person('Alice', 30);
-const bob = new Person('Bob', 25);
-
-// Both instances share the same method
-console.log(alice.greet()); // Hello, I'm Alice
-console.log(bob.greet());   // Hello, I'm Bob
-
-// Both instances share the same prototype
-console.log(Object.getPrototypeOf(alice) === Person.prototype); // true
-console.log(Object.getPrototypeOf(bob) === Person.prototype);   // true
-
-// The prototype chain:
-// alice → Person.prototype → Object.prototype → null
-console.log(alice.name);                    // 'Alice' (own property)
-console.log(alice.greet());                 // Found on Person.prototype
-console.log(alice.toString());              // Found on Object.prototype
-console.log(alice.nonExistent);             // undefined (not found)`}
+          code={`var object = Object.create(null);`}
           language="javascript"
-          title="constructor-prototypes.js"
+          title="object-create.js"
           defaultOpen={true}
         />
 
         <PlainText>
-          <Bold>Understanding the Prototype Chain:</Bold>
+          The following example creates an object along with additional new properties:
         </PlainText>
 
-        <CardComponent variant="info" title="📊 Prototype Chain Structure">
-          <PlainText component="div">
-            • <Bold>Instance</Bold> → Own properties (name, age)<br />
-            • ↓ <Bold>[[Prototype]]</Bold> → <Bold>Constructor.prototype</Bold> (shared methods)<br />
-            • ↓ <Bold>[[Prototype]]</Bold> → <Bold>Object.prototype</Bold> (toString, valueOf, etc.)<br />
-            • ↓ <Bold>[[Prototype]]</Bold> → <Bold>null</Bold> (end of chain)
-          </PlainText>
-        </CardComponent>
+        <CodeComponent
+          code={`let vehicle = {
+  wheels: "4",
+  fuelType: "Gasoline",
+  color: "Green",
+};
 
-        <TableComponent
-          headers={['Object', 'Prototype', 'Description']}
-          rows={[
-            ['alice', 'Person.prototype', 'Instance of Person'],
-            ['Person.prototype', 'Object.prototype', 'Shared methods for Person'],
-            ['Object.prototype', 'null', 'Base prototype (end of chain)'],
-          ]}
+let carProps = {
+  type: {
+    value: "Volkswagen",
+  },
+  model: {
+    value: "Golf",
+  },
+};
+
+var car = Object.create(vehicle, carProps);
+console.log(car);`}
+          language="javascript"
+          title="object-create-example.js"
+          defaultOpen={true}
         />
 
-        <Title level={4}>When to Use Prototypes (Advanced)</Title>
-        <CardComponent variant="success" title="✅ Do's">
-          <UnorderedList
-            items={[
-              <>Use <InlineCode>Object.getPrototypeOf()</InlineCode> to access prototypes</>,
-              <>Use <InlineCode>Object.setPrototypeOf()</InlineCode> carefully if needed</>,
-              <>Prefer ES6 classes for cleaner inheritance</>,
-              <>Use <InlineCode>hasOwnProperty()</InlineCode> to check for own properties</>,
-              <>Use prototypes to <Bold>share methods</Bold> across instances (memory efficient)</>,
-            ]}
-          />
-        </CardComponent>
+        <Gap size={2} />
 
-        <CardComponent variant="warning" title="⚠️ Don'ts">
-          <UnorderedList
-            items={[
-              <>Don't use <InlineCode>__proto__</InlineCode> in production (deprecated)</>,
-              <>Avoid modifying built-in prototypes (<InlineCode>Array.prototype</InlineCode>, <InlineCode>Object.prototype</InlineCode>)</>,
-              <>Don't create deep prototype chains (affects performance)</>,
-              <>Avoid using <InlineCode>for...in</InlineCode> without checking <InlineCode>hasOwnProperty()</InlineCode></>,
-            ]}
-          />
-        </CardComponent>
+        {/* 4. Function constructor - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🏗️</Box>
+          4. Function constructor
+        </Title>
+        <PlainText>
+          In this approach, create any function and apply the <InlineCode>new</InlineCode> operator to create object instances. This was the main way to do constructor-based OOP before ES6 classes.
+        </PlainText>
+
+        <CodeComponent
+          code={`function Person(name) {
+  this.name = name;
+  this.age = 21;
+}
+var object = new Person("Sudheer");`}
+          language="javascript"
+          title="function-constructor.js"
+          defaultOpen={true}
+        />
 
         <Gap size={2} />
+
+        {/* 5. Function constructor with prototype - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🧬</Box>
+          5. Function constructor with prototype
+        </Title>
+        <PlainText>
+          This is similar to function constructor but it uses prototype for their properties and methods. Using prototype means you're <Bold>sharing methods/properties across instances</Bold>, which saves memory and improves performance.
+        </PlainText>
+
+        <CodeComponent
+          code={`function Person() {}
+Person.prototype.name = "Sudheer";
+var object = new Person();`}
+          language="javascript"
+          title="function-prototype.js"
+          defaultOpen={true}
+        />
+
+        <PlainText>
+          This is equivalent to creating an instance with Object.create method with a function prototype and then calling that function with an instance and parameters as arguments:
+        </PlainText>
+
+        <CodeComponent
+          code={`function func(x, y, z) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+}
+
+var instance = new func(1, 2, 3);
+
+// OR
+
+function func(x, y, z) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+}
+// Create a new instance using function prototype.
+var newInstance = Object.create(func.prototype);
+
+// Call the function
+var result = func.call(newInstance, 1, 2, 3);
+
+console.log(result && typeof result === 'object' ? result : newInstance);`}
+          language="javascript"
+          title="function-prototype-alternative.js"
+          defaultOpen={false}
+        />
+
+        <Gap size={2} />
+
+        {/* 6. Object's assign method - Advanced */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>📋</Box>
+          6. Object's assign method
+        </Title>
+        <PlainText>
+          The <InlineCode>Object.assign</InlineCode> method is used to copy all the properties from one or more source objects and stores them into a target object. This is mainly used for <Bold>cloning</Bold> and <Bold>merging</Bold>.
+        </PlainText>
+
+        <CodeComponent
+          code={`const orgObject = { company: "XYZ Corp" };
+const carObject = { name: "Toyota" };
+const staff = Object.assign({}, orgObject, carObject);`}
+          language="javascript"
+          title="object-assign.js"
+          defaultOpen={true}
+        />
+
+        <CardComponent variant="info" title="📊 Advanced Comparison">
+          <TableComponent
+            headers={['Method', 'Use Case', 'When to Use']}
+            rows={[
+              ['Object.create()', 'Prototypal inheritance', 'When you need to set prototypes'],
+              ['Function constructor', 'Traditional OOP', 'Pre-ES6 codebases'],
+              ['Function constructor + prototype', 'Memory efficient', 'Shared methods across instances'],
+              ['Object.assign()', 'Cloning/Merging', 'When you need to combine objects'],
+            ]}
+          />
+        </CardComponent>
       </LevelContent>
 
       {/* ============================================ */}
@@ -217,141 +308,111 @@ console.log(alice.nonExistent);             // undefined (not found)`}
 
         <Title level={3}>
           <Box component="span" sx={{ color: '#ef4444', mr: 1 }}>🚀</Box>
-          Expert: Advanced Prototype Patterns
+          Expert: Advanced Patterns & Best Practices
         </Title>
 
+        {/* 8. Singleton pattern - Expert */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>🔒</Box>
+          8. Singleton pattern
+        </Title>
         <PlainText>
-          Deep dive into advanced prototype patterns, performance, and best practices:
+          A Singleton is an object which can only be instantiated <Bold>one time</Bold>. Repeated calls to its constructor return the same instance. This ensures you don't accidentally create multiple instances.
         </PlainText>
 
+        <Title level={4}>Singleton with Closure (Classic JS Pattern)</Title>
+
         <CodeComponent
-          code={`// 1. Prototype inheritance without classes
-function Animal(name) {
-  this.name = name;
-}
+          code={`const Singleton = (function () {
+  let instance;
 
-Animal.prototype.speak = function() {
-  console.log(\`\${this.name} makes a sound\`);
-};
-
-function Dog(name, breed) {
-  Animal.call(this, name); // Call parent constructor
-  this.breed = breed;
-}
-
-// Set up prototype chain
-Dog.prototype = Object.create(Animal.prototype);
-Dog.prototype.constructor = Dog;
-
-// Add Dog-specific methods
-Dog.prototype.bark = function() {
-  console.log(\`\${this.name} barks\`);
-};
-
-const dog = new Dog('Rex', 'German Shepherd');
-dog.speak(); // Rex makes a sound
-dog.bark();  // Rex barks
-
-// 2. Multiple inheritance with mixins
-const CanFly = {
-  fly() {
-    console.log(\`\${this.name} is flying\`);
+  function createInstance() {
+    return { name: "Sudheer" };
   }
-};
 
-const CanSwim = {
-  swim() {
-    console.log(\`\${this.name} is swimming\`);
-  }
-};
+  return {
+    getInstance: function () {
+      if (!instance) {
+        instance = createInstance();
+      }
+      return instance;
+    }
+  };
+})();
 
-function Duck(name) {
-  this.name = name;
-}
+// Usage
+const obj1 = Singleton.getInstance();
+const obj2 = Singleton.getInstance();
 
-// Mix in multiple prototypes
-Object.assign(Duck.prototype, CanFly, CanSwim);
-
-const duck = new Duck('Donald');
-duck.fly();  // Donald is flying
-duck.swim(); // Donald is swimming
-
-// 3. Object.create for prototypal inheritance
-const animalProto = {
-  init(name) {
-    this.name = name;
-    return this;
-  },
-  speak() {
-    console.log(\`\${this.name} makes a sound\`);
-  }
-};
-
-const cat = Object.create(animalProto).init('Whiskers');
-cat.speak(); // Whiskers makes a sound
-
-// 4. Performance optimization with prototypes
-function optimizedFunction(name) {
-  // Use prototype for methods, not instances
-  // Avoid creating methods inside constructor
-}
-
-// 5. Checking prototype chain
-function getPrototypeChain(obj) {
-  const chain = [];
-  let current = obj;
-  while (current !== null) {
-    chain.push(current);
-    current = Object.getPrototypeOf(current);
-  }
-  return chain;
-}
-
-console.log(getPrototypeChain(dog));
-// [Dog, Animal, Object.prototype, null]`}
+console.log(obj1 === obj2); // true`}
           language="javascript"
-          title="expert-patterns.js"
-          defaultOpen={false}
+          title="singleton-pattern.js"
+          defaultOpen={true}
         />
 
-        <Title level={4}>⚡ Performance Considerations</Title>
+        <PlainText>
+          In modern JavaScript applications, singletons are commonly implemented using <Bold>ES6 modules</Bold> for their built-in caching behavior, or closures for encapsulated state management.
+        </PlainText>
 
-        <CardComponent variant="info" title="Performance Tips">
-          <UnorderedList
-            items={[
-              <>Prototype lookups are <Bold>slower</Bold> than own property lookups</>,
-              <>Deep prototype chains <Bold>decrease</Bold> performance</>,
-              <>Methods on prototype are <Bold>shared</Bold> across instances (memory efficient)</>,
-              <>In JavaScript engines, prototype lookups are heavily optimized</>,
-              <>Use <Bold>Object.create(null)</Bold> for pure dictionary objects (no prototype chain)</>,
+        <Note type="info">
+          💡 <Bold>Pro Tip:</Bold> While singletons can be useful, be cautious about overusing them as they can make your code harder to test and debug.
+        </Note>
+
+        <Gap size={2} />
+
+        <Title level={4}>🔬 Expert Insights: When to Use What</Title>
+
+        <CardComponent variant="info" title="📊 Complete Comparison">
+          <TableComponent
+            headers={['Method', 'Use Case', 'Performance', 'Modern Usage']}
+            rows={[
+              ['Object literal', 'Simple objects', 'Fast', '✅ Recommended'],
+              ['Object constructor', 'Avoid', 'Slow', '❌ Deprecated'],
+              ['Object.create()', 'Prototypal inheritance', 'Good', '✅ Recommended'],
+              ['Function constructor', 'Legacy OOP', 'Good', '⚠️ Legacy'],
+              ['Function constructor + prototype', 'Shared methods', 'Good', '⚠️ Legacy'],
+              ['Object.assign()', 'Cloning/Merging', 'Good', '✅ Recommended'],
+              ['ES6 Classes', 'Modern OOP', 'Good', '✅ Recommended'],
+              ['Singleton', 'Single instance', 'Good', '⚠️ Use sparingly'],
             ]}
           />
         </CardComponent>
 
-        <Title level={4}>💡 Expert Tips</Title>
+        <Title level={4}>💡 Expert Tips & Best Practices</Title>
 
         <CardComponent variant="default" title="Pro Insights">
           <UnorderedList
             items={[
-              <>Use <Bold>ES6 Classes</Bold> for cleaner prototype syntax</>,
-              <>Understand the difference between <InlineCode>prototype</InlineCode> and <InlineCode>[[Prototype]]</InlineCode></>,
-              <>Use <Bold>Object.create()</Bold> for simple prototypal inheritance</>,
-              <>Avoid modifying built-in prototypes (<Bold>never</Bold> extend <InlineCode>Array.prototype</InlineCode>)</>,
-              <>Use <Bold>Object.getPrototypeOf()</Bold> instead of <InlineCode>__proto__</InlineCode></>,
-              <>Understand that <Bold>prototype chain</Bold> lookups are dynamic (can be changed at runtime)</>,
+              <>For <Bold>simple objects</Bold>, always use <Bold>object literals</Bold></>,
+              <>For <Bold>complex OOP</Bold>, use <Bold>ES6 Classes</Bold> (cleaner syntax)</>,
+              <>Use <Bold>Object.create()</Bold> for <Bold>prototypal inheritance</Bold> without classes</>,
+              <>Use <Bold>Object.assign()</Bold> for <Bold>shallow cloning</Bold> and merging</>,
+              <>Avoid <Bold>constructor functions</Bold> in modern code (use classes instead)</>,
+              <>Use <Bold>Singleton pattern</Bold> only when truly necessary</>,
+              <>Consider <Bold>performance implications</Bold> for large-scale applications</>,
+            ]}
+          />
+        </CardComponent>
+
+        <CardComponent variant="success" title="✅ Modern Best Practices">
+          <UnorderedList
+            items={[
+              <>Use <Bold>object literals</Bold> for DTOs and simple data structures</>,
+              <>Use <Bold>ES6 Classes</Bold> for domain models and business logic</>,
+              <>Use <Bold>Object.create()</Bold> for flexible prototypal inheritance</>,
+              <>Use <Bold>Object.assign()</Bold> for immutable updates (in React, Redux)</>,
+              <>Use <Bold>factory functions</Bold> for encapsulation and privacy</>,
             ]}
           />
         </CardComponent>
 
         <HLText type="info">
-          💡 <Bold>Expert Insight:</Bold> The prototype chain is JavaScript's native inheritance mechanism. While ES6 classes provide a cleaner syntax, they are <Bold>syntactic sugar</Bold> over the prototype system. Understanding prototypes is essential for advanced JavaScript development.
+          💡 <Bold>Expert Insight:</Bold> Choose your object creation method based on your <Bold>use case</Bold>. For modern applications, prefer <Bold>object literals</Bold> and <Bold>ES6 Classes</Bold>. Use <Bold>Object.create()</Bold> when you need fine-grained control over prototypes. Avoid the <Bold>Object constructor</Bold> entirely.
         </HLText>
 
         <Note type="warning" icon="⚠️">
-          <Bold>Expert Warning:</Bold> While prototypes are powerful, don't over-engineer inheritance hierarchies. Prefer <Bold>composition over inheritance</Bold> and use ES6 classes when possible. Deep prototype chains can make code <Bold>harder to understand and debug</Bold>.
+          <Bold>Expert Warning:</Bold> The <Bold>Object constructor</Bold> (<InlineCode>new Object()</InlineCode>) is considered <Bold>bad practice</Bold> in modern JavaScript. Always use <Bold>object literals</Bold> instead. It's faster, cleaner, and more readable.
         </Note>
-
-        <Gap size={2} />
       </LevelContent>
 
       {/* ============================================ */}
@@ -360,117 +421,58 @@ console.log(getPrototypeChain(dog));
       <Divider />
 
       <Title level={3}>
-        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>📌</Box>
+        <Box component="span" sx={{ color: '#fbbf24', mr: 1 }}>📌</Box>
         Summary
       </Title>
-
-      <Box
-        sx={{
-          bgcolor: 'rgba(96, 165, 250, 0.04)',
-          borderRadius: 2,
-          p: 3,
-          border: '1px solid',
-          borderColor: 'rgba(96, 165, 250, 0.1)',
-          mb: 3,
-        }}
-      >
-        <PlainText component="div">
-          • The prototype chain enables <Bold>inheritance</Bold> in JavaScript.<br />
-          • If a property isn't found on an object, JavaScript looks up its <Bold>prototype chain</Bold>.<br />
-          • The prototype of an object instance can be accessed with <InlineCode>Object.getPrototypeOf(obj)</InlineCode>.<br />
-          • The prototype of a constructor function is available via <InlineCode>constructor.prototype</InlineCode>.<br />
-          • The chain ends when the prototype is <InlineCode>null</InlineCode>.<br />
-          • ES6 classes are <Bold>syntactic sugar</Bold> over the prototype system.
-        </PlainText>
-      </Box>
-
-      {/* Prototype Chain Diagram - Shown at all levels */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>🔗</Box>
-        Prototype Chain Diagram
-      </Title>
       <PlainText>
-        Here's a visual representation of the prototype chain:
+        JavaScript offers multiple ways to create objects, each with its own use cases:
       </PlainText>
 
-      <Box
-        sx={{
-          bgcolor: '#0a0f1e',
-          borderRadius: 2,
-          p: 3,
-          overflowX: 'auto',
-          border: '1px solid rgba(255,255,255,0.05)',
-          my: 2,
-          fontFamily: 'monospace',
-          fontSize: '0.9rem',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Box sx={{ 
-            bgcolor: 'rgba(96, 165, 250, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #2563eb',
-            minWidth: 120,
-            textAlign: 'center',
-          }}>
-            <Box sx={{ color: '#60a5fa', fontWeight: 700 }}>instance</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem' }}>({'{...}'})</Box>
-          </Box>
+      <CardComponent variant="info" title="🎯 Quick Reference">
+        <UnorderedList
+          items={[
+            <><Bold>Object literal</Bold> - Best for simple, one-off objects</>,
+            <><Bold>Object constructor</Bold> - Not recommended (use literal instead)</>,
+            <><Bold>Object.create()</Bold> - Best for prototypal inheritance</>,
+            <><Bold>Function constructor</Bold> - Traditional OOP approach (pre-ES6)</>,
+            <><Bold>Function constructor with prototype</Bold> - Memory efficient shared methods</>,
+            <><Bold>Object.assign()</Bold> - Best for cloning and merging objects</>,
+            <><Bold>ES6 Classes</Bold> - Modern OOP approach (recommended)</>,
+            <><Bold>Singleton pattern</Bold> - Single instance across the application</>,
+          ]}
+        />
+      </CardComponent>
 
-          <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.5rem' }}>→</Box>
+      <Gap size={2} />
 
-          <Box sx={{ 
-            bgcolor: 'rgba(139, 92, 246, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #8b5cf6',
-            minWidth: 120,
-            textAlign: 'center',
-          }}>
-            <Box sx={{ color: '#a78bfa', fontWeight: 700 }}>Constructor.prototype</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem' }}>(shared methods)</Box>
-          </Box>
-
-          <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.5rem' }}>→</Box>
-
-          <Box sx={{ 
-            bgcolor: 'rgba(251, 191, 36, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #fbbf24',
-            minWidth: 120,
-            textAlign: 'center',
-          }}>
-            <Box sx={{ color: '#fcd34d', fontWeight: 700 }}>Object.prototype</Box>
-            <Box sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem' }}>(base prototype)</Box>
-          </Box>
-
-          <Box sx={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.5rem' }}>→</Box>
-
-          <Box sx={{ 
-            bgcolor: 'rgba(239, 68, 68, 0.2)', 
-            p: 2, 
-            borderRadius: 2,
-            border: '2px solid #ef4444',
-            minWidth: 80,
-            textAlign: 'center',
-          }}>
-            <Box sx={{ color: '#fca5a5', fontWeight: 700 }}>null</Box>
-          </Box>
-        </Box>
-      </Box>
-
-      <Note type="info" icon="🔍">
-        <Bold>Visual Explanation:</Bold> The chain starts from the instance → goes to the constructor's prototype → then to Object.prototype → and finally ends at null. This is the complete prototype chain lookup path.
+      <Note type="success">
+        📝 <Bold>Recommendation:</Bold> For most modern JavaScript applications, use <Bold>object literals</Bold> for simple objects and <Bold>ES6 Classes</Bold> for more complex object-oriented designs.
       </Note>
 
+      {/* Quick Comparison Table */}
+      <Title level={3}>
+        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>📊</Box>
+        Quick Comparison
+      </Title>
+
+      <TableComponent
+        headers={['Method', 'Use Case', 'Recommended']}
+        rows={[
+          ['Object literal', 'Simple objects', '✅ Yes'],
+          ['Object constructor', 'Avoid', '❌ No'],
+          ['Object.create()', 'Prototypal inheritance', '✅ Yes'],
+          ['Function constructor', 'Legacy OOP', '⚠️ Optional'],
+          ['ES6 Classes', 'Modern OOP', '✅ Yes'],
+          ['Singleton', 'Single instance', '⚠️ Use sparingly'],
+        ]}
+      />
+
       <HLText type="info">
-        💡 <Bold>Pro Tip:</Bold> Understanding the prototype chain is crucial for mastering JavaScript's inheritance model and writing efficient, reusable code. It's the foundation for <Bold>object-oriented</Bold> and <Bold>functional</Bold> programming in JavaScript.
+        💡 <Bold>Pro Tip:</Bold> When in doubt, start with <Bold>object literals</Bold>. They're simple, fast, and work perfectly for 90% of use cases. Only reach for classes or other patterns when you need more structure or reuse.
       </HLText>
 
       <Note type="success" icon="🎉">
-        <Bold>Remember:</Bold> The prototype chain is what makes JavaScript's prototypal inheritance possible. Master it, and you'll unlock the full power of the language!
+        <Bold>Remember:</Bold> The best way to create an object depends on your <Bold>specific use case</Bold>. Choose wisely based on your needs for simplicity, reuse, and maintainability!
       </Note>
     </QuestionWrapper>
   );
