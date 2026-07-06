@@ -12,6 +12,7 @@ import { Question08 } from './question_08';
 import { Question09 } from './question_09';
 import { Question10 } from './question_11';
 import { Question11 } from './question_12';
+import { Question12 } from './question_13';
 // Import more as you create them
 
 export const question00Meta: QuestionMeta = {
@@ -86,6 +87,12 @@ export const question11Meta = {
   definition: "A first-class function is a function that can be treated like any other value - assigned to variables, passed as arguments, returned from functions, and stored in data structures.",
 };
 
+export const question12Meta = {
+  id: 13,
+  title: "What is a first order function?",
+  definition: "A first-order function is a function that does not take another function as an argument and does not return a function as its result. It works directly with primitive values and data structures.",
+};
+
 export const questionRegistry = [
   {
     ...question00Meta,
@@ -134,9 +141,14 @@ export const questionRegistry = [
   {
     ...question11Meta,
     component: Question11,
-  }
+  },
+  {
+    ...question12Meta,
+    component: Question12,
+  },
   // Add more here
 ];
+  
 
 export const questionMetadata = questionRegistry.map(({ id, title, definition }) => ({
   id,
