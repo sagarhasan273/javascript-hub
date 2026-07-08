@@ -21,6 +21,7 @@ import { Question18 } from "./question_18";
 import { Question19 } from "./question_19";
 import { Question20 } from "./question_20";
 import { Question21 } from "./question_21";
+import { Question22 } from "./question_22";
 // Import more as you create them
 
 export const question01Meta: QuestionMeta = {
@@ -162,6 +163,12 @@ export const question21Meta = {
   definition: "To redeclare variables in a switch block, wrap each case clause in curly braces {} to create a new block scope, preventing redeclaration errors with let and const.",
 };
 
+export const question22Meta = {
+  id: 22,
+  title: "What is the difference between let and var?",
+  definition: "The main differences between let and var are scope (block vs function), hoisting behavior (TDZ vs undefined), redeclaration rules, and global scope attachment.",
+};
+
 
 export const questionRegistry = [
   {
@@ -248,6 +255,10 @@ export const questionRegistry = [
     ...question21Meta,
     component: Question21,
   },
+  {
+    ...question22Meta,
+    component: Question22,
+  }
   // Add more here
 ];
 
