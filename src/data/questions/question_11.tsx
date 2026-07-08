@@ -1,4 +1,4 @@
-// data/questions/Question10.tsx
+// data/questions/Question11.tsx
 import { Box } from "@mui/material";
 import { QuestionWrapper } from "../../components/QuestionWrapper";
 import { LevelContent } from "../../components/LevelContent";
@@ -15,18 +15,18 @@ import {
   InlineCode,
   UnorderedList,
 } from "../../components/content";
-import { question10Meta } from "./registry";
+import { question11Meta } from "./registry";
 import { useLevel } from "../../hooks";
 
 
-export function Question10({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
+export function Question11({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
 
   return (
     <QuestionWrapper
-      id={question10Meta.id}
-      title={question10Meta.title}
-      definition={question10Meta.definition}
+      id={question11Meta.id}
+      title={question11Meta.title}
+      definition={question11Meta.definition}
       index={index}
       isActive={isActive}
     >
@@ -216,12 +216,12 @@ button.addEventListener('click', () => {
         <CardComponent variant="success" title="Perfect Use Cases">
           <UnorderedList
             items={[
-              'Callbacks - array methods (<InlineCode>map</InlineCode>, <InlineCode>filter</InlineCode>, <InlineCode>reduce</InlineCode>)',
-              'Timers - <InlineCode>setTimeout</InlineCode>, <InlineCode>setInterval</InlineCode>',
-              'Promises and async/await callbacks',
-              'React components and class methods (to auto-bind this)',
-              'Functional programming and data pipelines',
-              'When you want to preserve <InlineCode>this</InlineCode> context from parent scope',
+              <>Callbacks - array methods (<InlineCode>map</InlineCode>, <InlineCode>filter</InlineCode>, <InlineCode>reduce</InlineCode>)</>,
+              <>Timers - <InlineCode>setTimeout</InlineCode>, <InlineCode>setInterval</InlineCode></>,
+              <>Promises and async/await callbacks</>,
+              <>React components and class methods (to auto-bind this)</>,
+              <>Functional programming and data pipelines</>,
+              <>When you want to preserve <InlineCode>this</InlineCode> context from parent scope</>,
             ]}
           />
         </CardComponent>
@@ -230,12 +230,12 @@ button.addEventListener('click', () => {
         <CardComponent variant="warning" title="Avoid When">
           <UnorderedList
             items={[
-              'Object methods that need dynamic <InlineCode>this</InlineCode>',
-              'Constructors (<InlineCode>new</InlineCode> keyword)',
-              'Event handlers where you need <InlineCode>this</InlineCode> to refer to the element',
-              'When you need the <InlineCode>arguments</InlineCode> object',
-              'When you need to use <InlineCode>call()</InlineCode>, <InlineCode>apply()</InlineCode>, or <InlineCode>bind()</InlineCode>',
-              'When you need to access <InlineCode>new.target</InlineCode>',
+              <>Object methods that need dynamic <InlineCode>this</InlineCode></>,
+              <>Constructors (<InlineCode>new</InlineCode> keyword)</>,
+              <>Event handlers where you need <InlineCode>this</InlineCode> to refer to the element</>,
+              <>When you need the <InlineCode>arguments</InlineCode> object</>,
+              <>When you need to use <InlineCode>call()</InlineCode>, <InlineCode>apply()</InlineCode>, or <InlineCode>bind()</InlineCode></>,
+              <>When you need to access <InlineCode>new.target</InlineCode></>,
             ]}
           />
         </CardComponent>

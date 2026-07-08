@@ -1,4 +1,4 @@
-// data/questions/Question01.tsx
+// data/questions/Question04.tsx
 import { Box } from '@mui/material';
 import { QuestionWrapper } from '../../components/QuestionWrapper';
 import { LevelContent } from '../../components/LevelContent';
@@ -6,20 +6,18 @@ import {
   Title,
   PlainText,
   Bold,
-  CodeComponent,
-  Divider,
-  Gap,
-  Note,
-  InlineCode,
   CardComponent,
-  UnorderedList,
-  TableComponent,
   HLText,
+  CodeComponent,
+  Note,
+  Gap,
+  UnorderedList,
 } from '../../components/content';
 import { question01Meta } from './registry';
 import { useLevel } from '../../hooks';
 
-export function Question01({  isActive = false }: { index?: number; isActive?: boolean }) {
+
+export function Question01({ isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
 
   return (
@@ -31,7 +29,7 @@ export function Question01({  isActive = false }: { index?: number; isActive?: b
     >
       {/* Introduction - Shown at all levels */}
       <PlainText>
-        There are many ways to create objects in JavaScript as mentioned below:
+        JavaScript is a high-level, interpreted programming language that is primarily used to create interactive and dynamic content on websites. It is one of the core technologies of the World Wide Web, alongside HTML and CSS.
       </PlainText>
 
       {/* ============================================ */}
@@ -40,96 +38,73 @@ export function Question01({  isActive = false }: { index?: number; isActive?: b
       <LevelContent level="beginner" currentLevel={level}>
         <Title level={3}>
           <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🌱</Box>
-          Beginner: Object Creation Basics
+          Beginner: What is JavaScript?
         </Title>
 
         <PlainText>
-          Let's start with the <Bold>most common</Bold> and <Bold>easiest</Bold> ways to create objects in JavaScript:
+          JavaScript is a <Bold>programming language</Bold> that makes websites <Bold>interactive</Bold> and <Bold>dynamic</Bold>. It's one of the three core technologies of the web:
         </PlainText>
 
-        {/* 1. Object literal syntax - Beginner */}
-        <Title level={3}>
-          <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>📝</Box>
-          1. Object literal syntax
-        </Title>
-        <PlainText>
-          The object literal syntax (or object initializer), is a comma-separated set of name-value pairs wrapped in curly braces.
-        </PlainText>
-
-        <CodeComponent
-          code={`var object = {
-  name: "Sudheer",
-  age: 34,
-};`}
-          language="javascript"
-          title="object-literal.js"
-          defaultOpen={true}
-        />
-
-        <PlainText>
-          Object literal property values can be of any data type, including array, function, and nested object.
-        </PlainText>
-
-        <Note type="info">
-          <Bold>📌 Note:</Bold> This is one of the easiest ways to create an object and it's most commonly used for creating simple, ad-hoc objects.
-        </Note>
-
-        <Gap size={2} />
-
-        {/* 2. Object constructor - Beginner */}
-        <Title level={3}>
-          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚠️</Box>
-          2. Object constructor
-        </Title>
-        <PlainText>
-          The simplest way to create an empty object is using the <InlineCode>Object</InlineCode> constructor. Currently this approach is <Bold>not recommended</Bold>.
-        </PlainText>
-
-        <CodeComponent
-          code={`var object = new Object();`}
-          language="javascript"
-          title="object-constructor.js"
-          defaultOpen={true}
-        />
-
-        <Note type="warning">
-          ⚠️ This approach is not recommended for creating objects. Use <Bold>object literal syntax</Bold> instead.
-        </Note>
-
-        <Gap size={2} />
-
-        {/* 7. ES6 Class syntax - Beginner */}
-        <Title level={3}>
-          <Box component="span" sx={{ color: '#f43f5e', mr: 1 }}>✨</Box>
-          7. ES6 Class syntax
-        </Title>
-        <PlainText>
-          ES6 introduces class feature to create objects. This is <Bold>syntactic sugar</Bold> over the prototype-based system and is the <Bold>recommended</Bold> way for OOP.
-        </PlainText>
-
-        <CodeComponent
-          code={`class Person {
-  constructor(name) {
-    this.name = name;
-  }
-}
-
-var object = new Person("Sudheer");`}
-          language="javascript"
-          title="es6-class.js"
-          defaultOpen={true}
-        />
-
-        <Note type="info">
-          💡 <Bold>Tip:</Bold> ES6 Classes are now the preferred way for object-oriented programming in JavaScript. They provide a cleaner, more intuitive syntax.
-        </Note>
-
-        <CardComponent variant="success" title="✅ Beginner Summary">
+        <CardComponent variant="info" title="🎯 The Three Core Web Technologies">
           <UnorderedList
             items={[
-              <>Use <Bold>object literals</Bold> for simple, one-off objects</>,
-              <>Use <Bold>ES6 Classes</Bold> for object-oriented programming</>,
-              <>Avoid <Bold>Object constructor</Bold> (use literals instead)</>,
+              <><Bold>HTML</Bold> - Structure (the skeleton)</>,
+              <><Bold>CSS</Bold> - Style (the clothes)</>,
+              <><Bold>JavaScript</Bold> - Behavior (the brain)</>,
+            ]}
+          />
+        </CardComponent>
+
+        <PlainText>
+          <Bold>What makes JavaScript special?</Bold>
+        </PlainText>
+
+        <CardComponent variant="success" title="✅ Key Characteristics (Beginner)">
+          <UnorderedList
+            items={[
+              <>📄 <Bold>Interpreted:</Bold> Runs directly in your browser without compilation</>,
+              <>🎯 <Bold>Dynamic:</Bold> You don't need to specify data types</>,
+              <>🔄 <Bold>Event-driven:</Bold> Responds to clicks, scrolls, and user actions</>,
+              <>🌐 <Bold>Everywhere:</Bold> Works in all modern browsers</>,
+              <>🚀 <Bold>Beginner-friendly:</Bold> Easy to start, with immediate visual results</>,
+            ]}
+          />
+        </CardComponent>
+
+        <PlainText>
+          <Bold>Simple Example:</Bold>
+        </PlainText>
+
+        <CodeComponent
+          code={`// This is a simple JavaScript program
+console.log("Hello, World!");
+
+// Variables - store data
+let name = "John";
+const age = 25;
+
+// Functions - reusable code blocks
+function greet(person) {
+  return "Hello, " + person + "!";
+}
+
+console.log(greet(name)); // Hello, John!`}
+          language="javascript"
+          title="hello-world.js"
+          defaultOpen={true}
+        />
+
+        <Note type="info" icon="💡">
+          <Bold>Beginner Tip:</Bold> You can write JavaScript directly in your browser's console (F12 → Console tab) and see results immediately!
+        </Note>
+
+        <CardComponent variant="success" title="✅ Beginner Checklist">
+          <UnorderedList
+            items={[
+              <>✔️ JavaScript makes websites interactive</>,
+              <>✔️ It runs in your browser without installation</>,
+              <>✔️ You can start writing code today</>,
+              <>✔️ It's the most popular programming language</>,
             ]}
           />
         </CardComponent>
@@ -139,340 +114,408 @@ var object = new Person("Sudheer");`}
       {/* ADVANCED LEVEL */}
       {/* ============================================ */}
       <LevelContent level="advanced" currentLevel={level}>
-        <Divider sx={{ my: 3 }} />
+        <Gap size={2} />
 
         <Title level={3}>
           <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>⚡</Box>
-          Advanced: Object Creation Patterns
+          Advanced: JavaScript Ecosystem & Features
         </Title>
 
-        {/* 3. Object's create method - Advanced */}
+        {/* What JavaScript Can Do */}
         <Title level={3}>
-          <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🔗</Box>
-          3. Object's create method
+          <Box component="span" sx={{ color: '#2563eb', mr: 1 }}>🚀</Box>
+          What Can JavaScript Do?
         </Title>
-        <PlainText>
-          The <InlineCode>create</InlineCode> method of Object is used to create a new object by passing the specified prototype object and properties as arguments. This pattern is helpful to create new objects based on existing objects, useful for setting up <Bold>prototypal inheritance</Bold>.
-        </PlainText>
 
-        <PlainText>
-          The following code creates a new empty object whose prototype is null:
-        </PlainText>
+        <CardComponent variant="info" title="🌐 Full-Stack Capabilities">
+          <UnorderedList
+            items={[
+              <>🎨 <Bold>Frontend:</Bold> Create interactive UIs with React, Vue, Angular</>,
+              <>🖥️ <Bold>Backend:</Bold> Build servers with Node.js, Express, NestJS</>,
+              <>📱 <Bold>Mobile:</Bold> Build cross-platform apps with React Native</>,
+              <>💻 <Bold>Desktop:</Bold> Create desktop apps with Electron, Tauri</>,
+              <>🤖 <Bold>AI/ML:</Bold> Use TensorFlow.js for machine learning</>,
+              <>🎮 <Bold>Gaming:</Bold> Create games with Phaser, Babylon.js, Three.js</>,
+              <>🔌 <Bold>IoT:</Bold> Control hardware with Johnny-Five, Arduino</>,
+            ]}
+          />
+        </CardComponent>
+
+        {/* JavaScript Evolution */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>📜</Box>
+          A Brief History
+        </Title>
 
         <CodeComponent
-          code={`var object = Object.create(null);`}
+          code={`// JavaScript Timeline
+1995 - Brendan Eich created JavaScript at Netscape in just 10 days
+1996 - Microsoft created JScript (IE's version of JavaScript)
+1997 - JavaScript became an ECMA standard (ECMAScript)
+2009 - Node.js was released, bringing JavaScript to the server
+2015 - ECMAScript 6 (ES6) introduced major features:
+  • Classes
+  • Arrow functions
+  • let/const
+  • Template literals
+  • Promises
+  • Destructuring
+  • Modules
+
+Today - JavaScript is the most popular programming language in the world!`}
           language="javascript"
-          title="object-create.js"
+          title="javascript-history.js"
           defaultOpen={true}
         />
 
-        <PlainText>
-          The following example creates an object along with additional new properties:
-        </PlainText>
-
-        <CodeComponent
-          code={`let vehicle = {
-  wheels: "4",
-  fuelType: "Gasoline",
-  color: "Green",
-};
-
-let carProps = {
-  type: {
-    value: "Volkswagen",
-  },
-  model: {
-    value: "Golf",
-  },
-};
-
-var car = Object.create(vehicle, carProps);
-console.log(car);`}
-          language="javascript"
-          title="object-create-example.js"
-          defaultOpen={true}
-        />
+        <Note type="info" icon="📌">
+          <Bold>Fun Fact:</Bold> JavaScript was originally named "Mocha" by Brendan Eich, then renamed to "LiveScript" before finally settling on "JavaScript" for marketing reasons (to ride the popularity of Java at the time).
+        </Note>
 
         <Gap size={2} />
 
-        {/* 4. Function constructor - Advanced */}
+        {/* JavaScript vs Other Languages */}
         <Title level={3}>
-          <Box component="span" sx={{ color: '#06b6d4', mr: 1 }}>🏗️</Box>
-          4. Function constructor
+          <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>📊</Box>
+          JavaScript vs Other Languages
         </Title>
-        <PlainText>
-          In this approach, create any function and apply the <InlineCode>new</InlineCode> operator to create object instances. This was the main way to do constructor-based OOP before ES6 classes.
-        </PlainText>
 
         <CodeComponent
-          code={`function Person(name) {
-  this.name = name;
-  this.age = 21;
-}
-var object = new Person("Sudheer");`}
-          language="javascript"
-          title="function-constructor.js"
-          defaultOpen={true}
-        />
+          code={`// Python vs JavaScript
+// Python
+def greet(name):
+    return f"Hello, {name}"
 
-        <Gap size={2} />
-
-        {/* 5. Function constructor with prototype - Advanced */}
-        <Title level={3}>
-          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>🧬</Box>
-          5. Function constructor with prototype
-        </Title>
-        <PlainText>
-          This is similar to function constructor but it uses prototype for their properties and methods. Using prototype means you're <Bold>sharing methods/properties across instances</Bold>, which saves memory and improves performance.
-        </PlainText>
-
-        <CodeComponent
-          code={`function Person() {}
-Person.prototype.name = "Sudheer";
-var object = new Person();`}
-          language="javascript"
-          title="function-prototype.js"
-          defaultOpen={true}
-        />
-
-        <PlainText>
-          This is equivalent to creating an instance with Object.create method with a function prototype and then calling that function with an instance and parameters as arguments:
-        </PlainText>
-
-        <CodeComponent
-          code={`function func(x, y, z) {
-  this.x = x;
-  this.y = y;
-  this.z = z;
+// JavaScript
+function greet(name) {
+    return \`Hello, \${name}\`;
 }
 
-var instance = new func(1, 2, 3);
+// Java vs JavaScript
+// Java - Static typing
+String name = "John";
 
-// OR
+// JavaScript - Dynamic typing
+let name = "John";
+name = 42; // Works fine!
 
-function func(x, y, z) {
-  this.x = x;
-  this.y = y;
-  this.z = z;
-}
-// Create a new instance using function prototype.
-var newInstance = Object.create(func.prototype);
-
-// Call the function
-var result = func.call(newInstance, 1, 2, 3);
-
-console.log(result && typeof result === 'object' ? result : newInstance);`}
+// Comparison
+// JavaScript: Dynamic, interpreted, runs in browser
+// Python: Dynamic, interpreted, general purpose
+// Java: Static, compiled, enterprise applications`}
           language="javascript"
-          title="function-prototype-alternative.js"
+          title="language-comparison.js"
           defaultOpen={false}
         />
 
         <Gap size={2} />
 
-        {/* 6. Object's assign method - Advanced */}
+        {/* Core Concepts */}
         <Title level={3}>
-          <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>📋</Box>
-          6. Object's assign method
+          <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>🧠</Box>
+          Core Concepts to Master
         </Title>
-        <PlainText>
-          The <InlineCode>Object.assign</InlineCode> method is used to copy all the properties from one or more source objects and stores them into a target object. This is mainly used for <Bold>cloning</Bold> and <Bold>merging</Bold>.
-        </PlainText>
 
-        <CodeComponent
-          code={`const orgObject = { company: "XYZ Corp" };
-const carObject = { name: "Toyota" };
-const staff = Object.assign({}, orgObject, carObject);`}
-          language="javascript"
-          title="object-assign.js"
-          defaultOpen={true}
-        />
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr 1fr', sm: '1fr 1fr 1fr', md: '1fr 1fr 1fr' },
+            gap: 2,
+            my: 2,
+          }}
+        >
+          {[
+            { title: 'Variables', icon: '📦', color: '#2563eb' },
+            { title: 'Data Types', icon: '🔢', color: '#8b5cf6' },
+            { title: 'Functions', icon: '🔧', color: '#f59e0b' },
+            { title: 'Objects', icon: '📋', color: '#06b6d4' },
+            { title: 'Arrays', icon: '📚', color: '#10b981' },
+            { title: 'Promises', icon: '🤝', color: '#ec4899' },
+            { title: 'Classes', icon: '🏗️', color: '#f472b6' },
+            { title: 'Modules', icon: '📦', color: '#8b5cf6' },
+            { title: 'Events', icon: '🎯', color: '#fbbf24' },
+          ].map((item) => (
+            <Box
+              key={item.title}
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.8)',
+                borderRadius: 2,
+                p: 2,
+                border: '1px solid',
+                borderColor: 'grey.200',
+                textAlign: 'center',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                  borderColor: item.color,
+                },
+              }}
+            >
+              <Box sx={{ fontSize: '2rem', mb: 1 }}>{item.icon}</Box>
+              <Box sx={{ fontWeight: 600, color: item.color }}>{item.title}</Box>
+            </Box>
+          ))}
+        </Box>
 
-        <CardComponent variant="info" title="📊 Advanced Comparison">
-          <TableComponent
-            headers={['Method', 'Use Case', 'When to Use']}
-            rows={[
-              ['Object.create()', 'Prototypal inheritance', 'When you need to set prototypes'],
-              ['Function constructor', 'Traditional OOP', 'Pre-ES6 codebases'],
-              ['Function constructor + prototype', 'Memory efficient', 'Shared methods across instances'],
-              ['Object.assign()', 'Cloning/Merging', 'When you need to combine objects'],
-            ]}
-          />
-        </CardComponent>
+        <Note type="info" icon="💡">
+          <Bold>Advanced Tip:</Bold> Mastering these concepts is the key to becoming a proficient JavaScript developer. Start with variables and functions, then progress to objects and asynchronous programming.
+        </Note>
       </LevelContent>
 
       {/* ============================================ */}
       {/* EXPERT LEVEL */}
       {/* ============================================ */}
       <LevelContent level="expert" currentLevel={level}>
-        <Divider sx={{ my: 3 }} />
+        <Gap size={2} />
 
         <Title level={3}>
           <Box component="span" sx={{ color: '#ef4444', mr: 1 }}>🚀</Box>
-          Expert: Advanced Patterns & Best Practices
+          Expert: Deep Dive & Professional Insights
         </Title>
 
-        {/* 8. Singleton pattern - Expert */}
+        {/* Why Learn JavaScript? */}
         <Title level={3}>
-          <Box component="span" sx={{ color: '#ec4899', mr: 1 }}>🔒</Box>
-          8. Singleton pattern
+          <Box component="span" sx={{ color: '#10b981', mr: 1 }}>💪</Box>
+          Why Learn JavaScript? (Expert Perspective)
         </Title>
-        <PlainText>
-          A Singleton is an object which can only be instantiated <Bold>one time</Bold>. Repeated calls to its constructor return the same instance. This ensures you don't accidentally create multiple instances.
-        </PlainText>
 
-        <Title level={4}>Singleton with Closure (Classic JS Pattern)</Title>
-
-        <CodeComponent
-          code={`const Singleton = (function () {
-  let instance;
-
-  function createInstance() {
-    return { name: "Sudheer" };
-  }
-
-  return {
-    getInstance: function () {
-      if (!instance) {
-        instance = createInstance();
-      }
-      return instance;
-    }
-  };
-})();
-
-// Usage
-const obj1 = Singleton.getInstance();
-const obj2 = Singleton.getInstance();
-
-console.log(obj1 === obj2); // true`}
-          language="javascript"
-          title="singleton-pattern.js"
-          defaultOpen={true}
-        />
-
-        <PlainText>
-          In modern JavaScript applications, singletons are commonly implemented using <Bold>ES6 modules</Bold> for their built-in caching behavior, or closures for encapsulated state management.
-        </PlainText>
-
-        <Note type="info">
-          💡 <Bold>Pro Tip:</Bold> While singletons can be useful, be cautious about overusing them as they can make your code harder to test and debug.
-        </Note>
-
-        <Gap size={2} />
-
-        <Title level={4}>🔬 Expert Insights: When to Use What</Title>
-
-        <CardComponent variant="info" title="📊 Complete Comparison">
-          <TableComponent
-            headers={['Method', 'Use Case', 'Performance', 'Modern Usage']}
-            rows={[
-              ['Object literal', 'Simple objects', 'Fast', '✅ Recommended'],
-              ['Object constructor', 'Avoid', 'Slow', '❌ Deprecated'],
-              ['Object.create()', 'Prototypal inheritance', 'Good', '✅ Recommended'],
-              ['Function constructor', 'Legacy OOP', 'Good', '⚠️ Legacy'],
-              ['Function constructor + prototype', 'Shared methods', 'Good', '⚠️ Legacy'],
-              ['Object.assign()', 'Cloning/Merging', 'Good', '✅ Recommended'],
-              ['ES6 Classes', 'Modern OOP', 'Good', '✅ Recommended'],
-              ['Singleton', 'Single instance', 'Good', '⚠️ Use sparingly'],
+        <CardComponent variant="success" title="🎯 Strategic Reasons">
+          <UnorderedList
+            items={[
+              <>🌐 <Bold>Universal Language:</Bold> Only language that runs natively in browsers</>,
+              <>💼 <Bold>Career Opportunities:</Bold> 70%+ of developer jobs require JavaScript</>,
+              <>🔧 <Bold>Full-Stack:</Bold> Use the same language across the entire stack</>,
+              <>📈 <Bold>Massive Ecosystem:</Bold> Over 2 million packages on npm</>,
+              <>🔄 <Bold>Continuous Evolution:</Bold> Annual updates with new features</>,
+              <>👥 <Bold>Community:</Bold> Largest developer community with endless resources</>,
+              <>⚡ <Bold>Performance:</Bold> V8 engine makes JavaScript incredibly fast</>,
             ]}
           />
         </CardComponent>
+
+        {/* Simple JavaScript Example */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f472b6', mr: 1 }}>💻</Box>
+          Professional JavaScript Example
+        </Title>
+
+        <CodeComponent
+          code={`// Professional JavaScript with modern features
+// 1. ES6+ Features
+const greet = (name) => \`Hello, \${name}!\`;
+
+// 2. Destructuring
+const user = { id: 1, name: 'Alice', role: 'Developer' };
+const { name, role } = user;
+
+// 3. Async/Await for API calls
+const fetchUserData = async (userId) => {
+  try {
+    const response = await fetch(\`/api/users/\${userId}\`);
+    if (!response.ok) throw new Error('Network error');
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to fetch:', error);
+    return null;
+  }
+};
+
+// 4. Functional Programming
+const processData = (data) =>
+  data
+    .filter(item => item.active)
+    .map(item => ({ ...item, processed: true }))
+    .reduce((acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    }, {});
+
+// 5. Classes and Inheritance
+class BaseModel {
+  constructor(data) {
+    this.id = data.id;
+    this.createdAt = new Date();
+  }
+  
+  validate() {
+    return this.id !== undefined;
+  }
+}
+
+class UserModel extends BaseModel {
+  constructor(data) {
+    super(data);
+    this.name = data.name;
+    this.email = data.email;
+  }
+  
+  get displayName() {
+    return \`\${this.name} (\${this.email})\`;
+  }
+}
+
+// 6. Error Handling
+const safeExecution = (fn, fallback) => {
+  try {
+    return fn();
+  } catch (error) {
+    console.error('Error:', error.message);
+    return fallback;
+  }
+};`}
+          language="javascript"
+          title="professional-javascript.js"
+          defaultOpen={false}
+        />
+
+        {/* Modern JavaScript */}
+        <Title level={3}>
+          <Box component="span" sx={{ color: '#f59e0b', mr: 1 }}>✨</Box>
+          Modern JavaScript (ES6+) - Expert Edition
+        </Title>
+
+        <CodeComponent
+          code={`// Modern JavaScript features for experts
+
+// 1. Optional Chaining
+const user = { profile: { name: "John" } };
+console.log(user.profile?.name); // John
+console.log(user.profile?.age);  // undefined
+
+// 2. Nullish Coalescing
+const value = null ?? 'default'; // 'default'
+const zero = 0 ?? 'default';     // 0
+
+// 3. Dynamic Imports
+const module = await import('./module.js');
+
+// 4. Generators
+function* idGenerator() {
+  let id = 0;
+  while (true) {
+    yield id++;
+  }
+}
+const gen = idGenerator();
+console.log(gen.next().value); // 0
+console.log(gen.next().value); // 1
+
+// 5. Proxies
+const handler = {
+  get(target, property) {
+    console.log(\`Getting \${property}\`);
+    return target[property];
+  }
+};
+const proxy = new Proxy({ name: 'John' }, handler);
+console.log(proxy.name); // Logs: Getting name
+
+// 6. Private Fields (ES2022)
+class Person {
+  #privateField = 'secret';
+  
+  getSecret() {
+    return this.#privateField;
+  }
+}
+
+// 7. Top-level await
+const data = await fetch('/api/data');
+console.log(data);`}
+          language="javascript"
+          title="modern-javascript-expert.js"
+          defaultOpen={false}
+        />
 
         <Title level={4}>💡 Expert Tips & Best Practices</Title>
 
         <CardComponent variant="default" title="Pro Insights">
           <UnorderedList
             items={[
-              <>For <Bold>simple objects</Bold>, always use <Bold>object literals</Bold></>,
-              <>For <Bold>complex OOP</Bold>, use <Bold>ES6 Classes</Bold> (cleaner syntax)</>,
-              <>Use <Bold>Object.create()</Bold> for <Bold>prototypal inheritance</Bold> without classes</>,
-              <>Use <Bold>Object.assign()</Bold> for <Bold>shallow cloning</Bold> and merging</>,
-              <>Avoid <Bold>constructor functions</Bold> in modern code (use classes instead)</>,
-              <>Use <Bold>Singleton pattern</Bold> only when truly necessary</>,
-              <>Consider <Bold>performance implications</Bold> for large-scale applications</>,
+              <>Master <Bold>asynchronous programming</Bold> (Promises, async/await)</>,
+              <>Understand <Bold>event loop</Bold> and how it affects performance</>,
+              <>Learn <Bold>functional programming</Bold> patterns in JavaScript</>,
+              <>Use <Bold>TypeScript</Bold> for type safety in production code</>,
+              <>Follow <Bold>clean code</Bold> principles and patterns</>,
+              <>Stay up-to-date with <Bold>ES proposals</Bold> and new features</>,
+              <>Build <Bold>large-scale applications</Bold> with proper architecture</>,
             ]}
           />
         </CardComponent>
 
-        <CardComponent variant="success" title="✅ Modern Best Practices">
+        <CardComponent variant="info" title="📊 JavaScript Ecosystem Overview">
           <UnorderedList
             items={[
-              <>Use <Bold>object literals</Bold> for DTOs and simple data structures</>,
-              <>Use <Bold>ES6 Classes</Bold> for domain models and business logic</>,
-              <>Use <Bold>Object.create()</Bold> for flexible prototypal inheritance</>,
-              <>Use <Bold>Object.assign()</Bold> for immutable updates (in React, Redux)</>,
-              <>Use <Bold>factory functions</Bold> for encapsulation and privacy</>,
+              <>📦 <Bold>Package Manager:</Bold> npm, yarn, pnpm</>,
+              <>⚛️ <Bold>Frontend Frameworks:</Bold> React, Vue, Angular, Svelte</>,
+              <>🖥️ <Bold>Backend Frameworks:</Bold> Express, NestJS, Next.js, Nuxt</>,
+              <>📱 <Bold>Mobile:</Bold> React Native, Ionic, Flutter (Dart)</>,
+              <>🧪 <Bold>Testing:</Bold> Jest, Mocha, Cypress, Playwright</>,
+              <>🔧 <Bold>Build Tools:</Bold> Webpack, Vite, Rollup, esbuild</>,
+              <>📊 <Bold>State Management:</Bold> Redux, Zustand, MobX, Pinia</>,
             ]}
           />
         </CardComponent>
 
         <HLText type="info">
-          💡 <Bold>Expert Insight:</Bold> Choose your object creation method based on your <Bold>use case</Bold>. For modern applications, prefer <Bold>object literals</Bold> and <Bold>ES6 Classes</Bold>. Use <Bold>Object.create()</Bold> when you need fine-grained control over prototypes. Avoid the <Bold>Object constructor</Bold> entirely.
+          💡 <Bold>Expert Insight:</Bold> JavaScript is no longer just a "scripting language" - it's a <Bold>full-fledged programming language</Bold> used for everything from <Bold>AI</Bold> to <Bold>IoT</Bold>. The ecosystem is vast and continuously evolving. Master the fundamentals, then explore the ecosystem based on your interests and career goals.
         </HLText>
 
         <Note type="warning" icon="⚠️">
-          <Bold>Expert Warning:</Bold> The <Bold>Object constructor</Bold> (<InlineCode>new Object()</InlineCode>) is considered <Bold>bad practice</Bold> in modern JavaScript. Always use <Bold>object literals</Bold> instead. It's faster, cleaner, and more readable.
+          <Bold>Expert Warning:</Bold> The JavaScript ecosystem moves fast. Focus on <Bold>fundamentals</Bold> (language features, patterns, and paradigms) rather than chasing every new framework. Once you master the core language, you can learn any framework or library quickly.
         </Note>
       </LevelContent>
 
       {/* ============================================ */}
       {/* SUMMARY - Shown at all levels */}
       {/* ============================================ */}
-      <Divider />
+      <Gap size={2} />
 
       <Title level={3}>
-        <Box component="span" sx={{ color: '#fbbf24', mr: 1 }}>📌</Box>
+        <Box component="span" sx={{ color: '#10b981', mr: 1 }}>📌</Box>
         Summary
       </Title>
-      <PlainText>
-        JavaScript offers multiple ways to create objects, each with its own use cases:
-      </PlainText>
 
-      <CardComponent variant="info" title="🎯 Quick Reference">
+      <CardComponent variant="info" title="🎯 Key Takeaways">
         <UnorderedList
           items={[
-            <><Bold>Object literal</Bold> - Best for simple, one-off objects</>,
-            <><Bold>Object constructor</Bold> - Not recommended (use literal instead)</>,
-            <><Bold>Object.create()</Bold> - Best for prototypal inheritance</>,
-            <><Bold>Function constructor</Bold> - Traditional OOP approach (pre-ES6)</>,
-            <><Bold>Function constructor with prototype</Bold> - Memory efficient shared methods</>,
-            <><Bold>Object.assign()</Bold> - Best for cloning and merging objects</>,
-            <><Bold>ES6 Classes</Bold> - Modern OOP approach (recommended)</>,
-            <><Bold>Singleton pattern</Bold> - Single instance across the application</>,
+            <>JavaScript is the language of the web, used for both frontend and backend</>,
+            <>It's a high-level, dynamic, interpreted programming language</>,
+            <>JavaScript supports multiple programming paradigms (OOP, functional, imperative)</>,
+            <>The language is continuously evolving with modern features</>,
+            <>It has a massive ecosystem with frameworks like React, Vue, Angular, and Node.js</>,
+            <>Understanding JavaScript is essential for any modern web developer</>,
           ]}
         />
       </CardComponent>
 
       <Gap size={2} />
 
-      <Note type="success">
-        📝 <Bold>Recommendation:</Bold> For most modern JavaScript applications, use <Bold>object literals</Bold> for simple objects and <Bold>ES6 Classes</Bold> for more complex object-oriented designs.
-      </Note>
-
-      {/* Quick Comparison Table */}
-      <Title level={3}>
-        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>📊</Box>
-        Quick Comparison
-      </Title>
-
-      <TableComponent
-        headers={['Method', 'Use Case', 'Recommended']}
-        rows={[
-          ['Object literal', 'Simple objects', '✅ Yes'],
-          ['Object constructor', 'Avoid', '❌ No'],
-          ['Object.create()', 'Prototypal inheritance', '✅ Yes'],
-          ['Function constructor', 'Legacy OOP', '⚠️ Optional'],
-          ['ES6 Classes', 'Modern OOP', '✅ Yes'],
-          ['Singleton', 'Single instance', '⚠️ Use sparingly'],
-        ]}
-      />
-
       <HLText type="info">
-        💡 <Bold>Pro Tip:</Bold> When in doubt, start with <Bold>object literals</Bold>. They're simple, fast, and work perfectly for 90% of use cases. Only reach for classes or other patterns when you need more structure or reuse.
+        💡 <Bold>Pro Tip:</Bold> Start with the fundamentals (variables, functions, objects) and gradually explore advanced concepts. JavaScript is a language that rewards practice and experimentation.
       </HLText>
 
+      <Gap size={2} />
+
+      {/* Resources */}
+      <Title level={4}>
+        <Box component="span" sx={{ color: '#8b5cf6', mr: 1 }}>📚</Box>
+        Recommended Learning Path
+      </Title>
+
+      <CardComponent variant="default" title="📖 Learning Resources">
+        <PlainText component="div">
+          • <Bold>Fundamentals:</Bold> Variables, Data Types, Functions, Objects<br />
+          • <Bold>Intermediate:</Bold> DOM Manipulation, Events, Async Programming<br />
+          • <Bold>Advanced:</Bold> Closures, Prototypes, Design Patterns<br />
+          • <Bold>Frameworks:</Bold> React, Vue, Angular, Node.js<br />
+          • <Bold>Practice:</Bold> Build projects, solve coding challenges
+        </PlainText>
+      </CardComponent>
+
       <Note type="success" icon="🎉">
-        <Bold>Remember:</Bold> The best way to create an object depends on your <Bold>specific use case</Bold>. Choose wisely based on your needs for simplicity, reuse, and maintainability!
+        <Bold>Remember:</Bold> JavaScript is a language that you learn by doing. Write code every day, build projects, and don't be afraid to make mistakes - that's how you'll grow as a developer!
       </Note>
     </QuestionWrapper>
   );

@@ -161,7 +161,7 @@ export function Sidebar({
         boxShadow: "4px 0 30px rgba(0,0,0,0.6)",
         position: "relative",
         overflow: "hidden",
-        borderRight: "1px solid rgba(255,255,255,0.06)",
+        borderRight: "1px solid rgba(47, 158, 209, 0.97)",
         transition: isResizing ? "none" : "width 0.2s ease",
         flexShrink: 0,
         "&::before": {
@@ -220,7 +220,7 @@ export function Sidebar({
       {/* Resize Handle - Desktop only */}
       {!isMobile && (
         <Tooltip
-          title="Drag to resize sidebar"
+          title=""
           placement="left"
           open={isHovering || isResizing}
         >
@@ -234,12 +234,14 @@ export function Sidebar({
               right: -6,
               top: 0,
               bottom: 0,
-              width: 12,
+              width: 16, // Increased from 12 for better click area
               cursor: "col-resize",
-              zIndex: 100,
+              zIndex: 99999, // Increased to very high
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              // Add a transparent background to ensure clickability
+              backgroundColor: "transparent",
               "&:hover": {
                 "& .resize-border": {
                   borderColor: "rgba(96, 165, 250, 0.6)",
@@ -252,10 +254,10 @@ export function Sidebar({
               },
               "& .resize-border": {
                 position: "absolute",
-                right: 4,
+                right: 6,
                 top: 0,
                 bottom: 0,
-                width: 2,
+                width: 3, // Slightly thicker
                 borderRadius: 2,
                 backgroundColor: "rgba(255,255,255,0.08)",
                 transition: "all 0.3s ease",
@@ -269,11 +271,10 @@ export function Sidebar({
                   borderColor: "rgba(96, 165, 250, 0.4)",
                   boxShadow: "0 0 30px rgba(96, 165, 250, 0.3)",
                 }),
-                zIndex: 99,
               },
               "& .resize-icon-container": {
                 position: "absolute",
-                right: -4,
+                right: 2,
                 top: "50%",
                 transform: `${isHovering || isResizing ? "scale(1)" : "scale(0.8)"} translateY(-50%)`,
                 display: "flex",
@@ -282,6 +283,7 @@ export function Sidebar({
                 gap: 2,
                 opacity: isHovering || isResizing ? 1 : 0,
                 transition: "all 0.3s ease",
+                pointerEvents: "none", // Prevents blocking mouse events
               },
             }}
           >
@@ -433,7 +435,7 @@ export function Sidebar({
             >
               <Code size={24} style={{ color: "#60a5fa" }} />
             </Box>
-            Q&A Builder
+            JavaScript Q&A Daily
           </Typography>
           {!isMobile && (
             <Badge
@@ -787,7 +789,7 @@ export function Sidebar({
               background: "rgba(255,255,255,0.02)",
               borderRadius: 2,
               p: 1.5,
-              mb: 10
+              mb: 10,
             }}
           >
             {[
