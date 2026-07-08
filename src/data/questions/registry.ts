@@ -20,6 +20,7 @@ import { Question17 } from "./question_17";
 import { Question18 } from "./question_18";
 import { Question19 } from "./question_19";
 import { Question20 } from "./question_20";
+import { Question21 } from "./question_21";
 // Import more as you create them
 
 export const question01Meta: QuestionMeta = {
@@ -155,6 +156,12 @@ export const question20Meta = {
   definition: "The name 'let' was chosen for its mathematical origins, historical use in other programming languages, and its clear meaning as a variable declaration keyword.",
 };
 
+export const question21Meta = {
+  id: 21,
+  title: "How do you redeclare variables in a switch block without an error?",
+  definition: "To redeclare variables in a switch block, wrap each case clause in curly braces {} to create a new block scope, preventing redeclaration errors with let and const.",
+};
+
 
 export const questionRegistry = [
   {
@@ -236,7 +243,11 @@ export const questionRegistry = [
   {
     ...question20Meta,
     component: Question20,
-  }
+  },
+  {
+    ...question21Meta,
+    component: Question21,
+  },
   // Add more here
 ];
 
