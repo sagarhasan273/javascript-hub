@@ -58,8 +58,8 @@ export function Question02({  isActive = false }: { index?: number; isActive?: b
 
         <CodeComponent
           code={`var object = {
-  name: "Sudheer",
-  age: 34,
+  name: "Sagar",
+  age: 26,
 };`}
           language="javascript"
           title="object-literal.js"
@@ -114,7 +114,7 @@ export function Question02({  isActive = false }: { index?: number; isActive?: b
   }
 }
 
-var object = new Person("Sudheer");`}
+var object = new Person("Sagar");`}
           language="javascript"
           title="es6-class.js"
           defaultOpen={true}
@@ -209,7 +209,7 @@ console.log(car);`}
   this.name = name;
   this.age = 21;
 }
-var object = new Person("Sudheer");`}
+var object = new Person("Sagar");`}
           language="javascript"
           title="function-constructor.js"
           defaultOpen={true}
@@ -228,7 +228,7 @@ var object = new Person("Sudheer");`}
 
         <CodeComponent
           code={`function Person() {}
-Person.prototype.name = "Sudheer";
+Person.prototype.name = "Sagar";
 var object = new Person();`}
           language="javascript"
           title="function-prototype.js"
@@ -327,7 +327,7 @@ const staff = Object.assign({}, orgObject, carObject);`}
   let instance;
 
   function createInstance() {
-    return { name: "Sudheer" };
+    return { name: "Sagar" };
   }
 
   return {

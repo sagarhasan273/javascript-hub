@@ -22,6 +22,9 @@ import { Question19 } from "./question_19";
 import { Question20 } from "./question_20";
 import { Question21 } from "./question_21";
 import { Question22 } from "./question_22";
+import { Question23 } from "./question_23";
+import { Question24 } from "./question_24";
+import { Question25 } from "./question_25";
 // Import more as you create them
 
 export const question01Meta: QuestionMeta = {
@@ -169,6 +172,24 @@ export const question22Meta = {
   definition: "The main differences between let and var are scope (block vs function), hoisting behavior (TDZ vs undefined), redeclaration rules, and global scope attachment.",
 };
 
+export const question23Meta = {
+  id: 23,
+  title: "What is the Temporal Dead Zone?",
+  definition: "The Temporal Dead Zone (TDZ) is the period between entering a scope and the declaration of a let or const variable, during which accessing the variable throws a ReferenceError.",
+};
+
+export const question24Meta = {
+  id: 24,
+  title: "What is an IIFE (Immediately Invoked Function Expression)?",
+  definition: "An IIFE is a function that is defined and executed immediately after its creation, creating a private scope and preventing variables from polluting the global namespace.",
+};
+
+export const question25Meta = {
+  id: 25,
+  title: "How do you decode or encode a URL in JavaScript?",
+  definition: "JavaScript provides encodeURI(), encodeURIComponent(), decodeURI(), and decodeURIComponent() for URL encoding and decoding, with modern alternatives like URL and URLSearchParams.",
+};
+
 
 export const questionRegistry = [
   {
@@ -258,6 +279,18 @@ export const questionRegistry = [
   {
     ...question22Meta,
     component: Question22,
+  },
+  {
+    ...question23Meta,
+    component: Question23,
+  },
+  {
+    ...question24Meta,
+    component: Question24,
+  },
+  {
+    ...question25Meta,
+    component: Question25,
   }
   // Add more here
 ];
