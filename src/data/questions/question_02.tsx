@@ -16,7 +16,7 @@ import {
   TableComponent,
   HLText,
 } from '../../components/content';
-import { question02Meta } from './registry';
+import { question02Meta } from '../registry';
 import { useLevel } from '../../hooks';
 
 export function Question02({  isActive = false }: { index?: number; isActive?: boolean }) {

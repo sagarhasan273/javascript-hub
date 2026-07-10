@@ -15,7 +15,7 @@ import {
   InlineCode,
   UnorderedList,
 } from "../../components/content";
-import { question11Meta } from "./registry";
+import { question11Meta } from "../registry";
 import { useLevel } from "../../hooks";
 
 

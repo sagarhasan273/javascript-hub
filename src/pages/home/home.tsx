@@ -19,7 +19,7 @@ import {
 import {
   questionMetadata,
   questionRegistry,
-} from "../../data/questions/registry";
+} from "../../data/registry";
 import { Sidebar } from "../../components/Sidebar";
 import { Close } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";

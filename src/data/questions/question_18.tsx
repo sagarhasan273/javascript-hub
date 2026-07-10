@@ -13,7 +13,7 @@ import {
   Gap,
   UnorderedList,
 } from "../../components/content";
-import { question18Meta } from "./registry";
+import { question18Meta } from "../registry";
 import { useLevel } from "../../hooks";
 
 export function Question18({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {

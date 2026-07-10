@@ -13,7 +13,7 @@ import {
   Gap,
   UnorderedList,
 } from '../../components/content';
-import { question01Meta } from './registry';
+import { question01Meta } from '../registry';
 import { useLevel } from '../../hooks';
 
 

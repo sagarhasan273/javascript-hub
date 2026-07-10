@@ -15,7 +15,7 @@ import {
   InlineCode,
   UnorderedList,
 } from '../../components/content';
-import { question06Meta } from './registry';
+import { question06Meta } from '../registry';
 import { useLevel } from '../../hooks';
 
 export function Question06({ isActive = false }: { index?: number; isActive?: boolean }) {

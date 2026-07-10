@@ -6,7 +6,7 @@ import { Box, GlobalStyles } from "@mui/material";
 import { Home } from "./pages/home/home";
 import { Feedback } from "./pages/feedback/feedback";
 import { useState } from "react";
-import { questionRegistry } from "./data/questions/registry";
+import { questionRegistry } from "./data/registry";
 
 function App() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);

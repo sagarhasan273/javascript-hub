@@ -14,7 +14,7 @@ import {
   TableComponent,
   UnorderedList,
 } from "../../components/content";
-import { question13Meta } from "./registry";
+import { question13Meta } from "../registry";
 import { useLevel } from "../../hooks";
 
 export function Question13({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {

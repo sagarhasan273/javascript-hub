@@ -1,30 +1,34 @@
 // data/questions/registry.ts
-import { QuestionMeta } from "../types";
-import { Question01 } from "./question_01";
-import { Question02 } from "./question_02";
-import { Question03 } from "./question_03";
-import { Question04 } from "./question_04";
-import { Question05 } from "./question_05";
-import { Question06 } from "./question_06";
-import { Question07 } from "./question_07";
-import { Question08 } from "./question_08";
-import { Question09 } from "./question_09";
-import { Question10 } from "./question_10";
-import { Question11 } from "./question_11";
-import { Question12 } from "./question_12";
-import { Question13 } from "./question_13";
-import { Question14 } from "./question_14";
-import { Question15 } from "./question_15";
-import { Question16 } from "./question_16";
-import { Question17 } from "./question_17";
-import { Question18 } from "./question_18";
-import { Question19 } from "./question_19";
-import { Question20 } from "./question_20";
-import { Question21 } from "./question_21";
-import { Question22 } from "./question_22";
-import { Question23 } from "./question_23";
-import { Question24 } from "./question_24";
-import { Question25 } from "./question_25";
+import { QuestionMeta } from "./types";
+import { 
+  Question01, 
+  Question02, 
+  Question03, 
+  Question04,
+  Question05,
+  Question06,
+  Question07,
+  Question08,
+  Question09,
+  Question10,
+  Question11,
+  Question12,
+  Question13,
+  Question14,
+  Question15,
+  Question16,
+  Question17,
+  Question18,
+  Question19,
+  Question20,
+  Question21,
+  Question22,
+  Question23,
+  Question24,
+  Question25
+
+} from "./questions";
+
 // Import more as you create them
 
 export const question01Meta: QuestionMeta = {
@@ -121,75 +125,86 @@ export const question13Meta = {
 export const question14Meta = {
   id: 14,
   title: "What is a higher order function?",
-  definition: "A higher-order function is a function that takes one or more functions as arguments, returns a function, or both. It enables code reuse, abstraction, and functional programming patterns.",
+  definition:
+    "A higher-order function is a function that takes one or more functions as arguments, returns a function, or both. It enables code reuse, abstraction, and functional programming patterns.",
 };
 
 export const question15Meta = {
   id: 15,
   title: "What is a unary function?",
-  definition: "A unary function is a function that takes exactly one argument. It is fundamental to functional programming and enables composition, currying, and point-free style programming.",
+  definition:
+    "A unary function is a function that takes exactly one argument. It is fundamental to functional programming and enables composition, currying, and point-free style programming.",
 };
 
 export const question16Meta = {
   id: 16,
   title: "What is the currying function?",
-  definition: "Currying is a functional programming technique where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument.",
+  definition:
+    "Currying is a functional programming technique where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument.",
 };
 
 export const question17Meta = {
   id: 17,
   title: "What is a pure function?",
-  definition: "A pure function always produces the same output for the same input and has no side effects, making it predictable and easy to test.",
+  definition:
+    "A pure function always produces the same output for the same input and has no side effects, making it predictable and easy to test.",
 };
 
 export const question18Meta = {
   id: 18,
   title: "What are the benefits of pure functions?",
-  definition: "Pure functions offer predictability, testability, cacheability, composability, and easier debugging, making code more maintainable and reliable.",
+  definition:
+    "Pure functions offer predictability, testability, cacheability, composability, and easier debugging, making code more maintainable and reliable.",
 };
 
 export const question19Meta = {
   id: 19,
   title: "What is the purpose of the let keyword?",
-  definition: "let is used to declare block-scoped variables that can be reassigned, providing a safer alternative to var with better scoping and no hoisting issues.",
+  definition:
+    "let is used to declare block-scoped variables that can be reassigned, providing a safer alternative to var with better scoping and no hoisting issues.",
 };
 
 export const question20Meta = {
   id: 20,
   title: "What is the reason to choose the name let as a keyword?",
-  definition: "The name 'let' was chosen for its mathematical origins, historical use in other programming languages, and its clear meaning as a variable declaration keyword.",
+  definition:
+    "The name 'let' was chosen for its mathematical origins, historical use in other programming languages, and its clear meaning as a variable declaration keyword.",
 };
 
 export const question21Meta = {
   id: 21,
   title: "How do you redeclare variables in a switch block without an error?",
-  definition: "To redeclare variables in a switch block, wrap each case clause in curly braces {} to create a new block scope, preventing redeclaration errors with let and const.",
+  definition:
+    "To redeclare variables in a switch block, wrap each case clause in curly braces {} to create a new block scope, preventing redeclaration errors with let and const.",
 };
 
 export const question22Meta = {
   id: 22,
   title: "What is the difference between let and var?",
-  definition: "The main differences between let and var are scope (block vs function), hoisting behavior (TDZ vs undefined), redeclaration rules, and global scope attachment.",
+  definition:
+    "The main differences between let and var are scope (block vs function), hoisting behavior (TDZ vs undefined), redeclaration rules, and global scope attachment.",
 };
 
 export const question23Meta = {
   id: 23,
   title: "What is the Temporal Dead Zone?",
-  definition: "The Temporal Dead Zone (TDZ) is the period between entering a scope and the declaration of a let or const variable, during which accessing the variable throws a ReferenceError.",
+  definition:
+    "The Temporal Dead Zone (TDZ) is the period between entering a scope and the declaration of a let or const variable, during which accessing the variable throws a ReferenceError.",
 };
 
 export const question24Meta = {
   id: 24,
   title: "What is an IIFE (Immediately Invoked Function Expression)?",
-  definition: "An IIFE is a function that is defined and executed immediately after its creation, creating a private scope and preventing variables from polluting the global namespace.",
+  definition:
+    "An IIFE is a function that is defined and executed immediately after its creation, creating a private scope and preventing variables from polluting the global namespace.",
 };
 
 export const question25Meta = {
   id: 25,
   title: "How do you decode or encode a URL in JavaScript?",
-  definition: "JavaScript provides encodeURI(), encodeURIComponent(), decodeURI(), and decodeURIComponent() for URL encoding and decoding, with modern alternatives like URL and URLSearchParams.",
+  definition:
+    "JavaScript provides encodeURI(), encodeURIComponent(), decodeURI(), and decodeURIComponent() for URL encoding and decoding, with modern alternatives like URL and URLSearchParams.",
 };
-
 
 export const questionRegistry = [
   {
@@ -291,7 +306,7 @@ export const questionRegistry = [
   {
     ...question25Meta,
     component: Question25,
-  }
+  },
   // Add more here
 ];
 

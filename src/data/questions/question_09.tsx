@@ -15,7 +15,7 @@ import {
   InlineCode,
   UnorderedList,
 } from "../../components/content";
-import { question09Meta } from "./registry";
+import { question09Meta } from "../registry";
 import { Box } from "@mui/material";
 import { useLevel } from '../../hooks';
 
