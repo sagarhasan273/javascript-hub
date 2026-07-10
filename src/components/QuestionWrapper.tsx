@@ -751,10 +751,11 @@ export function QuestionWrapper({
                 sx={{
                   color: "grey.500",
                   transition: "all 0.2s ease",
+                  bgcolor: alpha("#24292e", 0.08),
                   "&:hover": {
                     color: "#24292e",
                     transform: "scale(1.1)",
-                    bgcolor: alpha("#24292e", 0.08),
+                    bgcolor: alpha("#24292e", 0.18),
                   },
                 }}
               >
@@ -773,10 +774,11 @@ export function QuestionWrapper({
                 sx={{
                   color: "grey.500",
                   transition: "all 0.2s ease",
+                  bgcolor: alpha("#0a66c2", 0.08),
                   "&:hover": {
                     color: "#0a66c2",
                     transform: "scale(1.1)",
-                    bgcolor: alpha("#0a66c2", 0.08),
+                    bgcolor: alpha("#0a66c2", 0.18),
                   },
                 }}
               >

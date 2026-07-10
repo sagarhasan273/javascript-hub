@@ -4,7 +4,7 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
+
   Box,
   IconButton,
   Drawer,
@@ -128,42 +128,6 @@ export function Navigation({ onMenuClick, questionCount = 0 }: NavigationProps) 
               )}
             </Typography>
           </Box>
-
-          {/* Desktop Navigation */}
-          {!isMobile && (
-            <Box sx={{ display: "flex", gap: 1 }}>
-              {navItems.map((item) => (
-                <Button
-                  key={item.path}
-                  component={Link}
-                  to={item.path}
-                  variant={location.pathname === item.path ? "contained" : "text"}
-                  startIcon={item.icon}
-                  sx={{
-                    borderRadius: 2,
-                    textTransform: "none",
-                    fontWeight: 500,
-                    ...(location.pathname === item.path && {
-                      bgcolor: "#2563eb",
-                      color: "white",
-                      "&:hover": {
-                        bgcolor: "#1d4ed8",
-                      },
-                    }),
-                    ...(location.pathname !== item.path && {
-                      color: "grey.600",
-                      "&:hover": {
-                        bgcolor: "rgba(37, 99, 235, 0.04)",
-                        color: "#2563eb",
-                      },
-                    }),
-                  }}
-                >
-                  {item.label}
-                </Button>
-              ))}
-            </Box>
-          )}
 
           {/* Mobile - Show question count in header */}
           {isMobile && questionCount > 0 && (
