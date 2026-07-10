@@ -50,19 +50,63 @@ export function CodeComponent({
     };
   }, [isCopied]);
 
-  // Detect language from code if not specified
+  // Improved language detection
   const detectLanguage = (code: string): string => {
-    if (code.includes('class') || code.includes('constructor') || code.includes('=>')) return 'javascript';
-    if (code.includes('<!DOCTYPE') || code.includes('<html>') || code.includes('</div>')) return 'html';
-    if (code.includes('SELECT') || code.includes('INSERT') || code.includes('UPDATE')) return 'sql';
-    if (code.includes('import React') || code.includes('export default')) return 'jsx';
-    if (code.includes('<?php')) return 'php';
-    if (code.includes('def ') || code.includes('import ')) return 'python';
-    if (code.includes('{') && code.includes('}') && code.includes(':')) return 'json';
-    return language;
+    // Check if language is explicitly provided
+    if (language && language !== 'javascript') {
+      return language;
+    }
+
+    // Trim the code for better detection
+    const trimmed = code.trim();
+    
+    // Check for common patterns
+    if (trimmed.includes('<!DOCTYPE') || trimmed.includes('<html') || trimmed.includes('</div>')) {
+      return 'html';
+    }
+    if (trimmed.includes('SELECT') || trimmed.includes('INSERT') || trimmed.includes('UPDATE')) {
+      return 'sql';
+    }
+    if (trimmed.includes('import React') || trimmed.includes('export default') || trimmed.includes('jsx')) {
+      return 'jsx';
+    }
+    if (trimmed.includes('<?php')) {
+      return 'php';
+    }
+    if (trimmed.includes('def ') || trimmed.includes('import ') && !trimmed.includes('import React')) {
+      return 'python';
+    }
+    if (trimmed.startsWith('{') && trimmed.includes(':') && trimmed.includes('}')) {
+      try {
+        JSON.parse(trimmed);
+        return 'json';
+      } catch {
+        // Not valid JSON, keep as javascript
+      }
+    }
+    if (trimmed.includes('class') && trimmed.includes('constructor')) {
+      return 'javascript';
+    }
+    if (trimmed.includes('const') || trimmed.includes('let') || trimmed.includes('var')) {
+      return 'javascript';
+    }
+    if (trimmed.includes('function') || trimmed.includes('=>')) {
+      return 'javascript';
+    }
+    
+    // Default to javascript
+    return 'javascript';
   };
 
   const detectedLanguage = detectLanguage(code);
+
+  // Helper to clean up code (remove extra whitespace)
+  const cleanCode = (code: string): string => {
+    // Remove excessive empty lines at start/end
+    return code.trim();
+  };
+
+  const cleanedCode = cleanCode(code);
 
   // If no title bar, just show the code with copy button
   if (!showTitle) {
@@ -128,6 +172,7 @@ export function CodeComponent({
               padding: '16px',
               background: 'transparent',
               borderRadius: 0,
+              fontFamily: '"Fira Code", "Consolas", monospace',
             }}
             lineNumberStyle={{
               color: '#666',
@@ -136,7 +181,7 @@ export function CodeComponent({
               userSelect: 'none',
             }}
           >
-            {code}
+            {cleanedCode}
           </SyntaxHighlighter>
         </Stack>
       </Stack>
@@ -181,7 +226,7 @@ export function CodeComponent({
               ml: 1,
             }}
           >
-            {title}
+            {title || `${detectedLanguage}.js`}
           </Typography>
         </Box>
         
@@ -239,6 +284,7 @@ export function CodeComponent({
               padding: '16px',
               background: 'transparent',
               borderRadius: 0,
+              fontFamily: '"Fira Code", "Consolas", monospace',
             }}
             lineNumberStyle={{
               color: '#666',
@@ -247,7 +293,7 @@ export function CodeComponent({
               userSelect: 'none',
             }}
           >
-            {code}
+            {cleanedCode}
           </SyntaxHighlighter>
         </Stack>
       </Collapse>

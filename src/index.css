@@ -235,3 +235,57 @@
 .italic {
   font-style: italic !important;
 }
+
+/* index.css - Add syntax highlighting styles */
+
+/* Ensure code blocks use monospace fonts */
+.javascript_code pre {
+  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+/* Override any conflicting styles */
+.javascript_code .token {
+  background: transparent !important;
+}
+
+/* Make sure string colors are visible */
+.javascript_code .token.string {
+  color: #ce9178 !important;
+}
+
+.javascript_code .token.number {
+  color: #b5cea8 !important;
+}
+
+.javascript_code .token.keyword {
+  color: #569cd6 !important;
+}
+
+.javascript_code .token.function {
+  color: #dcdcaa !important;
+}
+
+.javascript_code .token.comment {
+  color: #6a9955 !important;
+}
+
+.javascript_code .token.operator {
+  color: #d4d4d4 !important;
+}
+
+/* Fix for template literals */
+.javascript_code .token.template-string {
+  color: #ce9178 !important;
+}
+
+/* Fix for variables */
+.javascript_code .token.variable {
+  color: #9cdcfe !important;
+}
+
+/* Fix for object properties */
+.javascript_code .token.property {
+  color: #9cdcfe !important;
+}
