@@ -11,6 +11,8 @@ import {
   useTheme,
   Snackbar,
   Alert,
+  Link,
+  Divider,
 } from "@mui/material";
 import {
   BookOpen,
@@ -20,6 +22,9 @@ import {
   Copy,
   Check,
   Link2,
+  Github,
+  Linkedin,
+  Heart,
 } from "lucide-react";
 
 interface QuestionWrapperProps {
@@ -631,20 +636,191 @@ export function QuestionWrapper({
           {children}
         </Box>
 
-        {/* Footer Decoration */}
+        {/* Footer Section */}
         <Box
           sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 2,
+            mt: 2,
+            pt: 2,
+            pb: { xs: 2, md: 2.5 },
+            px: { xs: 2, md: 3 },
+            borderTop: "1px solid",
+            borderColor: "grey.100",
             background: isActive
-              ? "linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.1), transparent)"
-              : "linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent)",
-            transition: "all 0.3s ease",
+              ? "linear-gradient(135deg, rgba(96, 165, 250, 0.02), rgba(167, 139, 250, 0.02))"
+              : "transparent",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: { xs: 1.5, sm: 0 },
           }}
-        />
+        >
+          {/* Left Side - Question Info */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              flexWrap: "wrap",
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: "grey.500",
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+            >
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-block",
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  bgcolor: isActive ? "#2563eb" : "grey.400",
+                }}
+              />
+              Question #{String(id).padStart(2, "0")}
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "grey.400",
+                }}
+              >
+                •
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "grey.500",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                }}
+              >
+                <Heart
+                  size={12}
+                  style={{
+                    color: isActive ? "#ef4444" : "grey.400",
+                    fill: isActive ? "#ef4444" : "none",
+                  }}
+                />
+                Learn JavaScript
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Right Side - Social Links */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: "grey.400",
+                display: { xs: "none", sm: "block" },
+              }}
+            >
+              Connect with me:
+            </Typography>
+
+            {/* GitHub Link */}
+            <Tooltip title="Follow on GitHub">
+              <IconButton
+                component={Link}
+                href="https://github.com/sagarhasan273"
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+                sx={{
+                  color: "grey.500",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    color: "#24292e",
+                    transform: "scale(1.1)",
+                    bgcolor: alpha("#24292e", 0.08),
+                  },
+                }}
+              >
+                <Github size={16} />
+              </IconButton>
+            </Tooltip>
+
+            {/* LinkedIn Link */}
+            <Tooltip title="Connect on LinkedIn">
+              <IconButton
+                component={Link}
+                href="https://linkedin.com/in/sagar-hasan-677b5b1ba"
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+                sx={{
+                  color: "grey.500",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    color: "#0a66c2",
+                    transform: "scale(1.1)",
+                    bgcolor: alpha("#0a66c2", 0.08),
+                  },
+                }}
+              >
+                <Linkedin size={16} />
+              </IconButton>
+            </Tooltip>
+
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                borderColor: "grey.200",
+                display: { xs: "none", sm: "block" },
+              }}
+            />
+
+            <Typography
+              variant="caption"
+              sx={{
+                color: "grey.400",
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+            >
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-block",
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  bgcolor: "#22c55e",
+                  animation: "pulse-dot 2s ease-in-out infinite",
+                  "@keyframes pulse-dot": {
+                    "0%, 100%": { opacity: 1 },
+                    "50%": { opacity: 0.3 },
+                  },
+                }}
+              />
+              Available for collaboration
+            </Typography>
+          </Box>
+        </Box>
       </Paper>
 
       {/* Snackbar for notifications */}
