@@ -27,4 +27,35 @@
 - 🎨 **Modern UI**: Clean, professional design with MUI
 - ⚡ **Fast Performance**: Built with Vite
 
-### 🏗️ Architecture
+
+## 🛠️ Tech Stack
+
+### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| React | 18.0+ | UI Framework |
+| TypeScript | 5.0+ | Type Safety |
+| Material-UI | 5.0+ | Component Library |
+| React Router | 6.0+ | Navigation |
+| Vite | 4.0+ | Build Tool |
+| Lucide React | Latest | Icons |
+| React Syntax Highlighter | Latest | Code Highlighting |
+
+### Development Tools
+- **ESLint**: Code linting
+- **Prettier**: Code formatting
+- **TypeScript**: Static type checking
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16.0 or higher)
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/sagarhasan273/javascript-qna-daily.git
+cd javascript-qna-daily
