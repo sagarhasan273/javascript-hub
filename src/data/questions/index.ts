@@ -28,3 +28,8 @@ export * from "./question_27";
 export * from "./question_28";
 export * from "./question_29";
 export * from "./question_30";
+export * from "./question_31";
+export * from "./question_32";
+export * from "./question_33";
+export * from "./question_34";
+export * from "./question_35";

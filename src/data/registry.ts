@@ -30,7 +30,12 @@ import {
   Question27,
   Question28,
   Question29,
-  Question30
+  Question30,
+  Question31,
+  Question32,
+  Question33,
+  Question34,
+  Question35
 } from "./questions";
 
 
@@ -241,6 +246,36 @@ export const question30Meta = {
   definition: "Modules are encapsulated pieces of code that export functionality and import from other modules, providing organization, reusability, and maintainability in JavaScript applications.",
 };
 
+export const question31Meta = {
+  id: 31,
+  title: "What is scope in JavaScript?",
+  definition: "Scope defines the visibility and accessibility of variables, functions, and objects in different parts of your code.",
+};
+
+export const question32Meta = {
+  id: 32,
+  title: "What is a service worker?",
+  definition: "A service worker is a script that runs in the background, acting as a proxy server between the web application and the network, enabling offline support, push notifications, and background sync.",
+};
+
+export const question33Meta = {
+  id: 33,
+  title: "How do you manipulate DOM using a service worker?",
+  definition: "Service workers cannot directly manipulate the DOM; they communicate with the main thread using the PostMessage API, which then updates the DOM accordingly.",
+};
+
+export const question34Meta = {
+  id: 34,
+  title: "How do you reuse information across service worker restarts?",
+  definition: "Information is persisted across service worker restarts using persistent storage mechanisms like IndexedDB, Cache Storage, and localStorage.",
+};
+
+export const question35Meta = {
+  id: 35,
+  title: "Why do you need modules?",
+  definition: "Modules are essential for organizing, encapsulating, and reusing code in JavaScript applications, preventing global pollution, managing dependencies, and enabling scalable development.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
@@ -361,6 +396,26 @@ export const questionRegistry = [
   {
     ...question30Meta,
     component: Question30,
+  },
+  {
+    ...question31Meta,
+    component: Question31,
+  },
+  {
+    ...question32Meta,
+    component: Question32,
+  },
+  {
+    ...question33Meta,
+    component: Question33,
+  },
+  {
+    ...question34Meta,
+    component: Question34,
+  },
+  {
+    ...question35Meta,
+    component: Question35,
   }
   // Add more here
 ];
