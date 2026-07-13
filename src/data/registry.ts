@@ -26,8 +26,10 @@ import {
   Question23,
   Question24,
   Question25
-
+  
 } from "./questions";
+import { Question26 } from "./questions/question_26";
+import { Question27 } from "./questions/question_27";
 
 // Import more as you create them
 
@@ -206,6 +208,18 @@ export const question25Meta = {
     "JavaScript provides encodeURI(), encodeURIComponent(), decodeURI(), and decodeURIComponent() for URL encoding and decoding, with modern alternatives like URL and URLSearchParams.",
 };
 
+export const question26Meta = {
+  id: 26,
+  title: "What is memoization?",
+  definition: "Memoization is an optimization technique that caches the results of expensive function calls and returns the cached result when the same inputs occur again, trading memory for speed.",
+};
+
+export const question27Meta = {
+  id: 27,
+  title: "What is Hoisting?",
+  definition: "Hoisting is a JavaScript behavior where variable and function declarations are moved to the top of their containing scope during compilation, allowing them to be used before they are declared.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
@@ -306,6 +320,14 @@ export const questionRegistry = [
   {
     ...question25Meta,
     component: Question25,
+  },
+  {
+    ...question26Meta,
+    component: Question26,
+  },
+  {
+    ...question27Meta,
+    component: Question27,
   },
   // Add more here
 ];
