@@ -25,12 +25,14 @@ import {
   Question22,
   Question23,
   Question24,
-  Question25
-  
+  Question25,
+  Question26,
+  Question27,
+  Question28,
+  Question29,
+  Question30
 } from "./questions";
-import { Question26 } from "./questions/question_26";
-import { Question27 } from "./questions/question_27";
-import { Question28 } from "./questions/question_28";
+
 
 // Import more as you create them
 
@@ -227,6 +229,18 @@ export const question28Meta = {
   definition: "ES6 classes are syntactic sugar over JavaScript's prototype-based inheritance, providing a cleaner, more intuitive way to create objects and handle inheritance with a familiar class-based syntax.",
 };
 
+export const question29Meta = {
+  id: 29,
+  title: "What are closures?",
+  definition: "A closure is a function that remembers its lexical environment even after the outer function has returned, allowing access to variables from its containing scope.",
+};
+
+export const question30Meta = {
+  id: 30,
+  title: "What are modules?",
+  definition: "Modules are encapsulated pieces of code that export functionality and import from other modules, providing organization, reusability, and maintainability in JavaScript applications.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
@@ -340,6 +354,14 @@ export const questionRegistry = [
     ...question28Meta,
     component: Question28,
   },
+  {
+    ...question29Meta,
+    component: Question29,
+  },
+  {
+    ...question30Meta,
+    component: Question30,
+  }
   // Add more here
 ];
 
