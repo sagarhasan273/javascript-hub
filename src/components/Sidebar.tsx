@@ -25,7 +25,6 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
-  Badge,
   Fade,
   Tooltip,
 } from "@mui/material";
@@ -401,59 +400,6 @@ export function Sidebar({
             "linear-gradient(135deg, rgba(37,99,235,0.1) 0%, transparent 100%)",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 1,
-          }}
-        >
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              fontWeight: 800,
-              background: "linear-gradient(135deg, #60a5fa, #a78bfa)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              letterSpacing: "-0.5px",
-              fontSize: { xs: "1rem", md: "1.25rem" },
-            }}
-          >
-            <Box
-              sx={{
-                bgcolor: "rgba(37,99,235,0.2)",
-                p: 0.5,
-                borderRadius: 1.5,
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Code size={24} style={{ color: "#60a5fa" }} />
-            </Box>
-            JavaScript Q&A Daily
-          </Typography>
-          {!isMobile && (
-            <Badge
-              badgeContent={questions.length}
-              color="primary"
-              sx={{
-                "& .MuiBadge-badge": {
-                  bgcolor: "#2563eb",
-                  fontWeight: 700,
-                  fontSize: "0.7rem",
-                  height: 22,
-                  minWidth: 22,
-                },
-              }}
-            />
-          )}
-        </Box>
-
         {/* Level Toggle - Now in Header */}
         <Box
           sx={{
