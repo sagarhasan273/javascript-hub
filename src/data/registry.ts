@@ -30,6 +30,7 @@ import {
 } from "./questions";
 import { Question26 } from "./questions/question_26";
 import { Question27 } from "./questions/question_27";
+import { Question28 } from "./questions/question_28";
 
 // Import more as you create them
 
@@ -220,6 +221,12 @@ export const question27Meta = {
   definition: "Hoisting is a JavaScript behavior where variable and function declarations are moved to the top of their containing scope during compilation, allowing them to be used before they are declared.",
 };
 
+export const question28Meta = {
+  id: 28,
+  title: "What are classes in ES6?",
+  definition: "ES6 classes are syntactic sugar over JavaScript's prototype-based inheritance, providing a cleaner, more intuitive way to create objects and handle inheritance with a familiar class-based syntax.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
@@ -328,6 +335,10 @@ export const questionRegistry = [
   {
     ...question27Meta,
     component: Question27,
+  },
+  {
+    ...question28Meta,
+    component: Question28,
   },
   // Add more here
 ];
