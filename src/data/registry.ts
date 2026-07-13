@@ -276,6 +276,36 @@ export const question35Meta = {
   definition: "Modules are essential for organizing, encapsulating, and reusing code in JavaScript applications, preventing global pollution, managing dependencies, and enabling scalable development.",
 };
 
+export const question36Meta = {
+  id: 36,
+  title: "What is IndexedDB?",
+  definition: "IndexedDB is a low-level NoSQL database API for storing large amounts of structured data in the browser, supporting indexes, transactions, and complex queries.",
+};
+
+export const question37Meta = {
+  id: 37,
+  title: "What is web storage?",
+  definition: "Web Storage is a client-side storage API providing localStorage (persistent) and sessionStorage (tab-specific) for storing key-value data as strings.",
+};
+
+export const question38Meta = {
+  id: 38,
+  title: "What is a post message?",
+  definition: "PostMessage (window.postMessage) is a secure API for cross-origin communication between different browsing contexts like windows, iframes, and workers.",
+};
+
+export const question39Meta = {
+  id: 39,
+  title: "What is a Cookie?",
+  definition: "A cookie is a small piece of data stored in the browser, sent with every HTTP request, used for session management, preferences, and tracking.",
+};
+
+export const question40Meta = {
+  id: 40,
+  title: "Why do you need a Cookie?",
+  definition: "Cookies are needed to maintain stateful user experiences on stateless HTTP, enabling authentication, personalization, shopping carts, and session management.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
