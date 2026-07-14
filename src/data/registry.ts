@@ -35,7 +35,12 @@ import {
   Question32,
   Question33,
   Question34,
-  Question35
+  Question35,
+  Question36,
+  Question37,
+  Question38,
+  Question39,
+  Question40
 } from "./questions";
 
 
@@ -446,6 +451,26 @@ export const questionRegistry = [
   {
     ...question35Meta,
     component: Question35,
+  },
+  {
+    ...question36Meta,
+    component: Question36,
+  },
+  {
+    ...question37Meta,
+    component: Question37,
+  },
+  {
+    ...question38Meta,
+    component: Question38,
+  },
+  {
+    ...question39Meta,
+    component: Question39,
+  },
+  {
+    ...question40Meta,
+    component: Question40,
   }
   // Add more here
 ];
