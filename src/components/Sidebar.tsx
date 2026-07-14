@@ -1,5 +1,5 @@
 // components/Sidebar.tsx
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import {
   X,
   ChevronRight,
@@ -36,7 +36,6 @@ interface QuestionMeta {
   definition: string;
 }
 
-// components/Sidebar.tsx - Add onMenuClick to props
 interface SidebarProps {
   questions: QuestionMeta[];
   currentQuestion: number | null;
@@ -46,7 +45,7 @@ interface SidebarProps {
   maxWidth?: number;
   mobileOpen?: boolean;
   onMobileClose?: () => void;
-  onMenuClick?: () => void; // Add this prop
+  onMenuClick?: () => void;
 }
 
 export function Sidebar({
@@ -65,8 +64,12 @@ export function Sidebar({
   const [sidebarWidth, setSidebarWidth] = useState(defaultWidth);
   const [isResizing, setIsResizing] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizeRef = useRef<HTMLDivElement>(null);
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const onSelectQuestionRef = useRef<boolean>(false);
+  const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   const filteredQuestions = useMemo(() => {
     if (!searchQuery.trim()) return questions;
@@ -81,6 +84,45 @@ export function Sidebar({
       return false;
     });
   }, [questions, searchQuery]);
+
+  const scrollToQuestion = useCallback(
+    (questionId: number) => {
+      if (!listContainerRef.current || onSelectQuestionRef.current) return;
+      onSelectQuestionRef.current = true;
+
+      // Find the index of the question in the filtered list
+      const index = filteredQuestions.findIndex((q) => q.id === questionId);
+      if (index === -1) return;
+
+      const element = questionRefs.current[questionId];
+      if (element && listContainerRef.current) {
+        const container = listContainerRef.current;
+        const elementRect = element.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        // Calculate scroll position - scroll just enough to show the element
+        // Not centered, just enough to bring it into view
+        const scrollTop =
+          elementRect.top - containerRect.top + container.scrollTop - 20; // 20px padding from top
+
+        container.scrollTo({
+          top: Math.max(0, scrollTop),
+          behavior: "smooth",
+        });
+      }
+    },
+    [filteredQuestions],
+  );
+
+  // Scroll to current question when it changes (from URL or click)
+  useEffect(() => {
+    if (currentQuestion) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        scrollToQuestion(currentQuestion);
+      }, 100);
+    }
+  }, [currentQuestion, scrollToQuestion]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -142,6 +184,13 @@ export function Sidebar({
 
   const handleClose = () => {
     if (onMobileClose) {
+      onMobileClose();
+    }
+  };
+
+  const handleQuestionClick = (id: number) => {
+    onSelectQuestion(id);
+    if (isMobile && onMobileClose) {
       onMobileClose();
     }
   };
@@ -218,11 +267,7 @@ export function Sidebar({
 
       {/* Resize Handle - Desktop only */}
       {!isMobile && (
-        <Tooltip
-          title=""
-          placement="left"
-          open={isHovering || isResizing}
-        >
+        <Tooltip title="" placement="left" open={isHovering || isResizing}>
           <Box
             ref={resizeRef}
             onMouseDown={handleResizeStart}
@@ -233,13 +278,12 @@ export function Sidebar({
               right: -6,
               top: 0,
               bottom: 0,
-              width: 16, // Increased from 12 for better click area
+              width: 16,
               cursor: "col-resize",
-              zIndex: 99999, // Increased to very high
+              zIndex: 99999,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              // Add a transparent background to ensure clickability
               backgroundColor: "transparent",
               "&:hover": {
                 "& .resize-border": {
@@ -256,7 +300,7 @@ export function Sidebar({
                 right: 6,
                 top: 0,
                 bottom: 0,
-                width: 3, // Slightly thicker
+                width: 3,
                 borderRadius: 2,
                 backgroundColor: "rgba(255,255,255,0.08)",
                 transition: "all 0.3s ease",
@@ -282,7 +326,7 @@ export function Sidebar({
                 gap: 2,
                 opacity: isHovering || isResizing ? 1 : 0,
                 transition: "all 0.3s ease",
-                pointerEvents: "none", // Prevents blocking mouse events
+                pointerEvents: "none",
               },
             }}
           >
@@ -400,7 +444,6 @@ export function Sidebar({
             "linear-gradient(135deg, rgba(37,99,235,0.1) 0%, transparent 100%)",
         }}
       >
-        {/* Level Toggle - Now in Header */}
         <Box
           sx={{
             my: 1,
@@ -539,6 +582,7 @@ export function Sidebar({
 
       {/* Question List */}
       <Box
+        ref={listContainerRef}
         sx={{
           flex: 1,
           overflowY: "auto",
@@ -590,12 +634,10 @@ export function Sidebar({
               <Fade in key={question.id} timeout={index * 50}>
                 <ListItem disablePadding sx={{ mb: 0.5 }}>
                   <ListItemButton
-                    onClick={() => {
-                      onSelectQuestion(question.id);
-                      if (isMobile && onMobileClose) {
-                        onMobileClose();
-                      }
+                    ref={(el) => {
+                      questionRefs.current[question.id] = el;
                     }}
+                    onClick={() => handleQuestionClick(question.id)}
                     sx={{
                       borderRadius: 2.5,
                       py: 1.5,
