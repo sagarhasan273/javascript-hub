@@ -33,3 +33,8 @@ export * from "./question_32";
 export * from "./question_33";
 export * from "./question_34";
 export * from "./question_35";
+export * from "./question_36";
+export * from "./question_37";
+export * from "./question_38";
+export * from "./question_39";
+export * from "./question_40";
