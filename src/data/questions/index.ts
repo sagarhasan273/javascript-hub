@@ -38,3 +38,8 @@ export * from "./question_37";
 export * from "./question_38";
 export * from "./question_39";
 export * from "./question_40";
+export * from "./question_41";
+export * from "./question_42";
+export * from "./question_43";
+export * from "./question_44";
+export * from "./question_45";
