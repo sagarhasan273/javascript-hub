@@ -335,6 +335,12 @@ export const question44Meta = {
   definition: "The main difference is that localStorage persists indefinitely until manually cleared, while sessionStorage is cleared when the tab or window is closed.",
 };
 
+export const question45Meta = {
+  id: 45,
+  title: "How do you access web storage?",
+  definition: "Web Storage is accessed via the global localStorage and sessionStorage objects, which provide a simple key-value API for storing string data in the browser.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
