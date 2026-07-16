@@ -311,6 +311,30 @@ export const question40Meta = {
   definition: "Cookies are needed to maintain stateful user experiences on stateless HTTP, enabling authentication, personalization, shopping carts, and session management.",
 };
 
+export const question41Meta = {
+  id: 41,
+  title: "What are the options in a cookie?",
+  definition: "Cookie options (attributes) include Expires/Max-Age, Path, Domain, Secure, HttpOnly, and SameSite, controlling security, scope, and lifetime of cookies.",
+};
+
+export const question42Meta = {
+  id: 42,
+  title: "How do you delete a cookie?",
+  definition: "To delete a cookie, set its expiration date to a past date while matching the same path, domain, and security attributes used when the cookie was created.",
+};
+
+export const question43Meta = {
+  id: 43,
+  title: "What are the differences between cookie, local storage and session storage?",
+  definition: "Cookies are small (4KB) and sent to the server; localStorage persists indefinitely; sessionStorage is cleared when the tab closes. Each has different use cases and security implications.",
+};
+
+export const question44Meta = {
+  id: 44,
+  title: "What is the main difference between localStorage and sessionStorage?",
+  definition: "The main difference is that localStorage persists indefinitely until manually cleared, while sessionStorage is cleared when the tab or window is closed.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
