@@ -17,7 +17,6 @@ import {
 } from "../../components/content";
 import { question53Meta } from "../registry";
 import { useLevel } from "../../hooks";
-import { BlockOutlined } from "@mui/icons-material";
 
 export function Question53({ index = 0, isActive = false }: { index?: number; isActive?: boolean }) {
   const { level } = useLevel();
@@ -475,19 +474,19 @@ function createProgressPromise(task, progressCallback) {
       <CardComponent variant="info" title="🎯 Key Takeaways">
         <UnorderedList
           items={[
-            <>A promise represents the <BlockOutlined>future result</BlockOutlined> of an async operation</>,
-            <>Three states: <BlockOutlined>Pending</BlockOutlined>, <BlockOutlined>Fulfilled</BlockOutlined>, <BlockOutlined>Rejected</BlockOutlined></>,
-            <>Use <BlockOutlined>.then()</BlockOutlined> for success and <BlockOutlined>.catch()</BlockOutlined> for errors</>,
-            <>Promises are <BlockOutlined>chainable</BlockOutlined> for sequential operations</>,
-            <>Use <BlockOutlined>Promise.all</BlockOutlined> for parallel operations</>,
-            <>Always <BlockOutlined>handle rejections</BlockOutlined> to avoid errors</>,
-            <>Async/await is <BlockOutlined>syntactic sugar</BlockOutlined> over promises</>,
+            <>A promise represents the <InlineCode>future result</InlineCode> of an async operation</>,
+            <>Three states: <InlineCode>Pending</InlineCode>, <InlineCode>Fulfilled</InlineCode>, <InlineCode>Rejected</InlineCode></>,
+            <>Use <InlineCode>.then()</InlineCode> for success and <InlineCode>.catch()</InlineCode> for errors</>,
+            <>Promises are <InlineCode>chainable</InlineCode> for sequential operations</>,
+            <>Use <InlineCode>Promise.all</InlineCode> for parallel operations</>,
+            <>Always <InlineCode>handle rejections</InlineCode> to avoid errors</>,
+            <>Async/await is <InlineCode>syntactic sugar</InlineCode> over promises</>,
           ]}
         />
       </CardComponent>
 
       <HLText type="info">
-        💡 <Bold>Pro Tip:</Bold> Always <BlockOutlined>handle promise rejections</BlockOutlined> with <InlineCode>.catch()</InlineCode> or <InlineCode>try/catch</InlineCode> in async functions. Unhandled rejections can cause <BlockOutlined>unexpected crashes</BlockOutlined> in your application.
+        💡 <Bold>Pro Tip:</Bold> Always <InlineCode>handle promise rejections</InlineCode> with <InlineCode>.catch()</InlineCode> or <InlineCode>try/catch</InlineCode> in async functions. Unhandled rejections can cause <InlineCode>unexpected crashes</InlineCode> in your application.
       </HLText>
 
       <Note type="success" icon="🎉">
