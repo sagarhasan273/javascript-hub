@@ -381,6 +381,36 @@ export const question50Meta = {
   definition: "Check web worker support using typeof Worker !== 'undefined', try-catch blocks, and feature detection for different worker types.",
 };
 
+export const question51Meta = {
+  id: 51,
+  title: "Give an example of a web worker",
+  definition: "A web worker is a script that runs in the background on a separate thread, allowing heavy computations without blocking the main UI thread.",
+};
+
+export const question52Meta = {
+  id: 52,
+  title: "What are the restrictions of web workers on DOM?",
+  definition: "Web workers cannot access the DOM, window, or document objects because they run on a separate thread from the main UI thread.",
+};
+
+export const question53Meta = {
+  id: 53,
+  title: "What is a promise?",
+  definition: "A promise is an object that represents the eventual completion (or failure) of an asynchronous operation, serving as a placeholder for a future value.",
+};
+
+export const question54Meta = {
+  id: 54,
+  title: "Why do you need a promise?",
+  definition: "Promises are needed to handle asynchronous operations in a clean, manageable way, avoiding callback hell and providing better error handling.",
+};
+
+export const question55Meta = {
+  id: 55,
+  title: "Explain the three states of promise.",
+  definition: "A promise has three states: Pending (initial state), Fulfilled (operation completed successfully), and Rejected (operation failed).",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
