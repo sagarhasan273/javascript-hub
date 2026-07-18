@@ -346,6 +346,36 @@ export const question45Meta = {
   definition: "Web Storage is accessed via the global localStorage and sessionStorage objects, which provide a simple key-value API for storing string data in the browser.",
 };
 
+export const question46Meta = {
+  id: 46,
+  title: "What are the methods available on session storage?",
+  definition: "sessionStorage provides the same methods as localStorage: setItem, getItem, removeItem, clear, key, and length.",
+};
+
+export const question47Meta = {
+  id: 47,
+  title: "What is a storage event and its event handler?",
+  definition: "A storage event fires when localStorage or sessionStorage changes, allowing cross-tab communication through event listeners like window.addEventListener('storage', handler).",
+};
+
+export const question48Meta = {
+  id: 48,
+  title: "Why do you need web storage?",
+  definition: "Web storage is needed for performance optimization, offline support, user preferences, state management, and reducing server load.",
+};
+
+export const question49Meta = {
+  id: 49,
+  title: "How do you check web storage browser support?",
+  definition: "Check web storage support using typeof checks, try-catch blocks, and feature detection to handle private mode and unsupported browsers.",
+};
+
+export const question50Meta = {
+  id: 50,
+  title: "How do you check web workers browser support?",
+  definition: "Check web worker support using typeof Worker !== 'undefined', try-catch blocks, and feature detection for different worker types.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
