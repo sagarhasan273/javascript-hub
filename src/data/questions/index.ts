@@ -53,3 +53,8 @@ export * from "./question_52";
 export * from "./question_53";
 export * from "./question_54";
 export * from "./question_55";
+export * from "./question_56";
+export * from "./question_57";
+export * from "./question_58";
+export * from "./question_59";
+export * from "./question_60";
