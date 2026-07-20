@@ -55,7 +55,12 @@ import {
   Question52,
   Question53,
   Question54,
-  Question55
+  Question55,
+  Question56,
+  Question57,
+  Question58,
+  Question59,
+  Question60
 } from "./questions";
 
 
@@ -416,6 +421,36 @@ export const question55Meta = {
   definition: "A promise has three states: Pending (initial state), Fulfilled (operation completed successfully), and Rejected (operation failed).",
 };
 
+export const question56Meta = {
+  id: 56,
+  title: "What is a callback function?",
+  definition: "A callback function is a function passed as an argument to another function and executed later after some operation completes.",
+};
+
+export const question57Meta = {
+  id: 57,
+  title: "Why do we need callbacks?",
+  definition: "Callbacks are needed for asynchronous programming to keep the UI responsive and handle operations that take time to complete.",
+};
+
+export const question58Meta = {
+  id: 58,
+  title: "What is a callback hell?",
+  definition: "Callback hell is deeply nested callbacks creating a pyramid of doom, making code hard to read, debug, and maintain.",
+};
+
+export const question59Meta = {
+  id: 59,
+  title: "What are server-sent events?",
+  definition: "Server-Sent Events (SSE) allow servers to push real-time updates to clients over a single HTTP connection.",
+};
+
+export const question60Meta = {
+  id: 60,
+  title: "How do you receive server-sent event notifications?",
+  definition: "Receive SSE notifications using the EventSource API on the client side, listening for messages and events.",
+};
+
 export const questionRegistry = [
   {
     ...question01Meta,
@@ -636,6 +671,26 @@ export const questionRegistry = [
   {
     ...question55Meta,
     component: Question55,
+  },
+  {
+    ...question56Meta,
+    component: Question56,
+  },
+  {
+    ...question57Meta,
+    component: Question57,
+  },
+  {
+    ...question58Meta,
+    component: Question58,
+  },
+  {
+    ...question59Meta,
+    component: Question59,
+  },
+  {
+    ...question60Meta,
+    component: Question60,
   }
   // Add more here
 ];
